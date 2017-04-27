@@ -82,8 +82,10 @@ export function vendors() : Array<string> {
         '@angular/common',
         '@angular/http',
         '@angular/router',
-        '@angular/forms'
-        
+        '@angular/forms',
+
+        'jquery',
+        'bootstrap-webpack'
     ];
     return vendors;
 }

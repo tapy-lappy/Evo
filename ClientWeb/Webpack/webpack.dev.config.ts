@@ -2,7 +2,7 @@
 /// <reference path="typings/webpack.d.ts" />
 
 import Common from "./webpack.common.config";
-const { HotModuleReplacementPlugin, NamedModulesPlugin } = require('webpack');
+const { HotModuleReplacementPlugin, NamedModulesPlugin, ProvidePlugin } = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const webpackMerge = require('webpack-merge');
 import helper = require('./helpers/path.helper');
@@ -46,6 +46,12 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
                 alwaysNotify: true,             //cause double notification
                 //skipFirstNotification: true
             }),
+            new ProvidePlugin({     //automatically loads modules
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery',
+                'window.$': 'jquery'
+            })
         ].concat(common.Metadata.HMR ? new HotModuleReplacementPlugin() : []),     // enable HMR
 
         //https://webpack.js.org/configuration/dev-server

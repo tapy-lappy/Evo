@@ -41,7 +41,7 @@ export default class Common{
 
 
     webpackConfig(): IWebpackConfig {
-        const DLL = require(helper.root('Angular2/src/dll'));
+        const DLL = require(helper.root('src/dll'));
         const polyfills = DLL.polyfills(this.Metadata);
         const vendors = DLL.vendors();
         const rxjs = DLL.rxjs();
@@ -94,7 +94,8 @@ export default class Common{
                             // FIX for Angular 4 --- workaround for this issue:
                             // http://stackoverflow.com/a/43446971
                             // https://github.com/angular-redux/store/issues/64#issuecomment-223489640
-                            helper.root('node_modules/@angular/compiler')           //exclude files from loader(they won't be loaded by webpack)
+                            helper.root('node_modules/@angular/compiler'),           //exclude files from loader(they won't be loaded by webpack)
+                            helper.root('node_modules/bootstrap-webpack')            //to prevent conflict and allow bootstrap-webpack load Bootstrap JS files
                         ],
                         enforce: "pre"
                     },
@@ -127,7 +128,20 @@ export default class Common{
                     // {
                     //     test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
                     //     loader: 'file-loader?name=assets/[name].[hash].[ext]'
-                    // }
+                    // },
+
+                    //https://www.npmjs.com/package/bootstrap-webpack
+                    //https://github.com/bline/bootstrap-webpack
+                    // **IMPORTANT** This is needed so that each bootstrap js file required by
+                    // bootstrap-webpack has access to the jQuery object
+                    { test: /bootstrap\/js\//, loader: 'imports-loader?jQuery=jquery' },
+                    // Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
+                    // loads bootstrap's css.
+                    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url-loader?limit=10000&mimetype=application/font-woff" },
+                    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url-loader?limit=10000&mimetype=application/font-woff2" },
+                    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url-loader?limit=10000&mimetype=application/octet-stream" },
+                    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file-loader" },
+                    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url-loader?limit=10000&mimetype=image/svg+xml" }
                 ]
             },
 

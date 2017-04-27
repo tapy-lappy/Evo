@@ -259,3 +259,5 @@ ModelManifest.xml
 
 /Web/wwwroot/Angular2/**/*.js
 
+/ClientWeb/src/*.map
+/ClientWeb/src/*.js
