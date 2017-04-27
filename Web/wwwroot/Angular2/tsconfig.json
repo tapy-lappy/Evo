@@ -1,0 +1,40 @@
+{
+    "compileOnSave": true, //To enable build TypeScript files automaticaly when changes saved into *.ts file
+    "compilerOptions": {
+        //"watch": true, //To enable auto-compile *.ts files in Visual Studio Code
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,              //to allow *.ts debugging
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "types": ["node"], //to disable require error
+        "typeRoots": ["../../node_modules/@types"] //to disable require error
+
+        //"types": [
+        //  "node"
+        //],
+        //"typeroots": [
+        //  "./node_modules/@types"
+        //]
+
+        //"lib": ["es2015", "dom"] //if you set "target": "es6" - then need to remove?
+        //"types": [ "node", "core-js" ], //to make work require(). BUT - must be imported?
+        //"typeRoots": [
+        //  "./node_modules/@types"
+        //]
+    }
+    // "exclude": [
+    //     "node_modules"
+    // ],
+    // "files": [
+    //         "node_modules/@types/node/index.d.ts"
+    //     ]
+    //"include": [ "src/**/*.ts" ],
+    //"exclude": [
+    //  "node_modules",
+    //  "wwwroot"
+    //]
+}

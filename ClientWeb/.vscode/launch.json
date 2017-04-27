@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        //{
+        //     "name": "Launch index.html",
+        //     "type": "chrome",
+        //     "request": "launch",
+        //     "file": "index.html"
+        // },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:9001/wwwroot/dist/web/index.html",
+            "sourceMaps": true,
+            //"webRoot": "${workspaceRoot}"
+            "webRoot": "wwwroot",
+            "userDataDir": "${workspaceRoot}/.vscode/chrome" //https://github.com/Microsoft/vscode-chrome-debug/issues/111#issuecomment-225101947 Specify a userDataDir - this will avoid collisions with other chrome instances you may already have running.
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9001,
+            //"webRoot": "${workspaceRoot}"
+            "webRoot": "wwwroot"
+        }
+    ]
+}

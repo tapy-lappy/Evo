@@ -1,0 +1,12 @@
+<h5>App Component</h5>
+
+<div>
+    <dna-selector-component>Dna selector component loading...</dna-selector-component>
+</div>
+
+<button (click)="toogleMutation()">Toogle mutations</button>
+
+<p>Mutation enabled: {{mutationEnabled}}</p>
+
+<dna-list-component [mutationEnabled]="mutationEnabled" (remove)="removeFromDnaSelector($event)">Dna list component loading...</dna-list-component>
+

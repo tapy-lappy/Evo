@@ -1,0 +1,17 @@
+<h4>Please choose DNA type to add</h4>
+
+<div>
+    <select [disabled]="!hasAvailableDna" #availableDna ngClass="dna-selector">
+        <option *ngFor="let dna of availableDnas" value={{dna}}>{{getDnaName(dna)}}</option>
+    </select>
+    <button [disabled]="!hasAvailableDna" (click)="add(availableDna.value)">Add available</button>
+</div>
+
+<div>
+    <!--TODO: clarify why doesn't work-->
+    <!--<select name="selectedDna" [ngModel]="selectedDna">-->
+     <select [disabled]="!hasSelectedDna" #selectedDna ngClass="dna-selector">
+        <option *ngFor="let dna of selectedDnas" value={{dna}}>{{getDnaName(dna)}}</option>
+    </select>
+    <button [disabled]="!hasSelectedDna" (click)="remove(selectedDna.value)">Remove selected</button>
+</div>

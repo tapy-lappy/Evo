@@ -1,0 +1,25 @@
+https://damienbod.com/2016/06/12/asp-net-core-angular2-with-webpack-and-visual-studio/
+
+"scripts": {
+	//"start": "concurrently \"webpack-dev-server --inline --progress --port 8080\" \"dotnet run\" ",
+    //"build-dev": "npm run webpack-dev",
+    //"webpack-dev": "set NODE_ENV=development && webpack",
+
+    //"watch-webpack-dev": "set NODE_ENV=development && webpack --watch --color"
+
+    "build-production": "npm run ngc && npm run webpack-production",
+	"ngc": "ngc -p ./wwwroot/Angular2/tsconfig.json",
+	"webpack-production": "set NODE_ENV=production && webpack",
+    "watch-webpack-production": "npm run build-production --watch --color",
+    "publish-for-iis": "npm run build-production && dotnet publish -c Release"
+  }
+
+
+
+
+  "start": "webpack -d --progress --watch --colors",			to start webpack in watch mode
+
+
+  http://cheng.logdown.com/posts/2016/03/25/679045			devtool: "source-map" etc.
+  http://www.gamefromscratch.com/post/2014/05/27/TypeScript-debugging-in-Visual-Studio-with-IE-Chrome-and-Firefox-using-Source-Maps.aspx	enabling debugging in browser
+  https://blogs.msdn.microsoft.com/webdev/2016/11/21/client-side-debugging-of-asp-net-projects-in-google-chrome/							Mads Kristensen - debug in Chrome & IE for VS 2017

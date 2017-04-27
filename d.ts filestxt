@@ -1,0 +1,4 @@
+http://stackoverflow.com/a/38287176
+ There are many libraries based on Javascript like lodash, if you wish to use them in you angular2 project and you are using typescript for development then you have to use typings.
+
+ So, typings - it's for compatibility with old JS libraries when you are using TS for development

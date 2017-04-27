@@ -1,0 +1,2 @@
+https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebPackTaskRunner			to start webpack.config.js in Task Runner Explorer
+https://www.npmjs.com/package/webpack-notifier													to notify about webpack finish bundling with/without errors

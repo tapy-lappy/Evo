@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{B7F6034E-C7B2-428D-A904-83A12189E78C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Angular2\Components\app.component.js">
+      <DependentUpon>app.component.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Dto\test.js">
+      <DependentUpon>test.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\main.js">
+      <DependentUpon>main.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Models\currency.js">
+      <DependentUpon>currency.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Modules\app.module.js">
+      <DependentUpon>app.module.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Pipes\currency.format.pipe.js">
+      <DependentUpon>currency.format.pipe.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Services\web.api.service.js">
+      <DependentUpon>web.api.service.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\src\polyfills.js">
+      <DependentUpon>polyfills.ts</DependentUpon>
+    </Content>
+    <Content Include="Angular2\src\vendor.js">
+      <DependentUpon>vendor.ts</DependentUpon>
+    </Content>
+    <Content Include="Evolution\Abstract\DnaComponent.js" />
+    <Content Include="Evolution\AppState\app-state.js" />
+    <Content Include="Evolution\Components\app.component.js" />
+    <Content Include="Evolution\Components\dna-list.component.js" />
+    <Content Include="Evolution\Components\dna-selector.component.js" />
+    <Content Include="Evolution\Components\gene.component.js" />
+    <Content Include="Evolution\Config\app-config.js" />
+    <Content Include="Evolution\Css\common-text.css" />
+    <Content Include="Evolution\Css\dna-selector.component.css" />
+    <Content Include="Evolution\Enums\dna-enum.js" />
+    <Content Include="Evolution\Enums\site-enum.js" />
+    <Content Include="Evolution\Html\app.component.html" />
+    <Content Include="Evolution\Html\dna-list.component.html" />
+    <Content Include="Evolution\Html\dna-selector.component.html" />
+    <Content Include="Evolution\Html\gene.component.html" />
+    <Content Include="Evolution\main.js" />
+    <Content Include="Evolution\Models\gene.js" />
+    <Content Include="Evolution\Models\site.js" />
+    <Content Include="Evolution\Modules\evolution.module.js" />
+    <Content Include="Evolution\Providers\gene-service-provider.js" />
+    <Content Include="Evolution\Providers\mutation-service-provider.js" />
+    <Content Include="Evolution\Services\array-helper.js" />
+    <Content Include="Evolution\Services\gene.service.js" />
+    <Content Include="Evolution\Services\log.service.js" />
+    <Content Include="Evolution\Services\mutation.service.js" />
+    <Content Include="indexWebpackTemplate.html" />
+    <Content Include="systemjs.config.js" />
+    <Content Include="app.css" />
+    <Content Include="helpers\helpers.js" />
+    <Content Include="index.html" />
+    <Content Include="web.config" />
+    <Content Include="wwwroot\images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Angular2\Components\app.component.ts" />
+    <TypeScriptCompile Include="Angular2\Dto\test.ts" />
+    <TypeScriptCompile Include="Angular2\main.ts" />
+    <TypeScriptCompile Include="Angular2\Models\currency.ts" />
+    <TypeScriptCompile Include="Angular2\Modules\app.module.ts" />
+    <TypeScriptCompile Include="Angular2\Pipes\currency.format.pipe.ts" />
+    <TypeScriptCompile Include="Angular2\Services\web.api.service.ts" />
+    <TypeScriptCompile Include="Angular2\src\polyfills.ts" />
+    <TypeScriptCompile Include="Angular2\src\vendor.ts" />
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="Evolution\Abstract\DnaComponent.ts" />
+    <TypeScriptCompile Include="Evolution\AppState\app-state.ts" />
+    <TypeScriptCompile Include="Evolution\Components\app.component.ts" />
+    <TypeScriptCompile Include="Evolution\Components\dna-list.component.ts" />
+    <TypeScriptCompile Include="Evolution\Components\dna-selector.component.ts" />
+    <TypeScriptCompile Include="Evolution\Components\gene.component.ts" />
+    <TypeScriptCompile Include="Evolution\Config\app-config.ts" />
+    <TypeScriptCompile Include="Evolution\Enums\dna-enum.ts" />
+    <TypeScriptCompile Include="Evolution\Enums\site-enum.ts" />
+    <TypeScriptCompile Include="Evolution\main.ts" />
+    <TypeScriptCompile Include="Evolution\Models\gene.ts" />
+    <TypeScriptCompile Include="Evolution\Models\site.ts" />
+    <TypeScriptCompile Include="Evolution\Modules\evolution.module.ts" />
+    <TypeScriptCompile Include="Evolution\Providers\gene-service-provider.ts" />
+    <TypeScriptCompile Include="Evolution\Providers\mutation-service-provider.ts" />
+    <TypeScriptCompile Include="Evolution\Services\array-helper.ts" />
+    <TypeScriptCompile Include="Evolution\Services\gene.service.ts" />
+    <TypeScriptCompile Include="Evolution\Services\log.service.ts" />
+    <TypeScriptCompile Include="Evolution\Services\mutation.service.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsconfig.json" />
+    <Content Include="package.json" />
+    <Content Include="Angular2\Components\app.component.js.map">
+      <DependentUpon>app.component.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Dto\test.js.map">
+      <DependentUpon>test.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Models\Currency.js.map">
+      <DependentUpon>currency.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Modules\app.module.js.map">
+      <DependentUpon>app.module.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Pipes\currency.format.pipe.js.map">
+      <DependentUpon>currency.format.pipe.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\Services\web.api.service.js.map">
+      <DependentUpon>web.api.service.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\src\polyfills.js.map">
+      <DependentUpon>polyfills.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\src\vendor.js.map">
+      <DependentUpon>vendor.js</DependentUpon>
+    </Content>
+    <Content Include="Angular2\main.js.map">
+      <DependentUpon>main.js</DependentUpon>
+    </Content>
+    <Content Include="Evolution\Abstract\DnaComponent.js.map" />
+    <Content Include="Evolution\AppState\app-state.js.map" />
+    <Content Include="Evolution\Components\app.component.js.map" />
+    <Content Include="Evolution\Components\dna-list.component.js.map" />
+    <Content Include="Evolution\Components\dna-selector.component.js.map" />
+    <Content Include="Evolution\Components\gene.component.js.map" />
+    <Content Include="Evolution\Config\app-config.js.map" />
+    <Content Include="Evolution\Enums\dna-enum.jss.map" />
+    <Content Include="Evolution\Enums\site-enum.js.map" />
+    <Content Include="Evolution\main.js.map" />
+    <Content Include="Evolution\Models\gene.js.map" />
+    <Content Include="Evolution\Models\site.js.map" />
+    <Content Include="Evolution\Modules\evolution.module.js.map" />
+    <Content Include="Evolution\Providers\gene-service-provider.js.map" />
+    <Content Include="Evolution\Providers\mutation-service-provider.js.map" />
+    <Content Include="Evolution\Services\array-helper.js" />
+    <Content Include="Evolution\Services\gene.service.js.map" />
+    <Content Include="Evolution\Services\log.service.js.map" />
+    <Content Include="Evolution\Services\mutation.service.js.map" />
+    <Content Include="Evolution\Css\gene.component.less" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\dist\web\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>ClientWeb</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56188</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:56188/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://localhost:56188/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

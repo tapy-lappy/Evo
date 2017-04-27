@@ -1,0 +1,56 @@
+//https://www.typescriptlang.org/docs/handbook/compiler-options.html
+{
+  "compileOnSave": true, //To enable build TypeScript files in Visual Studio IDE automaticaly when changes saved into *.ts file
+  "compilerOptions": {
+    "rootDirs" :[ //create an output (virtual) directory from following roots(root directories):
+      "Evolution", "Angular2", "wwwroot/html", "wwwroot/css", "wwwroot/images"
+    ],            //works only for relative module import(like: import './main') - https://www.typescriptlang.org/docs/handbook/module-resolution.html
+    //"traceResolution": true,  //to provide detail description what is happening during module resolution process(works only with TS compiler): E:\TravelOrganizer\ClientWeb>tsc -traceResolution
+
+    //"watch": true, //To enable auto-compile *.ts files in Visual Studio Code
+
+    //"target": "es5", //to disable  TS2304: Cannot find name 'Promise', 'Map', 'Set' - http://stackoverflow.com/a/41608156 use "es5" in combination with "lib": [ "es2016", "dom" ]
+                     //OR just "es6"(without "lib"). But using "es6" may cause your JavaScript output will be incompatible with older browsers
+    //"lib": [ "es2016", "dom" ], //only for "target": "es5" - don't need to use for "es6"
+    "target": "es6",
+
+    "module": "commonjs",
+    "moduleResolution": "node",           //https://www.typescriptlang.org/docs/handbook/module-resolution.html#node
+
+    "sourceMap": true,                    //to allow *.ts debugging
+    //"inlineSources": true,              //doesn't help to debug
+    //"inlineSourceMap": false,
+
+    //"outDir": "output",                   //npm run build -> to move output structure(*.js, *.js.map files) to specific directory
+    "noImplicitReturns": true,
+    "noImplicitThis": true,                 //https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html
+    "noImplicitAny": true,                  //https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html
+    "noFallthroughCasesInSwitch": true,
+    //this one cause errors:
+    //"strictNullChecks": true,               //when using the --strictNullChecks flag, null and undefined are only assignable to void and their respective types - https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html
+
+    "emitDecoratorMetadata": true,            //To enable emitting certain types of metadata for declarations that have decorators - https://www.typescriptlang.org/docs/handbook/decorators.html#metadata
+    "experimentalDecorators": true,           //To enable experimental support for decorators - https://www.typescriptlang.org/docs/handbook/decorators.html
+    "removeComments": false,
+    "types": [ "node" ],                    //to disable require error
+    "typeRoots": [ "node_modules/@types" ], //to disable require error
+    "allowJs": false                        // Allow JavaScript files to be compiled. If true - will recompile changes in JS(not TS) files, but if false - need to do changes in TS to make JS recompile.
+  },
+  "awesomeTypescriptLoaderOptions": {
+
+  },
+  "include": [
+    "Evolution/**/*.ts",
+    "Evolution/**/*.html",
+    "Evolution/**/*.css",
+    "Angular2/**/*.ts",
+    "Webpack/**/*.ts",   //there are typings definition files(*.d.ts) that are used in angular components
+    "wwwroot/**/*.html",
+    "wwwroot/**/*.css"
+  ],
+  "exclude": [
+    //For TS files here in their JS files refferences on MAP will be removed: //# sourceMappingURL=webpack.config.js.map
+    "**/webpack.config.ts",
+    "Webpack/**/webpack.?*.config.ts"
+  ]
+}

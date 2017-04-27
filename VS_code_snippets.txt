@@ -1,0 +1,12 @@
+https://msdn.microsoft.com/en-us/library/z4c5cc9b(v=vs.90).aspx
+
+To use code snippets through the snippet’s shortcut
+    In the Visual Studio IDE, open the file that you intend to change.
+    In the Code Editor, put the cursor where you want to insert the code snippet.
+    Type the shortcut for the code snippet that you want to add to your code.
+    OR –
+    Press CTRL+SPACE to view the completion list and then select the snippet shortcut from the list.
+    Press TAB, TAB to invoke the code snippet.
+
+https://msdn.microsoft.com/en-us/library/ms165394.aspx		Walkthrough: Creating a Code Snippet
+https://msdn.microsoft.com/en-us/library/ms165392.aspx		Code Snippets

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <!--<link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="app.js"></script>-->
+
+    <!-- Angular2 Code -->
+    <base href="/">
+    <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <!--<script src="node_modules/@types/node"-->
+    <!--<script lang="ts">
+        //var require: NodeRequire;
+        //declare var System: any;
+        //declare var require: any;
+    </script>-->
+    <script src="node_modules/core-js/shim.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="systemjs.config.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script>
+        System.import('Angular2').catch(function (err) { console.error(err); });
+    </script>
+    <!-- Angular2 Code -->
+</head>
+<body>
+    <h1>TypeScript HTML App</h1>
+    <travel-organizer-app>Downloading...</travel-organizer-app>
+    <div id="content"></div>
+</body>
+</html>

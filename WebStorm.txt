@@ -1,0 +1,13 @@
+http://stackoverflow.com/a/27523378
+How to disable the auto update *.ts(and other files) without pressing Ctrl + S
+How to disable 'safe write' when WebStorm save changes to temporary file first and if saving was successful - then remove original file and rename temporary file.
+
+    Settings / Appearance & Behavior / System Settings / Save file on frame deactivation: unchecked
+    Settings / Appearance & Behavior / System Settings / Save files automatically if...: unchecked
+    Settings / Editor / General / Editor tabs / Mark modified tabs with asterisk : checked
+
+The resulting behavior is:
+
+    Changes are not automatically saved in the file
+    If you close a changed file, no warning is displayed
+    If you close a changed file then reopen it, changes have not been lost

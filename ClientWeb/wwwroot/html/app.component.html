@@ -1,0 +1,18 @@
+<h2 [hidden]="hideError" class="alert alert-danger">Error: {{error}}</h2>
+<h3 *ngIf="error" class="alert alert-danger">Error2: {{error}}</h3>
+
+<h1>Welcome, {{input}}!</h1>
+<label>Enter the name:</label>
+<input [(ngModel)]="input" placeholder="Name">
+<div *ngIf="showData">
+    <div>Got from server: </div>
+    <div>Label {{data?.label}}</div>
+    <div>Y: {{data?.x}}</div>
+    <div>X: {{data?.y}}</div>
+</div>
+<select *ngIf="currencies">
+    <option *ngFor="let currency of currencies; let i = index" (click)="showCurrency(i + 1, currency)">
+        {{currency | currencyFormat:i + 1}}
+    </option>
+</select>
+<input type="button" value="Test" (click)="Test()" />
