@@ -46,12 +46,12 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
                 alwaysNotify: true,             //cause double notification
                 //skipFirstNotification: true
             }),
-            new ProvidePlugin({     //automatically loads modules
-                $: 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery',
-                'window.$': 'jquery'
-            })
+            // new ProvidePlugin({     //automatically loads modules
+            //     $: 'jquery',
+            //     jQuery: 'jquery',
+            //     'window.jQuery': 'jquery',
+            //     'window.$': 'jquery'
+            // })
         ].concat(common.Metadata.HMR ? new HotModuleReplacementPlugin() : []),     // enable HMR
 
         //https://webpack.js.org/configuration/dev-server

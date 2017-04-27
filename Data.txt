@@ -27,6 +27,7 @@ npm install gulp -g										installation package on the machine(globally)
  npm update --save-dev									to update only devDependencies(when you in project directory)
  npm install											install all dependencies & devDependencies from package.json
  npm update												update  all dependencies & devDependencies from package.json
+ npm uninstall -S bootstrap								uninstall 'bootstrap' from dependencies
 
  https://www.npmjs.com/package/npm-check-updates
  npm install -g npm-check-updates
