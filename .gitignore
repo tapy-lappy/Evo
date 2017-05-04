@@ -254,7 +254,7 @@ ModelManifest.xml
 /ClientWeb/Webpack/**/*.map
 /ClientWeb/Webpack/**/*.js
 !/ClientWeb/Webpack/**/bootstrap.config.js
-#/ClientWeb/webpack.config.js
+/ClientWeb/webpack.config.js
 /ClientWeb/webpack.config.js.map
 
 /ClientWeb/Evolution/**/*.js
