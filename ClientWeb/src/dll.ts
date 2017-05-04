@@ -85,7 +85,9 @@ export function vendors() : Array<string> {
         '@angular/forms',
 
         'jquery',
-        'bootstrap-webpack'
+        //'bootstrap-webpack'
+        //'bootstrap-webpack!./bootstrap.config.js'
+        'bootstrap-webpack!./Webpack/bootstrap-webpack/bootstrap.config.js'
     ];
     return vendors;
 }

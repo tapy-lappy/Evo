@@ -47,6 +47,8 @@ export default class Common{
         const rxjs = DLL.rxjs();
 
         //console.log("All vendors: ", JSON.stringify([].concat(vendors, rxjs), null, 2));
+        const extractCSS = new ExtractTextPlugin({filename: 'css/d[name].css'});
+        const extractLESS = new ExtractTextPlugin('less/h[name].css');
 
         return {
             target: 'web',
@@ -88,37 +90,62 @@ export default class Common{
                         loader: 'html-loader'
                     },
                     {
-                        test: /\.(js|ts)$/,
+                        //regex doesn't match any files of the pattern *.config.js(ts) but matches rest of *.js(ts)     https://github.com/bline/bootstrap-webpack/issues/9#issuecomment-77898728
+                        test: /^((?!config).)*\.(js|ts)?$/,
+                        //test: /\.(js|ts)$/,
                         use: ["source-map-loader"],
                         exclude: [
                             // FIX for Angular 4 --- workaround for this issue:
                             // http://stackoverflow.com/a/43446971
                             // https://github.com/angular-redux/store/issues/64#issuecomment-223489640
                             helper.root('node_modules/@angular/compiler'),           //exclude files from loader(they won't be loaded by webpack)
-                            helper.root('node_modules/bootstrap-webpack')            //to prevent conflict and allow bootstrap-webpack load Bootstrap JS files
+
+                            //helper.root('node_modules/bootstrap-webpack'),            //to prevent conflict and allow bootstrap-webpack load Bootstrap JS files
+                            //helper.root('Webpack/bootstrap-webpack/bootstrap.config.js')    //works, but it's redundant - see Regex
                         ],
-                        enforce: "pre"
+                        enforce: "pre"              //https://webpack.js.org/configuration/module/#rule-enforce
                     },
                     //USEFUL - HMR(Image how it works) with CSS replacement - https://medium.com/@rajaraodv/webpack-hot-module-replacement-hmr-e756a726a07#.coqd1yp0s
                     {
                         test: /\.css$/,
-                        loader: "style-loader!css-loader"
+                        //loader: "style-loader!css-loader"
+
+                        //this will combine ALL *.css files into ONE main.css
+                        // use: ExtractTextPlugin.extract({fallback: 'style-loader', use: [
+                        //     {loader: 'css-loader', options: {sourceMap: true}}]}),
+
+                        //this will combine ALL *.css files into SEPARATE [name].css
+                        use: extractCSS.extract([
+                            'style-loader',
+                            {loader: 'css-loader', options: {sourceMap: true}}])
                     },
                     {
                         test: /\.less$/,    //https://github.com/webpack-contrib/less-loader
-                        use: [{
-                            loader: "style-loader" // creates style nodes from JS strings
-                        }, {
-                            loader: "css-loader", // translates CSS into CommonJS
-                            options: {
-                                sourceMap: true
-                            }
-                        }, {
-                            loader: "less-loader", // compiles Less to CSS
-                            options: {
-                                sourceMap: true
-                            }
-                        }]
+                        // use: [{
+                        //     loader: "style-loader" // creates style nodes from JS strings
+                        // }, {
+                        //     loader: "css-loader", // translates CSS into CommonJS
+                        //     options: {
+                        //         sourceMap: true
+                        //     }
+                        // }, {
+                        //     loader: "less-loader", // compiles Less to CSS
+                        //     options: {
+                        //         sourceMap: true
+                        //     }
+                        // }]
+
+                        //this will combine ALL *.less files into ONE main.css
+                        // use: ExtractTextPlugin.extract({fallback: 'style-loader', use: [
+                        //     {loader: 'css-loader', options: {sourceMap: true}},
+                        //     {loader: 'less-loader', options: {sourceMap: true}}]
+                        // })
+
+                        //this will combine ALL *.less files into SEPARATE [name].css
+                        use:  extractLESS.extract([
+                            'style-loader',
+                            {loader: 'css-loader', options: {sourceMap: true}},
+                            {loader: 'less-loader', options: {sourceMap: true}}])
                     },
                     {
                         test: /\.json$/,
@@ -133,8 +160,8 @@ export default class Common{
                     //https://www.npmjs.com/package/bootstrap-webpack
                     //https://github.com/bline/bootstrap-webpack
                     // **IMPORTANT** This is needed so that each bootstrap js file required by
-                    // bootstrap-webpack has access to the jQuery object
-                    { test: /bootstrap\/js\//, loader: 'imports-loader?jQuery=jquery' },
+                    // bootstrap-webpack has access to the jQuery object - https://github.com/shakacode/bootstrap-sass-loader#example-loaders-configuration
+                    //{ test: /bootstrap\/js\//, loader: 'imports-loader?jQuery=jquery' },        //WORKS WITHOUT THIS: load jQuery to allow Bootstrap scripts to execute
                     // Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
                     // loads bootstrap's css.
                     { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url-loader?limit=10000&mimetype=application/font-woff" },
@@ -164,7 +191,13 @@ export default class Common{
                     chunksSortMode: 'dependency',                            //how chunks should be sorted before they are included to the html -  http://stackoverflow.com/a/39119631
                     excludeChunks: []                                        //skip some chunks
                 }),
+                //https://webpack.js.org/plugins/extract-text-webpack-plugin/
+                /*It moves all the required *.css modules in entry chunks into a separate CSS file. So your styles are no longer inlined into
+                the JS bundle, but in a separate CSS file (styles.css). If your total stylesheet volume is big, it will be faster because the
+                CSS bundle is loaded in parallel to the JS bundle.*/
                 new ExtractTextPlugin('[name].css'), //extracts CSS(which HtmlWebpackPlugin bury into scripts) into external .css files
+                //extractCSS,      //TODO: why it except??? why it doesn't generate css files by path
+                //extractLESS,
 
                 //new webpack.optimize.AggressiveSplittingPlugin({
                 //    minSize: 5000,

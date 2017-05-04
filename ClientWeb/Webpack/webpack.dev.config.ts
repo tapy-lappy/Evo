@@ -46,6 +46,8 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
                 alwaysNotify: true,             //cause double notification
                 //skipFirstNotification: true
             }),
+
+            //https://github.com/AngularClass/angular2-webpack-starter/issues/696#issuecomment-226442566
             // new ProvidePlugin({     //automatically loads modules
             //     $: 'jquery',
             //     jQuery: 'jquery',
