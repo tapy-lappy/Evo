@@ -42,12 +42,8 @@
   "include": [
     "src/**/*.ts",
     "Evolution/**/*.ts",
-    "Evolution/**/*.html",
-    "Evolution/**/*.css",
     "Angular2/**/*.ts",
-    "Webpack/**/*.ts",   //there are typings definition files(*.d.ts) that are used in angular components
-    "wwwroot/**/*.html",
-    "wwwroot/**/*.css"
+    "Webpack/**/*.ts"   //there are typings definition files(*.d.ts) that are used in angular components
   ],
   "exclude": [
     //For TS files here in their JS files refferences on MAP will be removed: //# sourceMappingURL=webpack.config.js.map
