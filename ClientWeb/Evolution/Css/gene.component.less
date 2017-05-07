@@ -1,4 +1,5 @@
 @import "common-text";      /*LESS*/
+@import "common-gene";
 //@import url('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
 
 h4.dnaName{
@@ -7,24 +8,24 @@ h4.dnaName{
   font-family: Algerian;
   font-size: 25px;
   color: #7c4dff;
-
+  display: inline-block;
+  padding: 0px 10px;
 }
 
-.gene{border: solid 1px black;}
+.gene{
+  //border: solid 1px black;
+  display:inline-block;
+}
 .gene-remove-button {
   position:relative;
   //top:0;
   //right:0;
   float: right;
-  margin-right: 20px;
-  top: -130px;
+  margin-right: -60px;
+  top: -106px;
   font-weight: bold;
   border-width: 1px;
 }
 
 
-.A {color: red; background-color: greenyellow;}
-.C {color: blue; background-color: yellow; /*border: dashed 1px black;*/}
-.G {color: forestgreen;  background-color: #84ffff;}
-.T {color: orangered; background-color: deepskyblue;}
-.site-mutated {color: white; background-color: black;}
+

@@ -1,8 +1,8 @@
 <div class="gene">
-    <h4 ngClass="dnaName" highlight="blue">{{gene.name}}</h4>
+    <h4 ngClass="dnaName" highlight="#eeeeee">{{gene.name}}</h4>
     <p>{{gene.description}}</p>
     <div [ngClass]="bold">Gene sites</div>
-    <table highlight="yellow">
+    <table highlight="#dcfbfb">
         <tr>
             <td>Original</td>
             <td *ngFor="let site of gene.sites" [class]="site.name">{{site.name}}</td>       <!--[class.site-mutated]="site.isMutated"-->
@@ -12,5 +12,5 @@
             <td *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutate(site)">{{site.name}}</td> <!--[class]="site.isMutated ? 'site-mutated': site.name"-->
         </tr>
     </table>
-    <button ngClass="btn btn-danger btn-xs gene-remove-button" (click)="removeGene()">Remove</button>
+    <button ngClass="btn btn-danger btn-xs gene-remove-button" (click)="removeGene()">X</button>
 </div>
