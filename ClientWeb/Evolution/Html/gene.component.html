@@ -12,5 +12,5 @@
             <td *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutate(site)">{{site.name}}</td> <!--[class]="site.isMutated ? 'site-mutated': site.name"-->
         </tr>
     </table>
-    <button class="gene-remove-button" (click)="removeGene()">Remove</button>
+    <button ngClass="btn btn-danger btn-xs gene-remove-button" (click)="removeGene()">Remove</button>
 </div>

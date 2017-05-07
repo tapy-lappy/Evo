@@ -17,6 +17,7 @@ export class AppComponent extends DnaComponent implements OnInit{
 
     constructor(private appState: AppState, private dnaInteraction: DnaInteractionService){
         super();
+        this.setToogleMutationClasses();
     }
 
     ngOnInit(): void {
@@ -28,6 +29,17 @@ export class AppComponent extends DnaComponent implements OnInit{
 
     toogleMutation() {
         this.mutationEnabled = this.appState.state.mutationEnabled = !this.mutationEnabled;
+        this.setToogleMutationClasses();
+    }
+
+    toogleMutationClasses: {};
+    setToogleMutationClasses(){
+        this.toogleMutationClasses = {
+            btn: true,
+            'btn-primary': this.mutationEnabled,
+            'btn-info': !this.mutationEnabled,
+            'btn-sm': true
+        };
     }
 
     @ViewChild(DnaSelectorComponent)
