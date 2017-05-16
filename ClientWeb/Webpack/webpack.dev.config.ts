@@ -13,7 +13,12 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
     const common = new Common(options);
     return webpackMerge(common.Configuration, {
         //cache: true,                                  //TODO: need or not?
-        devtool: "cheap-eval-source-map", //For HMR - https://github.com/webpack/webpack/issues/2478#issuecomment-220205767  //https://webpack.js.org/configuration/devtool/     https://webpack.js.org/guides/development/
+
+        //devtool: "cheap-eval-source-map", //For HMR - https://github.com/webpack/webpack/issues/2478#issuecomment-220205767  //https://webpack.js.org/configuration/devtool/     https://webpack.js.org/guides/development/
+        //https://webpack.js.org/configuration/devtool/#devtool
+        devtool: 'cheap-module-eval-source-map',
+        //cheap-eval-source-map                           - transformed code (lines only) ---  transpiled JS files
+        //eval-source-map, cheap-module-eval-source-map   - original source --- TS files
 
         module: {
             rules: [
