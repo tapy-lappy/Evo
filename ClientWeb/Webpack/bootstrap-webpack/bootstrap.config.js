@@ -1,3 +1,5 @@
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
     scripts: {
         // add every bootstrap script you need
@@ -15,11 +17,12 @@ module.exports = {
         'affix': true
     },
     //Doesn't work: https://www.npmjs.com/package/bootstrap-webpack#extract-text-webpack-plugin
-    // styleLoader: require('extract-text-webpack-plugin').extract({
+    // styleLoader: ExtractTextPlugin.extract({
     //     fallback: 'style-loader',
-    //     use: [{loader: 'css-loader', options: {sourceMap: true}},
-    //         {loader: 'less-loader', options: {sourceMap: true}}]
+    //     use: ['css-loader', 'less-loader']
     // }),
+
+    //styleLoader: require('extract-text-webpack-plugin').extract('style-loader', 'css-loader!less-loader'),
     styles: {
         // add every bootstrap style you need
         "mixins": true,
