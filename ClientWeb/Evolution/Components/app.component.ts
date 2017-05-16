@@ -11,6 +11,7 @@ import DnaInteractionService from "../Services/dna-interaction.service";
     moduleId: module.id,
     selector: 'evolution-main',
     templateUrl: '../Html/app.component.html',
+    styles: [String(require('../Css/common-background.less'))],
     providers: [ArrayHelper, DnaInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
 export class AppComponent extends DnaComponent implements OnInit{
