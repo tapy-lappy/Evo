@@ -1,3 +1,14 @@
+//https://angular.io/docs/ts/latest/guide/template-syntax.html
+//IT IS SAID ONLY ABOUT USING IT IN TEMPLATE SYNTAX
+//The Angular safe navigation operator (?.) is a more fluent and convenient way to guard
+// against nulls in property paths. The expression bails out when it hits the first null
+// value. The display is blank, but the app keeps rolling without errors.
+//The null hero's name is {{nullHero?.name}}
+//It works perfectly with long property paths such as a?.b?.c?.d
+//Analogs:
+//1) <div *ngIf="nullHero">The null hero's name is {{nullHero.name}}</div>
+//2) The null hero's name is {{nullHero && nullHero.name}}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html
 // declare var foo: string[] | null;
 // foo.length;  // error - 'foo' is possibly 'null'
