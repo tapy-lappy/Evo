@@ -8,16 +8,21 @@
             </div>
             <p ngClass="col-xs-7 col-xs-pull-5">Mutation enabled: <b>{{mutationEnabled}}</b></p>
         </div>
-        <!--<div ngClass="row">-->
-            <!--<div ngClass="col-xs-12">-->
-                <!--<img src="../../wwwroot/images/Z-DNA_orbit_animated.gif" />-->
-            <!--</div>-->
-        <!--</div>-->
+        <div ngClass="row">
+            <div ngClass="col-xs-12">
+                <div id="moleculeViewer" class="mol mol-left" data-molvwr="https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt"
+                     data-molvwr-format="pdb" data-molvwr-view="ballsandsticks"></div>
+                <!--<div id="moleculeViewer" class="mol mol-left" data-molvwr="https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt"-->
+                    <!--data-molvwr-format="pdb" data-molvwr-view="ballsandsticks"></div>-->
+            </div>
+        </div>
     </div>
     <div ngClass="col-xs-8 col-md-8 dark-background-color">
         <dna-list-component [mutationEnabled]="mutationEnabled">Dna list component loading...</dna-list-component>
     </div>
 </div>
+
+
 
 
 

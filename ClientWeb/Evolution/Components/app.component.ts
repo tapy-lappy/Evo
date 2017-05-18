@@ -7,6 +7,20 @@ import {DnaEnum} from "../Enums/dna-enum";
 import {DnaSelectorComponent} from "./dna-selector.component";
 import DnaInteractionService from "../Services/dna-interaction.service";
 
+//import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
+
+//require('../../Libraries/Molvwr/hand');
+//require('expose-loader?HANDJS!../../Libraries/Molvwr/hand');
+
+//let BABYLON = require('exports-loader?BABYLON!../../Libraries/Molvwr/babylon');
+let BABYLON = require("expose-loader?BABYLON!../../Libraries/Molvwr/babylon");
+//let Molvwr = require('../../Libraries/Molvwr/molvwr');
+//import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
+
+//require("expose-loader?BABYLON!../../Libraries/Molvwr/molvwr");
+ let MoleculeViewer = require("exports-loader?Molvwr,BabylonContext=Molvwr.BabylonContext!../../Libraries/Molvwr/molvwr");
+ let $ = require("expose-loader?$!jquery");
+
 @Component({
     moduleId: module.id,
     selector: 'evolution-main',
@@ -31,6 +45,11 @@ export class AppComponent extends DnaComponent implements OnInit{
     toogleMutation() {
         this.mutationEnabled = this.appState.state.mutationEnabled = !this.mutationEnabled;
         this.setToogleMutationClasses();
+
+        var canvas = $("#moleculeViewer").get(0);
+        //MoleculeViewer.BabylonContext(canvas);
+        MoleculeViewer.BABYLON = BABYLON;
+        MoleculeViewer.Molvwr.process();
     }
 
     toogleMutationClasses: {};

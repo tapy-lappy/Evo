@@ -102,6 +102,7 @@ export default class Common{
 
                             //helper.root('node_modules/bootstrap-webpack'),            //to prevent conflict and allow bootstrap-webpack load Bootstrap JS files
                             //helper.root('Webpack/bootstrap-webpack/bootstrap.config.js')    //works, but it's redundant - see Regex
+                            helper.root('Libraries')        //exclude 3d party libs
                         ],
                         enforce: "pre"              //https://webpack.js.org/configuration/module/#rule-enforce
                     },
@@ -170,6 +171,27 @@ export default class Common{
                         use: [{loader: 'file-loader'}]
                     },
 
+                    // {
+                    //     test: /molvwr-bundle.js$/,
+                    //     use: 'file-loader',
+                    //     include:  helper.root("Libraries/Molvwr")
+                    // },
+                    // {
+                    //     test: /\.(pdb|xyz|mol|sdf)$/,
+                    //     use: [{loader: 'file-loader'}],
+                    //     include: helper.root('Evolution/Html/arginin.xyz')
+                    // },
+                    {
+                        test: require.resolve('jquery'),
+                        use: [{
+                            loader: 'expose-loader',
+                            options: 'jQuery'
+                        },{
+                            loader: 'expose-loader',
+                            options: '$'
+                        }]
+                    },
+
                     //https://www.npmjs.com/package/bootstrap-webpack
                     //https://github.com/bline/bootstrap-webpack
                     // **IMPORTANT** This is needed so that each bootstrap js file required by
@@ -223,7 +245,7 @@ export default class Common{
                 //  path.resolve(__dirname, 'doesnotexist/')
                 //),
                 //-----------------------------------------------
-                // new AssetsPlugin({
+                // new AssetsPlugin({       //https://github.com/kossnocorp/assets-webpack-plugin
                 //     path: root('dist'),
                 //     filename: 'webpack-assets.json',
                 //     prettyPrint: true
@@ -268,6 +290,7 @@ export default class Common{
                 extensions: ['.ts', '.js', '.css', '.json'],     //resolve extension-less imports - it's important to save order .ts before .js because you lost possibility to debug in browser(ts files won't be loaded) - https://github.com/schempy/angular2-typescript-webpack/issues/4#issuecomment-215756985
                 // unsafeCache: true,
                 //modules: [ root('node_modules') ]
+                modules: ["node_modules", helper.root("Libraries")]
             },
         };
     }
