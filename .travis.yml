@@ -6,4 +6,7 @@ matrix:
       mono: none
       dist: trusty
       #env: DOTNETCORE=1  # optional, can be used to take different code paths in your script. I suppose it's to set up enviromental variables, e.g. PATH
-    - mono: latest
+      solution: TravelOrganizer.sln
+      script:
+       - xbuild /p:Configuration=Release TravelOrganizer.sln
+    #- mono: latest
