@@ -4,4 +4,4 @@ dotnet: 1.0.1
 dist: trusty
 solution: TravelOrganizer.sln
 install:
-  - nuget restore TravelOrganizer.sln
+  - npm restore TravelOrganizer.sln
