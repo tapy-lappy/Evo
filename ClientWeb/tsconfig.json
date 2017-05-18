@@ -35,8 +35,8 @@
     "types": [ "node" ],                    //to disable require error
     "typeRoots": [ "node_modules/@types" ], //to disable require error
 
-    //"allowJs": false                        // Allow JavaScript files to be compiled. If true - will recompile changes in JS(not TS) files, but if false - need to do changes in TS to make JS recompile.
-    "allowJs": true                           //To allow using 3d party libraries as Molvwr.js
+    "allowJs": false                        // Allow JavaScript files to be compiled. If true - will recompile changes in JS(not TS) files, but if false - need to do changes in TS to make JS recompile.
+    //"allowJs": true                           //To allow Webpack recompile project after changes in JS files, e.g. changing 3d party libraries as Molvwr.js
   },
   "awesomeTypescriptLoaderOptions": {
 

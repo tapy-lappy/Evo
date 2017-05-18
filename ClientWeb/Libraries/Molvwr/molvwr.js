@@ -196,7 +196,8 @@ var Molvwr;
                     console.timeEnd("parsing " + contentFormat);
                     if (molecule) {
                         _this._postProcessMolecule(molecule).then(function () {
-                            dataReadyCallback(molecule);
+                            if(dataReadyCallback)
+                                dataReadyCallback(molecule);
                             return _this._renderMolecule(molecule);
                         }).then(function () {
                             return molecule;
