@@ -3,5 +3,3 @@ mono: none
 dotnet: 1.0.1
 dist: trusty
 solution: TravelOrganizer.sln
-install:
-  - npm install TravelOrganizer.sln
