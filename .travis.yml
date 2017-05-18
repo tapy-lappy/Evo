@@ -3,3 +3,5 @@ mono: none
 dotnet: 1.0.1
 dist: trusty
 solution: TravelOrganizer.sln
+script:
+  - xbuild /p:Configuration=Release TravelOrganizer.sln
