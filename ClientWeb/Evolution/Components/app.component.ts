@@ -46,8 +46,7 @@ export class AppComponent extends DnaComponent implements OnInit{
         this.mutationEnabled = this.appState.state.mutationEnabled = !this.mutationEnabled;
         this.setToogleMutationClasses();
 
-        var canvas = $("#moleculeViewer").get(0);
-        //MoleculeViewer.BabylonContext(canvas);
+        let el = $("#moleculeViewer").get(0);
         MoleculeViewer.BABYLON = BABYLON;
         MoleculeViewer.Molvwr.process();
     }

@@ -11,6 +11,7 @@
             });
             this.bindedResize = this.resize.bind(this);
             window.addEventListener("resize", this.bindedResize);
+            this.dispose = this.dispose;
         }
         BabylonContext.prototype.resize = function () {
             this.engine.resize();
@@ -168,6 +169,7 @@ var Molvwr;
             this.config = config || Molvwr.Config.defaultConfig();
             this.element = element;
             this.element.molvwr = this;
+            this.element.molvwr.dispose = this.dispose;
             this.canvas = document.createElement("CANVAS");
             this.canvas.setAttribute("touch-action", "manipulation");
             this.canvas.style.width = "100%";
@@ -182,9 +184,9 @@ var Molvwr;
         Viewer.prototype.dispose = function () {
             this.context.dispose();
             this.context = null;
+            this.element.innerHTML = "";
             this.element = null;
             this.canvas = null;
-            this.element.innerHTML = "";
         };
         Viewer.prototype._loadContentFromString = function (content, contentFormat, dataReadyCallback) {
             var _this = this;
