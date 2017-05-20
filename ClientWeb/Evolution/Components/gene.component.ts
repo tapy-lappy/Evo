@@ -78,7 +78,8 @@ export class GeneComponent implements OnInit, OnDestroy {
         this.dnaInteraction.dnaRemove(this.dna);
     }
 
-    siteFocused(molecule: SiteEnum|DnaEnum){
+    siteFocused(event: Event, molecule: SiteEnum|DnaEnum){
+        event.stopPropagation();
         this.siteInteraction.siteHover(molecule);
     }
 }
