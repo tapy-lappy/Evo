@@ -9,12 +9,13 @@
             <p ngClass="col-xs-7 col-xs-pull-5">Mutation enabled: <b>{{mutationEnabled}}</b></p>
         </div>
         <div ngClass="row">
-            <div ngClass="col-xs-12">
-                <molecule-viewer></molecule-viewer>
-            </div>
+            <!--<div ngClass="col-xs-12">-->
+                <!--<molecule-viewer></molecule-viewer>-->
+            <!--</div>-->
         </div>
     </div>
     <div ngClass="col-xs-8 col-md-8 dark-background-color">
+        <molecule-viewer></molecule-viewer>
         <dna-list-component [mutationEnabled]="mutationEnabled">Dna list component loading...</dna-list-component>
     </div>
 </div>

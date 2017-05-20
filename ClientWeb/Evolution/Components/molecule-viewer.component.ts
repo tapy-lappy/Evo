@@ -3,6 +3,7 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
 import {DnaComponent} from "../Abstract/DnaComponent";
 import {SiteEnum} from "../Enums/site-enum";
 import {DnaEnum} from "../Enums/dna-enum";
+import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
 
 //require('../../Libraries/Molvwr/hand');
@@ -47,9 +48,9 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
     }
 
     private getMoleculeUrl(molecule: SiteEnum|DnaEnum){
-        const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
-        const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
-        const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
+        // const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
+        // const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
+        // const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
 
         // for (let dna in DnaEnum) {
         //     dna.
@@ -57,15 +58,11 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
 
         //if(typeof molecule == "DnaEnum")
         if (molecule > 3)
-            return dna;
+            return '../Evolution/Molecules/dna.pdb';
         else{
-            let site = molecule as SiteEnum;
-            switch (site){
-                case SiteEnum.A:
-                    return arginine;
-                default:
-                    return '';
-            }
+            return `../Evolution/Molecules/${SiteEnum[molecule]}.pdb`;
+            //return `Evolution/Molecules/${SiteEnum[molecule]}.pdb`;
+            //return helper.root(`Evolution/Molecules/${SiteEnum[molecule]}.pdb`);
         }
     }
 }
