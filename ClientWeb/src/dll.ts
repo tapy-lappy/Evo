@@ -6,9 +6,10 @@
  * Vendors
  * RxJS
  */
+import helper = require('../Webpack/helpers/path.helper');
 
 // Polyfills
-export function polyfills(env?: IMetadata) : Array<string> {
+function polyfills(env?: IMetadata) : Array<string> {
     // return [
     //     // 'ie-shim',
     //
@@ -61,7 +62,7 @@ export function polyfills(env?: IMetadata) : Array<string> {
 }
 
 // Angular 2 and other Vendor imports
-export function vendors() : Array<string> {
+function vendors() : Array<string> {
     // return [
     //     '@angular/platform-browser',
     //     '@angular/platform-browser-dynamic',
@@ -93,7 +94,7 @@ export function vendors() : Array<string> {
 }
 
 // RxJS
-export function rxjs() : Array<string> {
+function rxjs() : Array<string> {
     return [
         //TODO: choose only what you need!
         // 'rxjs/Observable',
@@ -106,4 +107,15 @@ export function rxjs() : Array<string> {
         'rxjs'
     ];
 }
+
+function  molecules(): Array<string>{
+    return [
+        helper.root('Evolution/Molecules/A.pdb'),
+        helper.root('Evolution/Molecules/C.pdb'),
+        helper.root('Evolution/Molecules/G.pdb'),
+        helper.root('Evolution/Molecules/T.pdb')
+    ];
+}
+
+export { polyfills, vendors, rxjs, molecules};
 
