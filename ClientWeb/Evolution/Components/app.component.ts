@@ -6,27 +6,14 @@ import {DnaComponent} from "../Abstract/DnaComponent";
 import {DnaEnum} from "../Enums/dna-enum";
 import {DnaSelectorComponent} from "./dna-selector.component";
 import DnaInteractionService from "../Services/dna-interaction.service";
-
-//import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
-
-//require('../../Libraries/Molvwr/hand');
-//require('expose-loader?HANDJS!../../Libraries/Molvwr/hand');
-
-//let BABYLON = require('exports-loader?BABYLON!../../Libraries/Molvwr/babylon');
-let BABYLON = require("expose-loader?BABYLON!../../Libraries/Molvwr/babylon");
-//let Molvwr = require('../../Libraries/Molvwr/molvwr');
-//import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
-
-//require("expose-loader?BABYLON!../../Libraries/Molvwr/molvwr");
- let MoleculeViewer = require("exports-loader?Molvwr,BabylonContext=Molvwr.BabylonContext!../../Libraries/Molvwr/molvwr");
- let $ = require("expose-loader?$!jquery");
+import {SiteInteractionService} from "../Services/site-interaction.service";
 
 @Component({
     moduleId: module.id,
     selector: 'evolution-main',
     templateUrl: '../Html/app.component.html',
     styles: [String(require('../Css/common-background.less'))],
-    providers: [ArrayHelper, DnaInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
+    providers: [ArrayHelper, DnaInteractionService, SiteInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
 export class AppComponent extends DnaComponent implements OnInit{
 
@@ -45,10 +32,6 @@ export class AppComponent extends DnaComponent implements OnInit{
     toogleMutation() {
         this.mutationEnabled = this.appState.state.mutationEnabled = !this.mutationEnabled;
         this.setToogleMutationClasses();
-
-        let el = $("#moleculeViewer").get(0);
-        MoleculeViewer.BABYLON = BABYLON;
-        MoleculeViewer.Molvwr.process();
     }
 
     toogleMutationClasses: {};
