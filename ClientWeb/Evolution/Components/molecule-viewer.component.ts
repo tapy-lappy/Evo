@@ -5,7 +5,7 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
 import {DnaComponent} from "../Abstract/DnaComponent";
 import {SiteEnum} from "../Enums/site-enum";
 import {DnaEnum} from "../Enums/dna-enum";
-
+import {Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
 
@@ -81,7 +81,18 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
         let el = $("#moleculeViewer").get(0);
         $(el).attr('data-molvwr', this.getMoleculeUrl(molecule));
         MoleculeViewer.BABYLON = BABYLON;
-        MoleculeViewer.Molvwr.process();
+        //MoleculeViewer.Molvwr.process(el, this.setMoleculaFormula);
+        MoleculeViewer.Molvwr.process(el,
+            (molecule:Molecule) => {
+                if(molecule.formula)
+                    molecule.formula = molecule.formula.replace(/ /g, '');  //https://stackoverflow.com/a/2116614
+                //this.siteInteraction.moleculaDisplay(molecula);
+                this.setMoleculaFormula(molecule);
+            });
+    }
+
+    private setMoleculaFormula(molecule: Molecule){
+        this.siteInteraction.moleculaDisplay(molecule);
     }
 
     private getMoleculeUrl(molecule: SiteEnum|DnaEnum){
