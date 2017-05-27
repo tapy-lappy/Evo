@@ -51,6 +51,7 @@ const Adenine = require('-!raw-loader!../Molecules/A.mol');
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
+const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
     moduleId: module.id,
@@ -114,6 +115,7 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
                 case SiteEnum.C: return Cytosine;
                 case SiteEnum.G: return Guanine;
                 case SiteEnum.T: return Thymine;
+                case SiteEnum.U: return Uracil;
             }
             //Otherwise - using URL to download data:
             return `../Evolution/Molecules/${SiteEnum[molecule]}.pdb`;
