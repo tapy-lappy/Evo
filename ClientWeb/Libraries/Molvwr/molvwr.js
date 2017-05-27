@@ -153,7 +153,12 @@ var Molvwr;
                 }
                 if (moleculeUrl && format) {
                     var viewer = new Viewer(e, options);
-                    viewer.loadContentFromUrl(moleculeUrl, format);
+                    if (moleculeUrl.startsWith('http') || moleculeUrl.startsWith('https')
+                        || moleculeUrl.startsWith('../') || moleculeUrl.startsWith('./'))
+                        viewer.loadContentFromUrl(moleculeUrl, format, datareadycallback);
+                    else
+                        viewer.loadContentFromString(moleculeUrl, format, datareadycallback);
+
                 }
             }
         }

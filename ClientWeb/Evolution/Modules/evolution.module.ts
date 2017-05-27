@@ -1,4 +1,4 @@
-import {NgModule, Type} from '@angular/core';
+import {NgModule, NO_ERRORS_SCHEMA, Type} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -33,7 +33,8 @@ const pipeDeclarations:Array<Type<any> | any[]> = [];
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
         {provide: DNA_ENUM_TOKEN, useValue: DnaEnum}
-    ]
+    ]//,
+    //schemas: [NO_ERRORS_SCHEMA]       //this is needed if you wanna use not Angular/HTML(e.g. <pdb>) tag into HTML templates of your components
 })
 export class EvolutionModule {
     constructor(public appRef: ApplicationRef, public appStore: AppState) {}
