@@ -16,6 +16,8 @@ import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
 import DnaInteractionService from "../Services/dna-interaction.service";
 import {Subscription} from "rxjs/Subscription";
 import {SiteInteractionService} from "../Services/site-interaction.service";
+import {DnaComponent} from "../Abstract/DnaComponent";
+import {Molecule} from "../../Libraries/Molvwr/molecule";
 
 @Component({
     moduleId: module.id,
@@ -28,12 +30,14 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
     inputs: ['dna'],
     //outputs: ['removeEvent:remove']
 })
-export class GeneComponent implements OnInit, OnDestroy {
+export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     // @Input() dna: DnaEnum;
     // @Output('remove') removeEvent = new EventEmitter<DnaEnum>();
     dna: DnaEnum;
     //removeEvent = new EventEmitter<DnaEnum>();
     gene: Gene;
+    molecule: Molecule;
+    kinds: Array<string>;
 
     constructor(@Optional() protected log: LogService,
                 private dnaInteraction: DnaInteractionService,
@@ -41,7 +45,9 @@ export class GeneComponent implements OnInit, OnDestroy {
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 //private geneService: GeneService,
                 //@Inject(SITE_ENUMS_TOKEN) protected siteEnum: SiteEnum,
-                private injector: Injector) { }
+                private injector: Injector) {
+        super();
+    }
 
     ngOnInit() {
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
@@ -54,6 +60,17 @@ export class GeneComponent implements OnInit, OnDestroy {
             this.log.log(`Gene ${this.gene.name} created!!!`);
             //this.log.log(`The API is ${this.config.apiEndpoint}`);
         }
+
+        this.siteInteraction.moleculaDisplayed$.subscribe(
+            molecule => {
+                this.molecule = molecule;
+                this.kinds = new Array<string>();
+                for(let prop in molecule.kinds){
+                    this.kinds.push(prop);
+                }
+            },
+            err => this.error(err)
+        );
     }
     ngOnDestroy(): void {
         console.log(`Gene ${this.gene.name} is destroyed!`);

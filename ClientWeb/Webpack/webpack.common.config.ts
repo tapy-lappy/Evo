@@ -47,8 +47,9 @@ export default class Common{
         const rxjs = DLL.rxjs();
 
         //console.log("All vendors: ", JSON.stringify([].concat(vendors, rxjs), null, 2));
-        const extractCSS = new ExtractTextPlugin('[name].css');
-        const extractLESS = new ExtractTextPlugin({filename: '_[name].css', ignoreOrder: true});
+        const extractCSS = new ExtractTextPlugin('css/[name].css');
+        const extractLESS = new ExtractTextPlugin({filename: 'css/[name].LESS.css', ignoreOrder: true});
+        const extractPDB = new ExtractTextPlugin({filename: 'pdbAssets/[name].pdb'});
 
         return {
             target: 'web',
@@ -77,6 +78,7 @@ export default class Common{
             module: {
                 exprContextCritical: false, //workaround: https://github.com/AngularClass/angular2-webpack-starter/issues/993
                 rules: [
+                    //TODO: do we need it? We have one loader inside webpack.dev.config.ts for TS
                     {
                         test: /\.ts$/,
                         use: ['angular2-template-loader'],
@@ -162,27 +164,24 @@ export default class Common{
                         loader: 'json-loader',
                         //include: [root('./src')]              //TODO: what does it mean?
                     },
-                    // {
-                    //     test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                    //     loader: 'file-loader?name=assets/[name].[hash].[ext]'
-                    // },
                     {
-                        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-                        use: [{loader: 'file-loader'}]
+                        test: /\.(png|jpe?g|gif|ico)$/,     //|svg|woff|woff2|ttf|eot
+                        use: [
+                            {
+                                loader: 'file-loader',
+                                options: {
+                                    //outputPath: 'images/',
+                                    name: 'images/[ext]/[path][name].[ext]',
+                                    context: './wwwroot/images'
+                                }
+                            }]
                     },
 
-                    // {
-                    //     test: /molvwr-bundle.js$/,
-                    //     use: 'file-loader',
-                    //     include:  helper.root("Libraries/Molvwr")
-                    // },
-                    // {
-                    //     test: /\.(pdb|xyz|mol|sdf)$/,
-                    //     use: [{loader: 'file-loader'}],
-                    //     include: helper.root('Evolution/Html/arginin.xyz')
-                    // },
+                    //TODO: using expose-loader/export-loader/ProvidePlugin for jQuery here instead of within TS file
                     {
-                        test: require.resolve('jquery'),
+                        //Remark: Allows using window.$/window.jQuery in web browser BUT doesn't expose it in component
+                        //files. Need to expose internaly there: let $ = require("expose-loader?$!jquery");
+                        test: require.resolve('jquery'),    //instead of regex only to use specific module
                         use: [{
                             loader: 'expose-loader',
                             options: 'jQuery'
@@ -191,6 +190,44 @@ export default class Common{
                             options: '$'
                         }]
                     },
+                    // {
+                    //     test: /molvwr-bundle.js$/,
+                    //     use: 'file-loader',
+                    //     include:  helper.root("Libraries/Molvwr")
+                    // },
+                    //To point WebPack how to process MOL/PDB/XYZ/SDF files
+                    {
+                        test: /\.(pdb|xyz|mol|sdf)$/,
+                        use: [ //'raw-loader',
+                            {
+                                loader: 'file-loader',
+                                options: {
+                                    name: '[ext]/[path][name].[ext]',
+                                    context: './Evolution/Molecules'
+                                }
+                            }],
+                        // test: /\.(pdb|xyz|mol|sdf)$/,
+                        // use:  extractPDB.extract({use: [
+                        //     //{loader: "imports-loader?this=>window"},      //https://webpack.js.org/loaders/imports-loader/
+                        //     {loader: 'file-loader',
+                        //         options: {
+                        //             name: '[ext]/[path][name].[ext]',
+                        //             context: './Evolution/Molecules'
+                        //         }}
+                        // ]})
+                        //TODO: try!(not a fact) to expose PDB here instead of like a vendors
+                        // include: [helper.root('Evolution/Molecules/A.pdb'),
+                        //     helper.root('Evolution/Molecules/C.pdb'),
+                        //     helper.root('Evolution/Molecules/G.pdb'),
+                        //     helper.root('Evolution/Molecules/T.pdb')]
+                    },
+                    // {
+                    //     test: /\.txt$/,
+                    //     use: [
+                    //         {
+                    //             loader: 'raw-loader'
+                    //         }],
+                    // },   //https://github.com/webpack-contrib/raw-loader   https://www.npmjs.com/package/raw-loader
 
                     //https://www.npmjs.com/package/bootstrap-webpack
                     //https://github.com/bline/bootstrap-webpack
@@ -199,11 +236,43 @@ export default class Common{
                     //{ test: /bootstrap\/js\//, loader: 'imports-loader?jQuery=jquery' },        //WORKS WITHOUT THIS: load jQuery to allow Bootstrap scripts to execute
                     // Needed for the css-loader when [bootstrap-webpack](https://github.com/bline/bootstrap-webpack)
                     // loads bootstrap's css.
-                    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-                    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url-loader?limit=10000&mimetype=application/font-woff2" },
-                    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url-loader?limit=10000&mimetype=application/octet-stream" },
-                    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file-loader" },
-                    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url-loader?limit=10000&mimetype=image/svg+xml" }
+                    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+                        use: [{loader: 'url-loader', options: {
+                            name: 'images/[path][name].[ext]',
+                            context: './node_modules',
+
+                            limit: '10000',
+                            mimetype: 'application/font-woff'
+                        }}]},
+                    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+                        use: [{loader: 'url-loader', options: {
+                            name: 'images/[path][name].[ext]',
+                            context: './node_modules',
+
+                            limit: '10000',
+                            mimetype: 'application/font-woff2'
+                        }}]},
+                    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                        use: [{loader: 'url-loader', options: {
+                            name: 'images/[path][name].[ext]',
+                            context: './node_modules',
+
+                            limit: '10000',
+                            mimetype: 'application/octet-stream'
+                        }}]},
+                    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+                        use: [{loader: 'file-loader', options: {
+                            name: 'images/[path][name].[ext]',
+                            context: './node_modules'
+                        }}]},
+                    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                        use: [{loader: 'url-loader', options: {
+                            name: 'images/[path][name].[ext]',
+                            context: './node_modules',
+
+                            limit: '10000',
+                            mimetype: 'image/svg+xml'
+                        }}]}
                 ]
             },
 
@@ -218,6 +287,7 @@ export default class Common{
                 }),
                 //https://www.npmjs.com/package/html-webpack-plugin
                 new HtmlWebpackPlugin({ //To generate more than one HTML file, declare the plugin more than once
+                    title: 'Evo',
                     filename: 'index.html',
                     template: './indexWebpackTemplate.html',
                     inject: 'body',
@@ -230,9 +300,10 @@ export default class Common{
                 /*It moves all the required *.css modules in entry chunks into a separate CSS file. So your styles are no longer inlined into
                 the JS bundle, but in a separate CSS file (styles.css). If your total stylesheet volume is big, it will be faster because the
                 CSS bundle is loaded in parallel to the JS bundle.*/
-                new ExtractTextPlugin('[name].css'), //extracts CSS(which HtmlWebpackPlugin bury into scripts) into external .css files
-                //    extractCSS,
-                //    extractLESS,
+                //new ExtractTextPlugin('[name].css'), //extracts CSS(which HtmlWebpackPlugin bury into scripts) into external .css files
+                    extractCSS,
+                    extractLESS,
+                extractPDB,
 
                 //new webpack.optimize.AggressiveSplittingPlugin({
                 //    minSize: 5000,
