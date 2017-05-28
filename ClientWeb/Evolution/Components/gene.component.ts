@@ -69,7 +69,12 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
                     this.kinds.push(prop);
                 }
             },
-            err => this.error(err)
+            err => this.error(err),
+            () => {
+                //TODO: never come in here
+                //console.log('Molecule formula and atoms have been displayed.');
+                alert('Molecule formula and atoms have been displayed.');
+            }
         );
     }
     ngOnDestroy(): void {
