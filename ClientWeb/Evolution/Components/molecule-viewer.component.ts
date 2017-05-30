@@ -5,7 +5,7 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
 import {DnaComponent} from "../Abstract/DnaComponent";
 import {SiteEnum} from "../Enums/site-enum";
 import {DnaEnum} from "../Enums/dna-enum";
-import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
 
@@ -88,8 +88,31 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
             (molecule:Molecule) => {
                 if(molecule.formula)
                     molecule.formula = molecule.formula.replace(/ /g, '');  //https://stackoverflow.com/a/2116614
+                if(molecule.kinds)
+                {
+                    for(let kindName in molecule.kinds){
+                        let kind = molecule.kinds[kindName].kind;
+                        let color = new BABYLON.Color3(kind.color[0], kind.color[1], kind.color[2]).scale(255);
+                        let R = Math.ceil(color.r);
+                        let G = Math.ceil(color.g);
+                        let B = Math.ceil(color.b);
+                        //extend molecule.kinds[].kind element with new rgb property:
+                        (kind as Kind).rgb = `rgb(${R}, ${G}, ${B})`;    //color.toHexString();
+                        let invertedColors: number[] = this.invertRGB(R, G, B);
+                        (kind as Kind).invertedRGB = `rgb(${invertedColors[0]}, ${invertedColors[1]}, ${invertedColors[2]})`;
+                    }
+                }
                 this.siteInteraction.moleculaDisplay(molecule);
             });
+    }
+
+    //https://stackoverflow.com/a/15291738
+    private invertRGB(...rgb: number[]) {
+        rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
+        for (var i = 0; i < rgb.length; i++) {
+            rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
+        }
+        return rgb;
     }
 
     private getMoleculeData(molecule: SiteEnum|DnaEnum){

@@ -9,6 +9,12 @@ export class Molecule{
     atoms = [];
     kinds = [];
 }
+export class Kind{
+    name: string;
+    symbol: string;
+    rgb: string;
+    invertedRGB: string;
+}
 
 //Also this module will be exported to molvwr.js, so using CommonJs module exports
 module.exports = Molecule;

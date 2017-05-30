@@ -37,7 +37,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     //removeEvent = new EventEmitter<DnaEnum>();
     gene: Gene;
     molecule: Molecule;
-    kinds: Array<string>;
+    kinds: string[];
 
     constructor(@Optional() protected log: LogService,
                 private dnaInteraction: DnaInteractionService,
@@ -64,7 +64,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         this.siteInteraction.moleculaDisplayed$.subscribe(
             molecule => {
                 this.molecule = molecule;
-                this.kinds = new Array<string>();
+                this.kinds = [];
                 for(let prop in molecule.kinds){
                     this.kinds.push(prop);
                 }
