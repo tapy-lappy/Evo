@@ -88,9 +88,13 @@ function vendors() : Array<string> {
         'jquery',
         //'bootstrap-webpack'
         //'bootstrap-webpack!./bootstrap.config.js'
-        'bootstrap-webpack!./Webpack/bootstrap-webpack/bootstrap.config.js'
+        //'bootstrap-webpack!./Webpack/bootstrap-webpack/bootstrap.config.js'
     ];
     return vendors;
+}
+function bootstrap(): string[]{
+    return ['bootstrap-webpack!./Webpack/bootstrap-webpack/bootstrap.config.js'/*,
+        './Evolution/Css/dna-selector.component.css'*/];
 }
 
 // RxJS
@@ -117,5 +121,5 @@ function rxjs() : Array<string> {
 //     ];
 // }
 
-export { polyfills, vendors, rxjs/*, molecules*/};
+export { polyfills, vendors, rxjs, bootstrap/*, molecules*/};
 
