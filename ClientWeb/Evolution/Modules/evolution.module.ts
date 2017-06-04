@@ -18,6 +18,7 @@ import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
 import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
 import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
+import {ArrayHelper} from "../Helpers/array-helper";
 
 const componentDeclarations = [AppComponent, DnaListComponent, GeneComponent, DnaSelectorComponent,
     MoleculeViewerComponent];
@@ -29,7 +30,7 @@ const pipeDeclarations:Array<Type<any> | any[]> = [];
     declarations: [componentDeclarations, directiveDeclarations, pipeDeclarations],
     bootstrap: [AppComponent],
     providers: [
-        AppState, LogService,
+        AppState, LogService, ArrayHelper,
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
         {provide: DNA_ENUM_TOKEN, useValue: DnaEnum}
