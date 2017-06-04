@@ -42,10 +42,15 @@ let $ = require("expose-loader?$!jquery");
 NOTE: leading -!(before raw-loader) is prepended to ignore other preLoaders and loaders configured by webpack
  adding ! to a request will disable configured preLoaders
      require("!raw!./script.coffee")
- adding !! to a request will disable all loaders specified in the configuration
-    require("!!raw!./script.coffee")
  adding -! to a request will disable configured preLoaders and loaders but not the postLoaders
     require("-!raw!./script.coffee")
+ adding !! to a request will disable all loaders(pre, normal and post) specified in the configuration
+ require("!!raw!./script.coffee")
+
+ //https://webpack.js.org/configuration/module/#rule-enforce
+ All normal loaders can be omitted (overridden) by prefixing ! in the request.
+ All normal and pre loaders can be omitted (overridden) by prefixing -! in the request.
+ All normal, post and pre loaders can be omitted (overridden) by prefixing !! in the request.
  */
 const Adenine = require('-!raw-loader!../Molecules/A.mol');
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
