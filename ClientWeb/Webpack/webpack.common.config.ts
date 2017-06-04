@@ -45,6 +45,7 @@ export default class Common{
         const polyfills = DLL.polyfills(this.Metadata);
         const vendors = DLL.vendors();
         const rxjs = DLL.rxjs();
+        const bootstrap = DLL.bootstrap();
 
         //console.log("All vendors: ", JSON.stringify([].concat(vendors, rxjs), null, 2));
         const extractCSS = new ExtractTextPlugin('css/[name].css');
@@ -57,6 +58,7 @@ export default class Common{
             entry: {
                 polyfills: polyfills,
                 vendors: [].concat(vendors, rxjs),
+                bootstrap: bootstrap,
                 //main: './Angular2/main'
                 main: './Evolution/main'
             },
@@ -79,6 +81,7 @@ export default class Common{
                 exprContextCritical: false, //workaround: https://github.com/AngularClass/angular2-webpack-starter/issues/993
                 rules: [
                     //TODO: do we need it? We have one loader inside webpack.dev.config.ts for TS
+                    //Done: Yes!!! It loads and compiles Angular Components! Angular code won't work without it.
                     {
                         test: /\.ts$/,
                         use: ['angular2-template-loader'],
@@ -118,13 +121,13 @@ export default class Common{
                         //use: ExtractTextPlugin.extract({fallback: 'style-loader', use: [
                         //this will combine ALL *.less files into SEPARATE [name].css
                         // use: new ExtractTextPlugin('[name].css').extract({fallback: 'style-loader', use: [
-                        //     {loader: 'css-loader', options: {sourceMap: true}}]}),
+                        //     {loader: 'css-loader', options: {sourceMap: true}}]})
 
                         //this will combine ALL *.css files into SEPARATE [name].css
                         use: extractCSS.extract({fallback: 'style-loader', use: [
                             //'style-loader',   //it cause error: http://stackoverflow.com/a/35369247
                             {loader: 'css-loader', options: {sourceMap: true/*, importLoaders: 1*/}},
-                            //'postcss-loader'
+                            //'postcss-loader'  //TODO: Investigate how we can use it(and its plugins as autoprefixer) to improve our approach
                         ]})
                     },
                     {
@@ -190,11 +193,6 @@ export default class Common{
                             options: '$'
                         }]
                     },
-                    // {
-                    //     test: /molvwr-bundle.js$/,
-                    //     use: 'file-loader',
-                    //     include:  helper.root("Libraries/Molvwr")
-                    // },
                     //To point WebPack how to process MOL/PDB/XYZ/SDF files
                     {
                         test: /\.(pdb|xyz|mol|sdf)$/,
@@ -292,7 +290,7 @@ export default class Common{
                     template: './indexWebpackTemplate.html',
                     inject: 'body',
                     favicon: helper.root('wwwroot/images/dna.jpg'),
-                    chunks: ['polyfills', 'common', 'vendors', 'main'],  //Add only specific chunks onto page
+                    chunks: ['polyfills', 'common', 'vendors', 'bootstrap', 'main'],  //Add only specific chunks onto page
                     chunksSortMode: 'dependency',                            //how chunks should be sorted before they are included to the html -  http://stackoverflow.com/a/39119631
                     excludeChunks: []                                        //skip some chunks
                 }),
@@ -300,10 +298,19 @@ export default class Common{
                 /*It moves all the required *.css modules in entry chunks into a separate CSS file. So your styles are no longer inlined into
                 the JS bundle, but in a separate CSS file (styles.css). If your total stylesheet volume is big, it will be faster because the
                 CSS bundle is loaded in parallel to the JS bundle.*/
-                //new ExtractTextPlugin('[name].css'), //extracts CSS(which HtmlWebpackPlugin bury into scripts) into external .css files
-                    extractCSS,
-                    extractLESS,
-                extractPDB,
+                    /*BUT!!! It only works if you use it ONLY with loader:
+                    * test: /\.css$/,
+                    * use: {loader: "style-loader!css-loader"}
+                    * It won't work(won't extract CSS files to separate CSS file and they will be inlined in
+                    * the JS bundle) if you will use another ExtractTextPlugin instead of using loader:
+                    * use: ExtractTextPlugin.extract(
+                    * OR
+                    * use:  extractLESS.extract(*/
+                //new ExtractTextPlugin('css/[name].css'), //extracts CSS(which HtmlWebpackPlugin bury into scripts) into external .css files
+                extractCSS,
+                extractLESS,
+
+                extractPDB, //Fixme: https://github.com/AndreyAttr/Evo/issues/32 Note: maybe removed
 
                 //new webpack.optimize.AggressiveSplittingPlugin({
                 //    minSize: 5000,
@@ -358,10 +365,11 @@ export default class Common{
             ],
 
             resolve: {
+                //Note: extensions that are used:
                 extensions: ['.ts', '.js', '.css', '.json'],     //resolve extension-less imports - it's important to save order .ts before .js because you lost possibility to debug in browser(ts files won't be loaded) - https://github.com/schempy/angular2-typescript-webpack/issues/4#issuecomment-215756985
                 // unsafeCache: true,
                 //modules: [ root('node_modules') ]
-                modules: ["node_modules", helper.root("Libraries")]
+                modules: ["node_modules", /*helper.root("Libraries")*/] //Note: directories where to look for modules - "Libraries" contains only 3d party libs and doesn't contain modules
             },
         };
     }

@@ -26,7 +26,8 @@ export class AppComponent extends DnaComponent implements OnInit{
         this.mutationEnabled = this.appState.state.mutationEnabled;
         this.dnaInteraction.dnaRemoved$.subscribe(
             dna => this.removeFromDnaSelector(dna),
-            error => this.error(error));
+            error => this.error(error)
+        );
     }
 
     toogleMutation() {

@@ -5,7 +5,7 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
 import {DnaComponent} from "../Abstract/DnaComponent";
 import {SiteEnum} from "../Enums/site-enum";
 import {DnaEnum} from "../Enums/dna-enum";
-import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
 
@@ -42,10 +42,15 @@ let $ = require("expose-loader?$!jquery");
 NOTE: leading -!(before raw-loader) is prepended to ignore other preLoaders and loaders configured by webpack
  adding ! to a request will disable configured preLoaders
      require("!raw!./script.coffee")
- adding !! to a request will disable all loaders specified in the configuration
-    require("!!raw!./script.coffee")
  adding -! to a request will disable configured preLoaders and loaders but not the postLoaders
     require("-!raw!./script.coffee")
+ adding !! to a request will disable all loaders(pre, normal and post) specified in the configuration
+ require("!!raw!./script.coffee")
+
+ //https://webpack.js.org/configuration/module/#rule-enforce
+ All normal loaders can be omitted (overridden) by prefixing ! in the request.
+ All normal and pre loaders can be omitted (overridden) by prefixing -! in the request.
+ All normal, post and pre loaders can be omitted (overridden) by prefixing !! in the request.
  */
 const Adenine = require('-!raw-loader!../Molecules/A.mol');
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
@@ -79,24 +84,43 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
     }
 
     private displayMolecule(molecule: SiteEnum | DnaEnum) {
+        const moleculeData = this.getMoleculeData(molecule);
         let el = $("#moleculeViewer").get(0);
-        $(el).attr('data-molvwr', this.getMoleculeUrl(molecule));
+        $(el).attr('data-molvwr', moleculeData.url);
+        $(el).attr('data-molvwr-format', moleculeData.format);
         MoleculeViewer.BABYLON = BABYLON;
-        //MoleculeViewer.Molvwr.process(el, this.setMoleculaFormula);
         MoleculeViewer.Molvwr.process(el,
             (molecule:Molecule) => {
                 if(molecule.formula)
                     molecule.formula = molecule.formula.replace(/ /g, '');  //https://stackoverflow.com/a/2116614
-                //this.siteInteraction.moleculaDisplay(molecula);
-                this.setMoleculaFormula(molecule);
+                if(molecule.kinds)
+                {
+                    for(let kindName in molecule.kinds){
+                        let kind = molecule.kinds[kindName].kind;
+                        let color = new BABYLON.Color3(kind.color[0], kind.color[1], kind.color[2]).scale(255);
+                        let R = Math.ceil(color.r);
+                        let G = Math.ceil(color.g);
+                        let B = Math.ceil(color.b);
+                        //extend molecule.kinds[].kind element with new rgb property:
+                        (kind as Kind).rgb = `rgb(${R}, ${G}, ${B})`;    //color.toHexString();
+                        let invertedColors: number[] = this.invertRGB(R, G, B);
+                        (kind as Kind).invertedRGB = `rgb(${invertedColors[0]}, ${invertedColors[1]}, ${invertedColors[2]})`;
+                    }
+                }
+                this.siteInteraction.moleculaDisplay(molecule);
             });
     }
 
-    private setMoleculaFormula(molecule: Molecule){
-        this.siteInteraction.moleculaDisplay(molecule);
+    //https://stackoverflow.com/a/15291738
+    private invertRGB(...rgb: number[]) {
+        rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
+        for (var i = 0; i < rgb.length; i++) {
+            rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
+        }
+        return rgb;
     }
 
-    private getMoleculeUrl(molecule: SiteEnum|DnaEnum){
+    private getMoleculeData(molecule: SiteEnum|DnaEnum){
         // const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
         // const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
         // const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
@@ -106,21 +130,28 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
         // }
 
         //if(typeof molecule == "DnaEnum")
-        if (molecule > 4)   //TODO: fix this condition to work with enums
-            return '../Evolution/Molecules/dna.pdb';
+        let url, format: string;
+        if (molecule > 4) {   //TODO: fix this condition to work with enums
+            url = '../Evolution/Molecules/dna.pdb';
+            format ='pdb';
+        }
         else{
             switch (molecule)
             {
-                case SiteEnum.A: return Adenine;
-                case SiteEnum.C: return Cytosine;
-                case SiteEnum.G: return Guanine;
-                case SiteEnum.T: return Thymine;
-                case SiteEnum.U: return Uracil;
+                case SiteEnum.A: url = Adenine; break;
+                case SiteEnum.C: url = Cytosine; break;
+                case SiteEnum.G: url = Guanine; break;
+                case SiteEnum.T: url = Thymine; break;
+                case SiteEnum.U: url = Uracil; break;
+                default:
+                    //Otherwise - using URL to download data:
+                    url = `../Evolution/Molecules/${SiteEnum[molecule]}.mol`;
+                    //url = `Evolution/Molecules/${SiteEnum[molecule]}.mol`;
+                    //url = helper.root(`Evolution/Molecules/${SiteEnum[molecule]}.mol`);
+                    break;
             }
-            //Otherwise - using URL to download data:
-            return `../Evolution/Molecules/${SiteEnum[molecule]}.pdb`;
-            //return `Evolution/Molecules/${SiteEnum[molecule]}.pdb`;
-            //return helper.root(`Evolution/Molecules/${SiteEnum[molecule]}.pdb`);
+            format = 'mol';
         }
+        return {url: url, format: format};
     }
 }

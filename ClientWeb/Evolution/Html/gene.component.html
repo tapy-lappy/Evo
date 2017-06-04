@@ -6,10 +6,11 @@
             <h4 ngClass="dnaName" highlight="#dcfbfb" [highlight-params]="{customClass: 'dna-name-title'}">{{gene.name}}</h4>
             <p>{{gene.description}}</p>
         </div>
-        <div ngClass="col-xs-3 col-xs-offset-1">
+        <div ngClass="col-xs-4">
             <span *ngIf="molecule?.formula">Formula: {{molecule.formula}}</span>
             <ul *ngIf="molecule?.kinds">
-                <li *ngFor="let name of kinds">
+                <li *ngFor="let name of kinds" highlight="{{molecule.kinds[name].kind.rgb}}" [highlight-params]="{color: molecule.kinds[name].kind.invertedRGB, borderRadius: '5px'}">
+                    <span ngClass="atomColor" [style.background-color]="molecule.kinds[name].kind.rgb"></span>
                     {{molecule.kinds[name].kind.symbol}}({{molecule.kinds[name].kind.name}})
                 </li>
             </ul>
