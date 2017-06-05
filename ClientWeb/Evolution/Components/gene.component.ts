@@ -1,7 +1,8 @@
 import {
     Component, OnInit, Inject, Optional, Injector, EventEmitter, OnDestroy
 } from '@angular/core';
-import LogService from "../Services/log.service";
+//Note: LogService - it's exported class by default, CustomLog - just exported class
+import LogService, {CustomLog} from "../Services/log.service";
 import {APP_CONFIG_TOKEN, AppConfig} from "../Config/app-config";
 import GeneService from "../Services/gene.service";
 import MutationService from "../Services/mutation.service";
@@ -60,9 +61,9 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
             let css = ['background: linear-gradient(#75ff5a, #178004)', 'border: 1px solid #3E0E02',
                 'color: white', 'display: block', 'text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3)',
                 'box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 5px 3px -5px rgba(0, 0, 0, 0.5), 0 -13px 5px -10px rgba(255, 255, 255, 0.4) inset',
-                'line-height: 40px', 'text-align: center', 'font-weight: bold'];
-            this.log.log({template: `Gene ${this.gene.name} created!!!`, styles: css});
-            //this.log.log(`The API is ${this.config.apiEndpoint}`);
+                'line-height: 40px', 'text-align: center', 'font-size: 18px', 'font-weight: bold', 'font-style: italic'];
+            this.log.log(new CustomLog(`Gene ${this.gene.name} created!!!`, css));
+            this.log.info(new CustomLog(`Gene ${this.gene.name} created!!!`));
         }
 
         this.siteInteraction.moleculaDisplayed$.subscribe(
@@ -76,7 +77,6 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
             err => this.error(err),
             () => {
                 //TODO: never come in here
-                //console.log('Molecule formula and atoms have been displayed.');
                 alert('Molecule formula and atoms have been displayed.');
             }
         );
@@ -100,7 +100,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         slides[slides.length-1] = slides[slides.length-1].substr(0, lastComaIndex).concat(';');
         let css = 'text-shadow: '.concat(...slides, 'font-size: 20px;');
         //let css = "text-shadow: -1px -1px hsl(0,100%,50%), 1px 1px hsl(6, 100%, 50%), 3px 2px hsl(12, 100%, 50%), 5px 3px hsl(18, 100%, 50%), 7px 4px hsl(24, 100%, 50%), 9px 5px hsl(30, 100%, 50%), 11px 6px hsl(36, 100%, 50%), 13px 7px hsl(42, 100%, 50%), 14px 8px hsl(48, 100%, 50%), 16px 9px hsl(54, 100%, 50%), 18px 10px hsl(60, 100%, 50%), 20px 11px hsl(66, 100%, 50%), 22px 12px hsl(72, 100%, 50%), 23px 13px hsl(78, 100%, 50%), 25px 14px hsl(84, 100%, 50%), 27px 15px hsl(90, 100%, 50%), 28px 16px hsl(96, 100%, 50%), 30px 17px hsl(102, 100%, 50%), 32px 18px hsl(108, 100%, 50%), 33px 19px hsl(114, 100%, 50%), 35px 20px hsl(120, 100%, 50%), 36px 21px hsl(126, 100%, 50%), 38px 22px hsl(132, 100%, 50%), 39px 23px hsl(138, 100%, 50%), 41px 24px hsl(144, 100%, 50%), 42px 25px hsl(150, 100%, 50%), 43px 26px hsl(156, 100%, 50%), 45px 27px hsl(162, 100%, 50%), 46px 28px hsl(168, 100%, 50%), 47px 29px hsl(174, 100%, 50%), 48px 30px hsl(180, 100%, 50%), 49px 31px hsl(186, 100%, 50%), 50px 32px hsl(192, 100%, 50%), 51px 33px hsl(200, 100%, 50%), 52px 34px hsl(206, 100%, 50%), 53px 35px hsl(212, 100%, 50%); font-size: 20px;";
-        this.log.log({template: `Gene ${this.gene.name} is destroyed!`, styles: css});
+        this.log.log(new CustomLog(`Gene ${this.gene.name} is destroyed!`, css));
     }
 
     mutate(site: Site){
