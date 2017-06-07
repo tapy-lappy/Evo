@@ -26,8 +26,7 @@ import {Molecule} from "../../Libraries/Molvwr/molecule";
     templateUrl: '../Html/gene.component.html',
     styles: [String(require('../Css/gene.component.less'))],
     //only when they are here - it will create new instance of this component every time:
-    providers: [geneServiceProvider, mutationServiceProvider, Gene
-    ],
+    providers: [geneServiceProvider, mutationServiceProvider, Gene],
     inputs: ['dna'],
     //outputs: ['removeEvent:remove']
 })

@@ -45,7 +45,7 @@ export class AppComponent extends DnaComponent implements OnInit{
         };
     }
 
-    @ViewChild(DnaSelectorComponent)
+    @ViewChild(DnaSelectorComponent)        //https://metanit.com/web/angular2/2.9.php
     dnaSelectorComponent: DnaSelectorComponent;
     removeFromDnaSelector(dna:DnaEnum){
         this.dnaSelectorComponent.remove(dna);
