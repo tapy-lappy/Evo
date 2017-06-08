@@ -43,18 +43,23 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
                 private dnaInteraction: DnaInteractionService,
                 private siteInteraction: SiteInteractionService,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
+                private appState: AppState,
                 //private geneService: GeneService,
                 //@Inject(SITE_ENUMS_TOKEN) protected siteEnum: SiteEnum,
                 private injector: Injector) {
         super();
     }
 
-    ngOnInit() {
+    private initGene(){
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
         //let geneService = this.injector.get(GeneService, "Error: GeneService can't be injected into GeneComponent!");
         //let allDnaEnumeration = this.injector.get(DNA_ENUM_TOKEN);
         let geneService = DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna}, mutationServiceProvider, AppState);
         this.gene = geneService.gene;
+    }
+
+    ngOnInit() {
+        this.initGene();
 
         if (this.log) {
             let css = ['background: linear-gradient(#75ff5a, #178004)', 'border: 1px solid #3E0E02',
@@ -78,6 +83,25 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
                 //TODO: never come in here
                 alert('Molecule formula and atoms have been displayed.');
             }
+        );
+
+        const reinitializeGene: () => void = this.initGene;
+        const subsribeAgain: (enabled: boolean) => void = (enabled) => {
+            //Note: call() & apply() allow to bind fuction to specific context and then immediately execute the function:
+            reinitializeGene.call(this);    //https://metanit.com/web/javascript/4.10.php
+
+            /*Remark: each time in reinitializeGene() we recreate GeneService which demands MutationService which demands
+             * Remark: new instance of AppState. Each time! So really we create NEW instance of AppState each time we create
+             * Remark: GeneService. But we DO NOT subscibe on .mutationChanged$ event of that NEW instance of AppState. So,
+             * Remark: we must REsubscribe on event of NEW generated AppState each time.*/
+            //Note: bind() just allow to bind function to specific context, but doesn't start execution:
+            this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
+        };
+        this.appState.state.mutationChanged$.subscribe(
+            enabled => {
+                subsribeAgain(enabled);
+            },
+            err => this.error(err)
         );
     }
     ngOnDestroy(): void {
