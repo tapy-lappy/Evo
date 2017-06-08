@@ -31,8 +31,7 @@ export class AppComponent extends DnaComponent implements OnInit{
     }
 
     toogleMutation() {
-        this.mutationEnabled = !this.mutationEnabled;
-        this.appState.state.mutationChange(this.mutationEnabled);
+        this.mutationEnabled = this.appState.state.mutationEnabled = !this.mutationEnabled;
         this.setToogleMutationClasses();
     }
 
@@ -46,7 +45,7 @@ export class AppComponent extends DnaComponent implements OnInit{
         };
     }
 
-    @ViewChild(DnaSelectorComponent)        //https://metanit.com/web/angular2/2.9.php
+    @ViewChild(DnaSelectorComponent)
     dnaSelectorComponent: DnaSelectorComponent;
     removeFromDnaSelector(dna:DnaEnum){
         this.dnaSelectorComponent.remove(dna);

@@ -70,7 +70,7 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.siteInteraction.siteClicked$.subscribe(
+        this.siteInteraction.siteHovered$.subscribe(
             site => this.displayMolecule(site),
             err => this.error(err)
         );
