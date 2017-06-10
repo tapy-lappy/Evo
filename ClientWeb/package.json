@@ -1,17 +1,17 @@
 {
-  "name": "TravelOrganizerWeb",
-  "description": "TravelOrganizer.Web project",
+  "name": "Evo",
+  "description": "Evo project dedicated to educate people in easy way how DNA works.",
   "author": "Andrew",
   "license": "MIT",
   "main": "wwwroot/index.html",
   "repository": {
     "type": "git",
-    "url": "https://travelorganizer.visualstudio.com/MyFirstProject"
+    "url": "https://github.com/AndreyAttr/Evo"
   },
   "bugs": {
-    "url": "https://travelorganizer.visualstudio.com/MyFirstProject/_workitems"
+    "url": "https://github.com/AndreyAttr/Evo/projects/1"
   },
-  "homepage": "https://travelorganizer.visualstudio.com/MyFirstProject",
+  "homepage": "https://github.com/AndreyAttr/Evo/tree/angular#evo",
   "version": "1.0.0",
   "dependencies": {
     "@angular/animations": "latest",
