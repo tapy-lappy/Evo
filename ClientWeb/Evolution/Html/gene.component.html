@@ -18,26 +18,12 @@
         <div ngClass="col-xs-1 col-xs-offset-3 gene-remove-button-container">
             <button ngClass="btn btn-danger btn-xs gene-remove-button" (click)="removeGene()">X</button>
         </div>
-        <!--<div class="clearfix visible-xs-block"></div>-->
+        <!--<div class="visible-xs-block"></div>-->
     </div>
 
-    <!--<div ngClass="col-xs-2">Original</div>-->
-    <!--<div ngClass="col-xs-10" style="overflow-x: auto; width: 300px">-->
-        <!--<span *ngFor="let site of gene.sites" [class]="site.name">{{site.name}}</span>-->
-    <!--</div>-->
-
     <div [ngClass]="bold">Gene sites</div>
-    <!--<table highlight="#dcfbfb" [highlight-params]="{borderRadius: '8px'}">-->
-        <!--<tr>-->
-            <!--<td>Original</td>-->
             <!--<td *ngFor="let site of gene.sites" [class]="site.name">{{site.name}}</td>       &lt;!&ndash;[class.site-mutated]="site.isMutated"&ndash;&gt;-->
         <!--</tr>-->
-        <!--<tr *ngIf="gene.mutationSites.length > 0">-->
-            <!--<td>Mutated</td>-->
-            <!--<td *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutate(site)">{{site.name}}</td> &lt;!&ndash;[class]="site.isMutated ? 'site-mutated': site.name"&ndash;&gt;-->
-        <!--</tr>-->
-    <!--</table>-->
-
     <div highlight="#dcfbfb" [highlight-params]="{borderRadius: '8px'}">
         <div ngClass="row">
             <div ngClass="col-xs-1 gene-label-sites-container">Original</div>
