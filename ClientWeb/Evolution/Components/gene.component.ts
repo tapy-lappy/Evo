@@ -128,6 +128,11 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         this.log.log(new CustomLog(`Gene ${this.gene.name} is destroyed!`, css));
     }
 
+    mutateGene(){
+        this.stopPropagation(event);
+        this.mutationEnabled = !this.mutationEnabled;
+        this.appState.state.mutationChange(this.mutationEnabled);
+    }
     mutate(site: Site){
         //This function is slower than the corresponding fromResolvedProviders because it needs to resolve the passed-in providers first
         //let injector: ReflectiveInjector = ReflectiveInjector.resolveAndCreate([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
@@ -148,7 +153,8 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     }
 
     siteClicked(event: Event, molecule: SiteEnum|DnaEnum){
-        event.stopPropagation();
+        this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
     }
+
 }

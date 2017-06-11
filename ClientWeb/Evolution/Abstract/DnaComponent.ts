@@ -5,6 +5,10 @@ import DnaHelper from "../Helpers/dna-helper";
 export abstract class DnaComponent {
     @Input() mutationEnabled: boolean = false;
 
+    protected stopPropagation(event: Event){
+        event.stopPropagation();
+    }
+
     getDnaName(dna:DnaEnum):string{
         return DnaHelper.getDnaName(dna);
     }
