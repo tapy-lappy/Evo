@@ -8,6 +8,7 @@ import {Directive, ElementRef, HostListener, Input} from '@angular/core';
 })
 export class HighlightDirective {
     //TODO: clarify how to use different @Input name (then directive selector)
+    //Done: simple - just change the name, but be aware - after that you can't use syntax like: highlight="#dcfbfb" and lose possibility to set up this parameter by using directive's selector(highlight)
     //@Input('highlight') backgroundColor: string;
     backgroundColor: string;
     @Input('highlight-params') params: {
