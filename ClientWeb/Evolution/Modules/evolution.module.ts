@@ -1,7 +1,7 @@
 import {NgModule, NO_ERRORS_SCHEMA, Type} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {RouterModule, Routes, Route} from '@angular/router';
 import { HttpModule } from '@angular/http';
 import * as config from "../Config/app-config";
 import LogService from "../Services/log.service";
@@ -19,14 +19,21 @@ import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
 import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";
+import {GeneEditorComponent} from "../Components/gene-editor.component";
 
 const componentDeclarations = [AppComponent, DnaListComponent, GeneComponent, DnaSelectorComponent,
-    MoleculeViewerComponent];
+    MoleculeViewerComponent, GeneEditorComponent];
 const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
 
+const routes: Routes = [
+    //{ path: '', component: AppComponent},
+    <Route>{path: 'gene/edit', component: GeneEditorComponent},
+    // {path: '**', component: NotFoundComponent}   //TODO: need to implement
+];
+
 @NgModule({
-    imports: [BrowserModule, FormsModule, RouterModule, HttpModule],
+    imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes), HttpModule],
     declarations: [componentDeclarations, directiveDeclarations, pipeDeclarations],
     bootstrap: [AppComponent],
     providers: [
