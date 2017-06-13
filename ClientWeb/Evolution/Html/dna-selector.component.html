@@ -9,8 +9,9 @@
 
     <div ngClass="col-xs-6 form-group">
         <!--TODO: clarify why doesn't work-->
-        <!--<select name="selectedDna" [ngModel]="selectedDna">-->
-         <select [disabled]="!hasSelectedDna" #selectedDna ngClass="form-control-dna-selector">
+        <!--Done: because NAME needed only when using together with ngForm, but it doesn't create template refference variable, as #selectDna did:-->
+        <!--<select [disabled]="!hasSelectedDna" name="selectedDna" [ngModel]="selectedDna" ngClass="form-control-dna-selector">-->
+        <select [disabled]="!hasSelectedDna" #selectedDna ngClass="form-control-dna-selector">
             <option *ngFor="let dna of selectedDnas" value={{dna}}>{{getDnaName(dna)}}</option>
         </select>
         <button [disabled]="!hasSelectedDna" (click)="remove(selectedDna.value)" ngClass="btn btn-default">Remove selected</button>

@@ -152,7 +152,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         this.dnaInteraction.dnaRemove(this.dna);
     }
 
-    siteClicked(event: Event, molecule: SiteEnum|DnaEnum){
+    siteClicked(event: MouseEvent, molecule: SiteEnum|DnaEnum){
         this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
     }
