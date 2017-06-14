@@ -1,2 +1,6 @@
 TODO: Gene editor component layout
 <p>{{name}}</p>
+<p>{{description}}</p>
+<select>
+    <option *ngFor="let site of sites">{{getSiteName(site.site)}}</option>
+</select>
