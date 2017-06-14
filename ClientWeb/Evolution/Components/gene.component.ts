@@ -57,6 +57,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         let geneService = DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna}, mutationServiceProvider, //AppState);
             {provide: AppState, useValue: this.appState});
         this.gene = geneService.gene;
+        //this.log.info(JSON.stringify(this.gene));
     }
 
     ngOnInit() {

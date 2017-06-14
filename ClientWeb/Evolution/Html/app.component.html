@@ -12,7 +12,7 @@
         <div ngClass="row">
             <div [ngClass]="col-xs-12">
                 <nav>
-                    <a [routerLink]="['gene/RxJs/edit']">Add gene</a>
+                    <a [routerLink]="['gene/RxJs/edit']" [queryParams]="{'description':'test', 'sites': '[{\'site\':4}, {\'site\':2}, {\'site\':0}]'}">Add gene</a>
                     <a [routerLink]="['gene/', 'AAAAA/', 'edit']">Add gene</a>
                 </nav>
                 <router-outlet></router-outlet>
