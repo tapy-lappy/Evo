@@ -28,7 +28,7 @@ const pipeDeclarations:Array<Type<any> | any[]> = [];
 
 const routes: Routes = [
     //{ path: '', component: AppComponent},
-    <Route>{path: 'gene/edit', component: GeneEditorComponent},
+    <Route>{path: 'gene/:geneName/edit', component: GeneEditorComponent},
     // {path: '**', component: NotFoundComponent}   //TODO: need to implement
 ];
 

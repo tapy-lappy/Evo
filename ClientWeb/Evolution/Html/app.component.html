@@ -12,7 +12,8 @@
         <div ngClass="row">
             <div [ngClass]="col-xs-12">
                 <nav>
-                    <a routerLink="/gene/edit">Add gene</a>
+                    <a [routerLink]="['gene/RxJs/edit']">Add gene</a>
+                    <a [routerLink]="['gene/', 'AAAAA/', 'edit']">Add gene</a>
                 </nav>
                 <router-outlet></router-outlet>
             </div>
