@@ -138,7 +138,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
         // let mutationService = injector.get(MutationService);
 
-        let mutationService = DI.resolve<MutationService>(MutationService, [mutationServiceProvider, {provider: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        let mutationService = DI.resolve<MutationService>(MutationService, [mutationServiceProvider, {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
         mutationService.mutateSite(site);
     }
 
