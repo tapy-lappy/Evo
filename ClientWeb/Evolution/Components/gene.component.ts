@@ -151,7 +151,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         let geneService = this.getGeneService();                    //Done
         geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
-    mutate(site: Site){
+    mutateSite(site: Site){
         let mutationService = this.getMutationService();
         mutationService.mutateSite(site);
     }
