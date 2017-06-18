@@ -50,12 +50,27 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         super();
     }
 
-    private initGene(){
+    private getMutationService(appState?: AppState):MutationService{
+        //This function is slower than the corresponding fromResolvedProviders because it needs to resolve the passed-in providers first
+        //let injector: ReflectiveInjector = ReflectiveInjector.resolveAndCreate([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        //let mutationService = this.injector.get(MutationService);
+
+        //This is faster then previous
+        // let resolvedProviders = ReflectiveInjector.resolve([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
+        // let mutationService = injector.get(MutationService);
+        return DI.resolve<MutationService>(MutationService, [mutationServiceProvider,
+            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+    }
+    private getGeneService():GeneService{
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
         //let geneService = this.injector.get(GeneService, "Error: GeneService can't be injected into GeneComponent!");
         //let allDnaEnumeration = this.injector.get(DNA_ENUM_TOKEN);
-        let geneService = DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna}, mutationServiceProvider, //AppState);
-            {provide: AppState, useValue: this.appState});
+        return DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna},
+            {provide: MutationService, useValue: this.getMutationService()});
+    }
+    private initGene(){
+        let geneService = this.getGeneService();
         this.gene = geneService.gene;
         //this.log.info(JSON.stringify(this.gene));
     }
@@ -87,7 +102,7 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
             }
         );
 
-        // const reinitializeGene: () => void = this.initGene;
+        // const reinitializeGene: () => void = this.initGene;      //aliasing
         // const subsribeAgain: (enabled: boolean) => void = (enabled) => {
         //     //Note: call() & apply() allow to bind fuction to specific context and then immediately execute the function:
         //     reinitializeGene.call(this);    //https://metanit.com/web/javascript/4.10.php
@@ -132,19 +147,12 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     mutateGene(){
         this.stopPropagation(event);
         this.mutationEnabled = !this.mutationEnabled;
-        this.appState.state.mutationChange(this.mutationEnabled);
+        //this.appState.state.mutationChange(this.mutationEnabled); //TODO: this cause wrong behaviour, need to fix it
+        let geneService = this.getGeneService();                    //Done
+        geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
     mutate(site: Site){
-        //This function is slower than the corresponding fromResolvedProviders because it needs to resolve the passed-in providers first
-        //let injector: ReflectiveInjector = ReflectiveInjector.resolveAndCreate([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
-        //let mutationService = this.injector.get(MutationService);
-
-        //This is faster then previous
-        // let resolvedProviders = ReflectiveInjector.resolve([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
-        // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
-        // let mutationService = injector.get(MutationService);
-
-        let mutationService = DI.resolve<MutationService>(MutationService, [mutationServiceProvider, {provider: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        let mutationService = this.getMutationService();
         mutationService.mutateSite(site);
     }
 

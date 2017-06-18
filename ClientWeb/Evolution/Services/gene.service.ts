@@ -34,8 +34,18 @@ export default class GeneService implements Resolvable{
     }
 
     get gene(): Gene{
-        if(!this.mutationService.isEnabled) return this._gene;
-        let mutatedGene: Gene = this.mutationService.mutateGene(this._gene);
+        return this.checkMutation(this._gene, this.mutationService.isEnabled);
+    }
+    checkMutation(gene:Gene, isMutationEnabled:boolean){
+        gene.mutationSites = [];
+        if(!isMutationEnabled){
+            return this._gene
+        };
+        let mutatedGene: Gene = this.mutationService.mutateGene(gene);
         return mutatedGene;
+    }
+    switchGeneMutation(gene:Gene, isMutationEnabled:boolean){
+        this.mutationService.isEnabled = isMutationEnabled;
+        this.checkMutation(gene, isMutationEnabled);
     }
 }
