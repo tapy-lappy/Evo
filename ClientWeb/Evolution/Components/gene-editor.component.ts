@@ -10,37 +10,40 @@ import Site from "../Models/site";
 @Component({
     moduleId: module.id,
     selector: 'gene-editor',
+    styles: [String(require('../Css/gene-editor.component.less'))],
     templateUrl: '../Html/gene-editor.component.html'
 })
 
 export class GeneEditorComponent extends DnaComponent implements OnDestroy {
-    // get geneName() {return this.gene.name;}
-    // get geneDescription() {return this.gene.description;}
-    name: string;
-    description: string;
-    sites: Site[] = [];
+    private currentChosenSite: Site;
+    //get diagnostic(){return JSON.stringify(this.gene);}
+    private gene: Gene = new Gene('', [], '');      //TODO: create DI factory to initialize constructor of Gene with this empty values and then use it in component's constructor
+    private validationMessageClasses = 'alert alert-danger';
+    private submitted = false;
+
+
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
     constructor(/*public gene:Gene*/private activeRoute: ActivatedRoute) {
         super();
         //https://metanit.com/web/angular2/7.3.php
-        //this.name = activeRoute.snapshot.params['geneName'];
+        //this.gene.name = activeRoute.snapshot.params['name'];
         //http://disq.us/p/1ebfmd9
         /*Remark: Angular creates only one instance of GeneEditorComponent to process all the routes connected with
         Remark: this component. So to catch router's params changes we use subscription onto changing router's parameter*/
         //https://angular.io/guide/router#observable-params-and-component-reuse
         //Quote: By default, the router re-uses a component instance when it re-navigates to the same component type without visiting a different component first. The route parameters could change each time.
-        this.routerSubscription = activeRoute.params.subscribe((params:Params) => this.name=params['geneName']);
+        this.routerSubscription = activeRoute.params.subscribe((params:Params) => this.gene.name=params['geneName']);
         this.querySubscription = activeRoute.queryParams.subscribe((params: Params) => {
-            this.description = params['description'];
+            this.gene.description = params['description'];
             if(params['sites']) {
                 let sites = JSON.parse(params['sites'].replace(/'/g, '"'));
                 //https://learn.javascript.ru/array-iteration
                 sites.forEach((site: any) => {           //map - to transform array to array of other items
-                    this.sites.push(<Site>site);
+                    this.gene.sites.push(<Site>site);
                 });
             }
-            else this.sites = [];       //cleaning sites array to prevent accumulation
+            else this.gene.sites = [];       //cleaning sites array to prevent accumulation
         });
 
         // (+) converts string 'id' to a number
@@ -58,5 +61,13 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
          */
         this.routerSubscription.unsubscribe();
         this.querySubscription.unsubscribe();
+    }
+
+    add(){
+        this.gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
+        this.currentChosenSite = undefined;
+    }
+    onSubmit(){
+        this.submitted = true;
     }
 }
