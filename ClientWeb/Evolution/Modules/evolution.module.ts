@@ -29,8 +29,10 @@ const pipeDeclarations:Array<Type<any> | any[]> = [];
 const routes: Routes = [
     //{ path: '', component: AppComponent},
     <Route>{path: 'gene/:geneName/edit', component: GeneEditorComponent},
-    {path:'wwwroot/dist/web', redirectTo:'/'}
+    //{path:'wwwroot/dist/web', redirectTo:'/'},       //redirectTo: '/about', pathMatch:'full'
+
     // {path: '**', component: NotFoundComponent}   //TODO: need to implement
+    //{ path: '**', redirectTo: '/'}
 ];
 
 @NgModule({
