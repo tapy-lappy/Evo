@@ -3,7 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-	<base href="/wwwroot/dist/web" />   <!--TODO: without this it doesn't now what route to use for /wwwroot/dist/web segments. BUT for production it's unacceptable-->
+    <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base-->
+	<!--<base href="/wwwroot/dist/web" />-->   <!--TODO: without this it doesn't know what route to use for /wwwroot/dist/web segments. BUT for production it's unacceptable&ndash;&gt;-->
+    <base href="/" />
     <title>Webpack Template</title>
 </head>
 <body class="z-dna">
