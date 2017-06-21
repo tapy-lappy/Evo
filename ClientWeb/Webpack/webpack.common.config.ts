@@ -67,6 +67,7 @@ export default class Common{
             output: {
                 path: helper.root(publicPath),             //The output directory as an absolute path  //TODO: dev/pro configuration for 'web'
                 //publicPath: helper.concat('/', publicPath, '/'),           //TODO: dev/pro configuration for 'web'
+                //Remark: I suppose for production also '/' should be used:
                 publicPath: this.Metadata.IS_PRODUCTION ? helper.concat(publicPath, '/') : '/',           //https://webpack.js.org/configuration/output/#output-publicpath
                 filename: '[name].bundle.js',
                 sourceMapFilename: '[name].bundle.map',
