@@ -52,7 +52,7 @@ NOTE: leading -!(before raw-loader) is prepended to ignore other preLoaders and 
  All normal and pre loaders can be omitted (overridden) by prefixing -! in the request.
  All normal, post and pre loaders can be omitted (overridden) by prefixing !! in the request.
  */
-const Adenine = require('-!raw-loader!../Molecules/A.mol');
+const Adenine = require('-!raw-loader!../Molecules/A.mol');     //import source file as a string
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';

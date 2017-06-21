@@ -24,7 +24,7 @@ export class AppComponent extends DnaComponent implements OnInit{
 
     ngOnInit(): void {
         this.mutationEnabled = this.appState.state.mutationEnabled;
-        this.dnaInteraction.dnaRemoved$.subscribe(
+        this.dnaInteraction.dnaRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside DnaSelectorComponent itself
             dna => this.removeFromDnaSelector(dna),
             error => this.error(error)
         );

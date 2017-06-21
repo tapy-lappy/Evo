@@ -36,11 +36,11 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
             if(params['sites']) {
                 let sites = JSON.parse(params['sites'].replace(/'/g, '"'));
                 //https://learn.javascript.ru/array-iteration
-                sites.forEach((site: any) => {           //map
+                sites.forEach((site: any) => {           //map - to transform array to array of other items
                     this.sites.push(<Site>site);
                 });
             }
-            else this.sites = [];
+            else this.sites = [];       //cleaning sites array to prevent accumulation
         });
 
         // (+) converts string 'id' to a number
@@ -48,7 +48,7 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        //http://disq.us/p/1jkl0a7 - it's possible to do not unsubscriebe:
+        //http://disq.us/p/1jkl0a7 - it's possible to do not unsubscribe:
         /*Quote:
          https://angular.io/guide/router#observable-params-and-component-reuse
          When subscribing to an observable in a component, you almost always arrange to unsubscribe when the component is destroyed.
