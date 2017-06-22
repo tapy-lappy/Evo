@@ -20,9 +20,10 @@ import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {GeneEditorComponent} from "../Components/gene-editor.component";
+import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
 
 const componentDeclarations = [AppComponent, DnaListComponent, GeneComponent, DnaSelectorComponent,
-    MoleculeViewerComponent, GeneEditorComponent];
+    MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent];
 const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
 

@@ -20,6 +20,10 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
     private gene: Gene = new Gene('', [], '');      //TODO: create DI factory to initialize constructor of Gene with this empty values and then use it in component's constructor
     private validationMessageClasses = 'alert alert-danger';
     private submitted = false;
+    private validationSettings = {
+        minlength: 3,
+        maxlength: 10
+    };
 
 
     private routerSubscription: Subscription;
@@ -27,7 +31,7 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
     constructor(/*public gene:Gene*/private activeRoute: ActivatedRoute) {
         super();
         //https://metanit.com/web/angular2/7.3.php
-        //this.gene.name = activeRoute.snapshot.params['name'];
+        //this.gene.name = activeRoute.snapshot.params['geneName'];
         //http://disq.us/p/1ebfmd9
         /*Remark: Angular creates only one instance of GeneEditorComponent to process all the routes connected with
         Remark: this component. So to catch router's params changes we use subscription onto changing router's parameter*/
@@ -36,14 +40,16 @@ export class GeneEditorComponent extends DnaComponent implements OnDestroy {
         this.routerSubscription = activeRoute.params.subscribe((params:Params) => this.gene.name=params['geneName']);
         this.querySubscription = activeRoute.queryParams.subscribe((params: Params) => {
             this.gene.description = params['description'];
+            this.gene.sites = [];       //cleaning sites array to prevent accumulation if we use two links which route to this component and switch between them
             if(params['sites']) {
                 let sites = JSON.parse(params['sites'].replace(/'/g, '"'));
                 //https://learn.javascript.ru/array-iteration
                 sites.forEach((site: any) => {           //map - to transform array to array of other items
                     this.gene.sites.push(<Site>site);
                 });
+                this.currentChosenSite = this.gene.sites[0];
             }
-            else this.gene.sites = [];       //cleaning sites array to prevent accumulation
+            else this.currentChosenSite = undefined;
         });
 
         // (+) converts string 'id' to a number

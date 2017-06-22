@@ -1,0 +1,17 @@
+<div *ngIf="submitted">
+    <h2>You submitted the following:</h2>
+    <div class="row">
+        <div class="col-xs-4 bold">Gene name</div>
+        <div class="col-xs-8  pull-left bold">{{ gene.name }}</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 italic">Description</div>
+        <div class="col-xs-8 pull-left bold italic">{{ gene.description }}</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 underline">Site to mutate</div>
+        <div class="col-xs-8 pull-left bold underline">{{ getSiteName(gene.sites[0].site) }}</div>
+    </div>
+    <br>
+    <button class="btn btn-primary" (click)="onClick()">Edit</button>
+</div>

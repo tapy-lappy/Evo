@@ -1,10 +1,14 @@
+<!--http://www.codingclub.net/News/Angular_4_ughe_dostupen-->
 <div *ngIf="!submitted; else displayData">      <!--Note: Angular 4: will display <ng-template #displayData> if submitted will equal 'true'-->
     <form #editorForm="ngForm" (ngSubmit)="onSubmit()">
         <div ngClass="form-group">
             <label for="name">Name</label>
-            <input id="name" class="form-control" type="text" placeholder="Type name here" required name="name" [(ngModel)]="gene.name" #name="ngModel"/>
-            <div [hidden]="name.valid || name.pristine" [class]="validationMessageClasses">
-                Name is required
+            <input id="name" class="form-control" type="text" placeholder="Type name here" required [minlength]="validationSettings.minlength" [maxlength]="validationSettings.maxlength"
+                   name="name" [(ngModel)]="gene.name" #name="ngModel"/>
+            <div *ngIf="name.errors && (name.dirty || name.touched)" [class]="validationMessageClasses">
+                <div [hidden]="!name.errors.required">Name is required</div>
+                <div *ngIf="name.errors.minlength">Name must be at least {{validationSettings.minlength}} characters long</div>
+                <div *ngIf="name.errors.maxlength">Name cannot be more than {{validationSettings.maxlength}} characters long</div>
             </div>
         </div>
 
@@ -16,7 +20,9 @@
         <div class="form-group">
             <label for="sites">Site to mutate</label>
             <select id="sites" ngClass="form-control" required name="sites" [(ngModel)]="currentChosenSite" #currentSite="ngModel">
-                <option *ngFor="let site of gene?.sites">{{getSiteName(site?.site)}}</option>
+                <!--TODO: need to do directive OptionSelected to allow [attr.selected] adds only ONE selected attribute to HTMLElement-->
+                <option *ngFor="let site of gene?.sites" [value]="site?.site" [attr.selected]="currentChosenSite?.site === site?.site">    <!--https://angular.io/guide/template-syntax#attribute-binding-->
+                    {{getSiteName(site?.site)}}</option>
             </select>
             <div *ngIf="!currentSite.valid && !currentSite.untouched" [class]="validationMessageClasses">
                 Site is required
@@ -28,19 +34,5 @@
     </form>
 </div>
 <ng-template #displayData>    <!--Note: Angular 4: won't work with <div>-->
-    <h2>You submitted the following:</h2>
-    <div class="row">
-        <div class="col-xs-4 bold">Gene name</div>
-        <div class="col-xs-8  pull-left bold">{{ gene.name }}</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 italic">Description</div>
-        <div class="col-xs-8 pull-left bold italic">{{ gene.description }}</div>
-    </div>
-    <div class="row">
-        <div class="col-xs-4 underline">Site to mutate</div>
-        <div class="col-xs-8 pull-left bold underline">{{ getSiteName(gene.sites[0].site) }}</div>
-    </div>
-    <br>
-    <button class="btn btn-primary" (click)="submitted=false">Edit</button>
+    <gene-submitted [gene]="gene" [(submitted)]="submitted"></gene-submitted>
 </ng-template>
