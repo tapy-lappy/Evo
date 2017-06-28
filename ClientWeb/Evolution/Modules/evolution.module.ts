@@ -21,10 +21,11 @@ import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {GeneEditorComponent} from "../Components/gene-editor.component";
 import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
+import {OptionSelectedDirective} from "../Directives/option-selected.directive";
 
 const componentDeclarations = [AppComponent, DnaListComponent, GeneComponent, DnaSelectorComponent,
     MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent];
-const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective];
+const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective, OptionSelectedDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
 
 const routes: Routes = [
@@ -42,7 +43,7 @@ const routes: Routes = [
     bootstrap: [AppComponent],
     providers: [
         AppState, LogService, ArrayHelper,
-        {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},
+        {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},      //https://angular.io/guide/dependency-injection#the-provider-class-and-provide-object-literal
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
         {provide: DNA_ENUM_TOKEN, useValue: DnaEnum}
     ]//,

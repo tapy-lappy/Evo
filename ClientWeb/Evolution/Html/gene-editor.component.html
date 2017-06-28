@@ -21,7 +21,8 @@
             <label for="sites">Site to mutate</label>
             <select id="sites" ngClass="form-control" required name="sites" [(ngModel)]="currentChosenSite" #currentSite="ngModel">
                 <!--TODO: need to do directive OptionSelected to allow [attr.selected] adds only ONE selected attribute to HTMLElement-->
-                <option *ngFor="let site of gene?.sites" [value]="site?.site" [attr.selected]="currentChosenSite?.site === site?.site">    <!--https://angular.io/guide/template-syntax#attribute-binding-->
+                <!--<option *ngFor="let site of gene?.sites" [value]="site?.site" [attr.selected]="currentChosenSite?.site === site?.site">-->    <!--https://angular.io/guide/template-syntax#attribute-binding-->
+                <option *ngFor="let site of gene?.sites" [value]="site?.site" [option-selected]="currentChosenSite?.site === site?.site">
                     {{getSiteName(site?.site)}}</option>
             </select>
             <div *ngIf="!currentSite.valid && !currentSite.untouched" [class]="validationMessageClasses">
