@@ -22,7 +22,10 @@
             <select id="sites" ngClass="form-control" required name="sites" [(ngModel)]="currentChosenSite" #currentSite="ngModel">
                 <!--TODO: need to do directive OptionSelected to allow [attr.selected] adds only ONE selected attribute to HTMLElement-->
                 <!--<option *ngFor="let site of gene?.sites" [value]="site?.site" [attr.selected]="currentChosenSite?.site === site?.site">-->    <!--https://angular.io/guide/template-syntax#attribute-binding-->
-                <option *ngFor="let site of gene?.sites" [value]="site?.site" [option-selected]="currentChosenSite?.site === site?.site">
+                <!--Remark: added directive, it works, adds 'selected' attribute to ONLY one <option> tag, but still without changes on page -->
+                <!--<option *ngFor="let site of gene?.sites" [value]="site?.site" [attr.selected]="currentChosenSite?.site === site?.site">-->
+                <!--Done: https://stackoverflow.com/a/35945293 - using [ngValue] - it supports any type([value] - only string), https://stackoverflow.com/a/37968835 - removed 'selected' attribute at all-->
+                <option *ngFor="let site of gene?.sites" [ngValue]="site">
                     {{getSiteName(site?.site)}}</option>
             </select>
             <div *ngIf="!currentSite.valid && !currentSite.untouched" [class]="validationMessageClasses">
