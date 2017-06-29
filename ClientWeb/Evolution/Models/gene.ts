@@ -3,6 +3,7 @@ import {Injectable, Optional} from "@angular/core";
 
 @Injectable()       //Note: to make class accessible by using constructor with params in Angular
 export default class Gene {
+    id: Symbol;
     sites: Site[] = [];
     mutationSites: Site[] = [];
     name: string;
@@ -18,6 +19,7 @@ export default class Gene {
 
     constructor(name: string, sites: Site[], description?: string) {
         this.name = name;
+        this.id = Symbol(this.name);
         this.sites = sites;
         this.description = description;
     }

@@ -1,4 +1,3 @@
-import {GeneEnum} from "../Enums/gene-enum";
 import {Input} from "@angular/core";
 import GeneHelper from "../Helpers/gene-helper";
 import {SiteEnum} from "../Enums/site-enum";
@@ -10,9 +9,6 @@ export abstract class BaseGeneComponent {
         event.stopPropagation();
     }
 
-    getGeneName(dna:GeneEnum):string{
-        return GeneHelper.getGeneName(dna);
-    }
     getSiteName(site:SiteEnum):string{
         return GeneHelper.getSiteName(site);
     }

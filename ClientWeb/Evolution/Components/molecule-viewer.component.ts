@@ -4,7 +4,6 @@ import {Component, OnInit} from '@angular/core';
 import {SiteInteractionService} from "../Services/site-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
-import {GeneEnum} from "../Enums/gene-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
@@ -56,6 +55,7 @@ const Adenine = require('-!raw-loader!../Molecules/A.mol');     //import source 
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
+import Gene from "../Models/gene";
 const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
@@ -71,7 +71,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
 
     ngOnInit() {
         this.siteInteraction.siteClicked$.subscribe(
-            site => this.displayMolecule(site),
+            molecule => this.displayMolecule(molecule),
             err => this.error(err)
         );
 
@@ -83,7 +83,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         });
     }
 
-    private displayMolecule(molecule: SiteEnum | GeneEnum) {
+    private displayMolecule(molecule: SiteEnum | Gene) {
         const moleculeData = this.getMoleculeData(molecule);
         let el = $("#moleculeViewer").get(0);
         $(el).attr('data-molvwr', moleculeData.url);
@@ -120,7 +120,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         return rgb;
     }
 
-    private getMoleculeData(molecule: SiteEnum|GeneEnum){
+    private getMoleculeData(molecule: SiteEnum|Gene){
         // const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
         // const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
         // const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
@@ -131,7 +131,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
 
         //if(typeof molecule == "GeneEnum")
         let url, format: string;
-        if (molecule > 4) {   //TODO: fix this condition to work with enums
+        if (molecule instanceof Gene) {
             url = '../Evolution/Molecules/dna.pdb';
             format ='pdb';
         }
@@ -145,7 +145,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
                 case SiteEnum.U: url = Uracil; break;
                 default:
                     //Otherwise - using URL to download data:
-                    url = `../Evolution/Molecules/${SiteEnum[molecule]}.mol`;
+                    url = `../Evolution/Molecules/${this.getSiteName(molecule)}.mol`;       //${SiteEnum[<SiteEnum>molecule]}
                     //url = `Evolution/Molecules/${SiteEnum[molecule]}.mol`;
                     //url = helper.root(`Evolution/Molecules/${SiteEnum[molecule]}.mol`);
                     break;

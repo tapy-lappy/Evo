@@ -9,7 +9,7 @@ import MutationService from "../Services/mutation.service";
 import {mutationServiceProvider} from "../Providers/mutation-service-provider";
 import Gene from "../Models/gene";
 import {geneServiceProvider} from "../Providers/gene-service-provider";
-import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
+//import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
 import Site from "../Models/site";
 import {AppState} from "../AppState/app-state";
 import DI from "../Helpers/di-helper";
@@ -27,14 +27,12 @@ import {Molecule} from "../../Libraries/Molvwr/molecule";
     styles: [String(require('../Css/gene.component.less'))],
     //only when they are here - it will create new instance of this component every time:
     providers: [geneServiceProvider, mutationServiceProvider, Gene],
-    inputs: ['dna'],
+    inputs: ['gene'],
     //outputs: ['removeEvent:remove']
 })
 export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     // @Input() dna: GeneEnum;
     // @Output('remove') removeEvent = new EventEmitter<GeneEnum>();
-    dna: GeneEnum;
-    //removeEvent = new EventEmitter<GeneEnum>();
     gene: Gene;
     molecule: Molecule;
     kinds: string[];
@@ -66,7 +64,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
         //let geneService = this.injector.get(GeneService, "Error: GeneService can't be injected into GeneComponent!");
         //let allDnaEnumeration = this.injector.get(GENE_ENUM_TOKEN);
-        return DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: GENE_ENUM_TOKEN, useValue: this.dna},
+        return DI.resolve<GeneService>(GeneService, geneServiceProvider, {provide: Gene, useValue: this.gene},//{provide: GENE_ENUM_TOKEN, useValue: this.dna},
             {provide: MutationService, useValue: this.getMutationService()});
     }
     private initGene(){
@@ -158,10 +156,10 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.geneInteraction.remove(this.dna);
+        this.geneInteraction.remove(this.gene);
     }
 
-    siteClicked(event: MouseEvent, molecule: SiteEnum|GeneEnum){
+    siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
         this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
     }

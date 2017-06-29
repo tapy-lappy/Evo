@@ -5,6 +5,7 @@ import {Subscription} from "rxjs/Subscription";
 import {SiteEnum} from "../Enums/site-enum";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
+import GeneInteractionService from "../Services/gene-interaction.service";
 
 
 @Component({
@@ -28,7 +29,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy 
 
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
-    constructor(/*public gene:Gene*/private activeRoute: ActivatedRoute) {
+    constructor(/*public gene:Gene*/private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];

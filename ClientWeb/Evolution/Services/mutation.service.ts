@@ -24,9 +24,7 @@ export default class MutationService implements Resolvable{
             }
 
             gene.sites.forEach(genome => {
-                let tmp = new Site();
-                tmp.site = genome.site;
-                gene.mutationSites.push(tmp)});
+                gene.mutationSites.push(new Site(genome.site))});
 
             gene.mutationSites[mutationIndex] = this.mutateSite(gene.mutationSites[mutationIndex]);
         }

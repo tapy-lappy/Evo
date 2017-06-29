@@ -15,13 +15,15 @@ import { AppState } from '../AppState/app-state';
 import {GeneSelectorComponent} from "../Components/gene-selector.component";
 import {GeneListComponent} from "../Components/gene-list.component";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
+//import {GeneEnum, GENE_ENUM_TOKEN, default as GeneList} from "../Enums/gene-enum";  //import default class as GeneList alias
+import GeneList from "../Models/gene-list";
 import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {GeneEditorComponent} from "../Components/gene-editor.component";
 import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
 import {OptionSelectedDirective} from "../Directives/option-selected.directive";
+
 
 const componentDeclarations = [AppComponent, GeneListComponent, GeneComponent, GeneSelectorComponent,
     MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent];
@@ -42,10 +44,10 @@ const routes: Routes = [
     declarations: [componentDeclarations, directiveDeclarations, pipeDeclarations],
     bootstrap: [AppComponent],
     providers: [
-        AppState, LogService, ArrayHelper,
+        AppState, GeneList, LogService, ArrayHelper,
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},      //https://angular.io/guide/dependency-injection#the-provider-class-and-provide-object-literal
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
-        {provide: GENE_ENUM_TOKEN, useValue: GeneEnum}
+        //{provide: GENE_ENUM_TOKEN, useValue: GeneEnum}
     ]//,
     //schemas: [NO_ERRORS_SCHEMA]       //this is needed if you wanna use not Angular/HTML(e.g. <pdb>) tag into HTML templates of your components
 })

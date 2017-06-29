@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import {ArrayHelper} from "../Helpers/array-helper";
 import {AppState} from "../AppState/app-state";
-import {GeneEnum} from "../Enums/gene-enum";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
+import Gene from "../Models/gene";
 
 @Component({
     moduleId: module.id,
@@ -12,34 +11,38 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 })
 export class GeneSelectorComponent extends BaseGeneComponent {
 
-    constructor(private appState: AppState, private arrayHelper: ArrayHelper<GeneEnum>) {
+    constructor(private appState: AppState) {
         super();
     }
 
-    get availableDnas(): GeneEnum[]{
-        return this.appState.state.availableDnas;
+    get availableGenes(): Gene[]{
+        return this.appState.state.availableGenes.genes;
     }
 
-    get selectedDnas(): GeneEnum[]{
-        return this.appState.state.selectedDnas;
+    get selectedGenes(): Gene[]{
+        return this.appState.state.selectedGenes.genes;
     }
 
-    get hasAvailableDna(){
-        return this.availableDnas.length > 0;
+    get hasAvailableGenes(){
+        return this.availableGenes.length > 0;
     }
 
-    get hasSelectedDna(){
-        return this.selectedDnas.length > 0;
+    get hasSelectedGenes(){
+        return this.selectedGenes.length > 0;
     }
 
-    add(dna: GeneEnum){
-        this.arrayHelper.addTo(dna, this.selectedDnas);
-        this.appState.state.availableDnas = this.arrayHelper.removeFrom(dna, this.appState.state.availableDnas);
+    add(gene: string|Gene){
+        if(typeof gene === 'string')
+            gene = this.appState.state.availableGenes.genesIndexed[gene];
+        this.appState.state.selectedGenes.add(gene);
+        this.appState.state.availableGenes.remove(gene);
     }
-    remove(dna: GeneEnum)
+    remove(gene: string|Gene)
     {
-        this.arrayHelper.addTo(dna, this.availableDnas);
-        this.appState.state.selectedDnas = this.arrayHelper.removeFrom(dna, this.appState.state.selectedDnas);
+        if(typeof gene === 'string')
+            gene = this.appState.state.selectedGenes.genesIndexed[gene];
+        this.appState.state.availableGenes.add(gene);
+        this.appState.state.selectedGenes.remove(gene);
     }
 
 }

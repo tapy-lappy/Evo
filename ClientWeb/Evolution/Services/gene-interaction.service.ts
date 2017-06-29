@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {GeneEnum} from "../Enums/gene-enum";
+import Gene from "../Models/gene";
 
 @Injectable()
 export default class GeneInteractionService {
-    private geneRemovedSources = new Subject<GeneEnum>();
+    private geneRemovedSources = new Subject<Gene>();
     geneRemoved$ = this.geneRemovedSources.asObservable();
-    remove(geneItem: GeneEnum){
+    remove(geneItem: Gene){
         this.geneRemovedSources.next(geneItem);
     }
 }

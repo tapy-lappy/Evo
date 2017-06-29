@@ -8,7 +8,7 @@ export default class DI {
         let resolvedProviders = ReflectiveInjector.resolve(providers);
         let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
         //console.log(`Impossible to extract ${type.toString()}`);          //log ALL THE code of class
-        //return injector.get(type, `ERROR: DI --> Impossible to extract ${type.toString()}`);
-        return injector.get(type);
+        return injector.get(type, `ERROR: DI --> Impossible to extract ${type.toString()}`);
+        //return injector.get(type);
     }
 }

@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
-import {GeneEnum} from "../Enums/gene-enum";
 
 @Component({
     moduleId: module.id,
@@ -14,7 +13,7 @@ export class GeneListComponent extends BaseGeneComponent {
         super();
     }
 
-    get dnaList(){
-        return this.appState.state.selectedDnas;
+    get geneList(){
+        return this.appState.state.selectedGenes.genes;
     }
 }
