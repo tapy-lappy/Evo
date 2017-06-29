@@ -9,15 +9,15 @@ import MutationService from "../Services/mutation.service";
 import {mutationServiceProvider} from "../Providers/mutation-service-provider";
 import Gene from "../Models/gene";
 import {geneServiceProvider} from "../Providers/gene-service-provider";
-import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
+import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
 import Site from "../Models/site";
 import {AppState} from "../AppState/app-state";
 import DI from "../Helpers/di-helper";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import DnaInteractionService from "../Services/dna-interaction.service";
+import GeneInteractionService from "../Services/gene-interaction.service";
 import {Subscription} from "rxjs/Subscription";
 import {SiteInteractionService} from "../Services/site-interaction.service";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {Molecule} from "../../Libraries/Molvwr/molecule";
 
 @Component({
@@ -30,17 +30,17 @@ import {Molecule} from "../../Libraries/Molvwr/molecule";
     inputs: ['dna'],
     //outputs: ['removeEvent:remove']
 })
-export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
-    // @Input() dna: DnaEnum;
-    // @Output('remove') removeEvent = new EventEmitter<DnaEnum>();
-    dna: DnaEnum;
-    //removeEvent = new EventEmitter<DnaEnum>();
+export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestroy {
+    // @Input() dna: GeneEnum;
+    // @Output('remove') removeEvent = new EventEmitter<GeneEnum>();
+    dna: GeneEnum;
+    //removeEvent = new EventEmitter<GeneEnum>();
     gene: Gene;
     molecule: Molecule;
     kinds: string[];
 
     constructor(@Optional() protected log: LogService,
-                private dnaInteraction: DnaInteractionService,
+                private geneInteraction: GeneInteractionService,
                 private siteInteraction: SiteInteractionService,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
@@ -65,8 +65,8 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     private getGeneService():GeneService{
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
         //let geneService = this.injector.get(GeneService, "Error: GeneService can't be injected into GeneComponent!");
-        //let allDnaEnumeration = this.injector.get(DNA_ENUM_TOKEN);
-        return DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna},
+        //let allDnaEnumeration = this.injector.get(GENE_ENUM_TOKEN);
+        return DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: GENE_ENUM_TOKEN, useValue: this.dna},
             {provide: MutationService, useValue: this.getMutationService()});
     }
     private initGene(){
@@ -158,10 +158,10 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.dnaInteraction.dnaRemove(this.dna);
+        this.geneInteraction.remove(this.dna);
     }
 
-    siteClicked(event: MouseEvent, molecule: SiteEnum|DnaEnum){
+    siteClicked(event: MouseEvent, molecule: SiteEnum|GeneEnum){
         this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
     }

@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
 import MutationService from "./mutation.service";
-import {DnaEnum} from "../Enums/dna-enum";
+import {GeneEnum} from "../Enums/gene-enum";
 import Gene from "../Models/gene";
 import {SiteEnum} from "../Enums/site-enum";
 import Site from "../Models/site";
-import DnaHelper from "../Helpers/dna-helper";
+import GeneHelper from "../Helpers/gene-helper";
 import {Resolvable} from "../Abstract/resolvable";
 
 @Injectable()
 export default class GeneService implements Resolvable{
     protected _gene: Gene;
 
-    constructor(private dna: DnaEnum, private mutationService: MutationService) {
+    constructor(private geneItem: GeneEnum, private mutationService: MutationService) {
         let sites = this.getGeneSites();
-        this._gene = new Gene(DnaHelper.getDnaName(this.dna), sites);
+        this._gene = new Gene(GeneHelper.getGeneName(this.geneItem), sites);
     }
 
     getGeneSites():Site[]{
         let sites: Site[] = [];
-        for(let i=0; i<this.dna; i++ )
+        for(let i=0; i<this.geneItem; i++ )
         {
             let site = new Site();
             let randomValue = Math.random();

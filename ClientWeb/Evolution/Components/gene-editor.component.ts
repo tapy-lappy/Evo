@@ -3,7 +3,7 @@ import Gene from "../Models/gene";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {SiteEnum} from "../Enums/site-enum";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 
 
@@ -14,7 +14,7 @@ import Site from "../Models/site";
     templateUrl: '../Html/gene-editor.component.html'
 })
 
-export class GeneEditorComponent extends DnaComponent implements OnDestroy {
+export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy {
     private currentChosenSite: Site;
     //get diagnostic(){return JSON.stringify(this.gene);}
     private gene: Gene = new Gene('', [], '');      //TODO: create DI factory to initialize constructor of Gene with this empty values and then use it in component's constructor

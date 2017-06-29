@@ -94,7 +94,7 @@ function vendors() : Array<string> {
 }
 function bootstrap(): string[]{
     return ['bootstrap-webpack!./Webpack/bootstrap-webpack/bootstrap.config.js'/*,
-        './Evolution/Css/dna-selector.component.css'*/];
+        './Evolution/Css/gene-selector.component.css'*/];
 }
 
 // RxJS

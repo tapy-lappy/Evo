@@ -2,9 +2,9 @@
 
 import {Component, OnInit} from '@angular/core';
 import {SiteInteractionService} from "../Services/site-interaction.service";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
-import {DnaEnum} from "../Enums/dna-enum";
+import {GeneEnum} from "../Enums/gene-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
@@ -64,7 +64,7 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
     templateUrl: '../Html/molecule-viewer.component.html'
 })
 
-export class MoleculeViewerComponent extends DnaComponent implements OnInit {
+export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit {
     constructor(private siteInteraction: SiteInteractionService) {
         super();
     }
@@ -83,7 +83,7 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
         });
     }
 
-    private displayMolecule(molecule: SiteEnum | DnaEnum) {
+    private displayMolecule(molecule: SiteEnum | GeneEnum) {
         const moleculeData = this.getMoleculeData(molecule);
         let el = $("#moleculeViewer").get(0);
         $(el).attr('data-molvwr', moleculeData.url);
@@ -120,16 +120,16 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
         return rgb;
     }
 
-    private getMoleculeData(molecule: SiteEnum|DnaEnum){
+    private getMoleculeData(molecule: SiteEnum|GeneEnum){
         // const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
         // const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
         // const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
 
-        // for (let dna in DnaEnum) {
+        // for (let dna in GeneEnum) {
         //     dna.
         // }
 
-        //if(typeof molecule == "DnaEnum")
+        //if(typeof molecule == "GeneEnum")
         let url, format: string;
         if (molecule > 4) {   //TODO: fix this condition to work with enums
             url = '../Evolution/Molecules/dna.pdb';

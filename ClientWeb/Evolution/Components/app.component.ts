@@ -2,10 +2,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {ArrayHelper} from "../Helpers/array-helper";
-import {DnaComponent} from "../Abstract/DnaComponent";
-import {DnaEnum} from "../Enums/dna-enum";
-import {DnaSelectorComponent} from "./dna-selector.component";
-import DnaInteractionService from "../Services/dna-interaction.service";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
+import {GeneEnum} from "../Enums/gene-enum";
+import {GeneSelectorComponent} from "./gene-selector.component";
+import DnaInteractionService from "../Services/gene-interaction.service";
 import {SiteInteractionService} from "../Services/site-interaction.service";
 
 @Component({
@@ -15,7 +15,7 @@ import {SiteInteractionService} from "../Services/site-interaction.service";
     styles: [String(require('../Css/common-background.less'))],
     providers: [ArrayHelper, DnaInteractionService, SiteInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
-export class AppComponent extends DnaComponent implements OnInit{
+export class AppComponent extends BaseGeneComponent implements OnInit{
 
     constructor(private appState: AppState, private dnaInteraction: DnaInteractionService){
         super();
@@ -24,7 +24,7 @@ export class AppComponent extends DnaComponent implements OnInit{
 
     ngOnInit(): void {
         this.mutationEnabled = this.appState.state.mutationEnabled;
-        this.dnaInteraction.dnaRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside DnaSelectorComponent itself
+        this.dnaInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
             dna => this.removeFromDnaSelector(dna),
             error => this.error(error)
         );
@@ -46,9 +46,9 @@ export class AppComponent extends DnaComponent implements OnInit{
         };
     }
 
-    @ViewChild(DnaSelectorComponent)        //https://metanit.com/web/angular2/2.9.php
-    dnaSelectorComponent: DnaSelectorComponent;
-    removeFromDnaSelector(dna:DnaEnum){
+    @ViewChild(GeneSelectorComponent)        //https://metanit.com/web/angular2/2.9.php
+    dnaSelectorComponent: GeneSelectorComponent;
+    removeFromDnaSelector(dna:GeneEnum){
         this.dnaSelectorComponent.remove(dna);
     }
 }

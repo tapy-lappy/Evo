@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import Gene from "../Models/gene";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 
 @Component({
     moduleId: module.id,
@@ -9,7 +9,7 @@ import {DnaComponent} from "../Abstract/DnaComponent";
     inputs: ['gene']
 })
 
-export class GeneSubmittedComponent extends DnaComponent {
+export class GeneSubmittedComponent extends BaseGeneComponent {
     private gene: Gene;
     @Input() submitted:boolean = false;
     @Output() submittedChange = new EventEmitter<boolean>();

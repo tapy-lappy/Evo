@@ -12,10 +12,10 @@ import {GeneComponent} from "../Components/gene.component";
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { ApplicationRef } from '@angular/core';
 import { AppState } from '../AppState/app-state';
-import {DnaSelectorComponent} from "../Components/dna-selector.component";
-import {DnaListComponent} from "../Components/dna-list.component";
+import {GeneSelectorComponent} from "../Components/gene-selector.component";
+import {GeneListComponent} from "../Components/gene-list.component";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
+import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
 import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";
@@ -23,7 +23,7 @@ import {GeneEditorComponent} from "../Components/gene-editor.component";
 import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
 import {OptionSelectedDirective} from "../Directives/option-selected.directive";
 
-const componentDeclarations = [AppComponent, DnaListComponent, GeneComponent, DnaSelectorComponent,
+const componentDeclarations = [AppComponent, GeneListComponent, GeneComponent, GeneSelectorComponent,
     MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent];
 const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective, OptionSelectedDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
@@ -45,7 +45,7 @@ const routes: Routes = [
         AppState, LogService, ArrayHelper,
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},      //https://angular.io/guide/dependency-injection#the-provider-class-and-provide-object-literal
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
-        {provide: DNA_ENUM_TOKEN, useValue: DnaEnum}
+        {provide: GENE_ENUM_TOKEN, useValue: GeneEnum}
     ]//,
     //schemas: [NO_ERRORS_SCHEMA]       //this is needed if you wanna use not Angular/HTML(e.g. <pdb>) tag into HTML templates of your components
 })
