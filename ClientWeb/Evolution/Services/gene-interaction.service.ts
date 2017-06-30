@@ -9,4 +9,10 @@ export default class GeneInteractionService {
     remove(geneItem: Gene){
         this.geneRemovedSources.next(geneItem);
     }
+
+    private geneAddedSources = new Subject<Gene>();
+    geneAdded$ = this.geneAddedSources.asObservable();
+    add(gene: Gene){
+        this.geneAddedSources.next(gene);
+    }
 }

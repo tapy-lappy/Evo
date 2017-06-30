@@ -1,8 +1,7 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import Gene from "../Models/gene";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
-import {SiteEnum} from "../Enums/site-enum";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import GeneInteractionService from "../Services/gene-interaction.service";
@@ -29,7 +28,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy 
 
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
-    constructor(/*public gene:Gene*/private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService) {
+    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];
@@ -70,9 +69,15 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy 
         this.querySubscription.unsubscribe();
     }
 
+    @ViewChild('editorForm')
+    private editorForm: HTMLFormElement;
     add(){
-        this.gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
-        this.currentChosenSite = undefined;
+        //Note: Using local LET variable to prevent setting all the this.gene properties to NULL when we reset the form
+        let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
+        this.geneInteraction.add(gene);
+        //Remark: cleans form AND because this.gene bounded to form by [(gene.name)] etc. it sets all the gene properties to NULL and
+        //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):
+        this.editorForm.reset();
     }
     onSubmit(){
         this.submitted = true;

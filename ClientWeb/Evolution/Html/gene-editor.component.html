@@ -5,7 +5,7 @@
             <label for="name">Name</label>
             <input id="name" class="form-control" type="text" placeholder="Type name here" required [minlength]="validationSettings.minlength" [maxlength]="validationSettings.maxlength"
                    name="name" [(ngModel)]="gene.name" #name="ngModel"/>
-            <div *ngIf="name.errors && (name.dirty || name.touched)" [class]="validationMessageClasses">
+            <div *ngIf="name.errors && (name.pristine || name.touched || name.dirty && name.untouched)" [class]="validationMessageClasses">
                 <div [hidden]="!name.errors.required">Name is required</div>
                 <div *ngIf="name.errors.minlength">Name must be at least {{validationSettings.minlength}} characters long</div>
                 <div *ngIf="name.errors.maxlength">Name cannot be more than {{validationSettings.maxlength}} characters long</div>
@@ -28,12 +28,12 @@
                 <option *ngFor="let site of gene?.sites" [ngValue]="site">
                     {{getSiteName(site?.site)}}</option>
             </select>
-            <div *ngIf="!currentSite.valid && !currentSite.untouched" [class]="validationMessageClasses">
+            <div *ngIf="currentSite.invalid && (currentSite.pristine || currentSite.touched)" [class]="validationMessageClasses">
                 Site is required
             </div>
         </div>
         <!--{{diagnostic}}-->
-        <button type="button" class="btn btn-default" (click)="add(); editorForm.reset();">Add</button>
+        <button type="button" class="btn btn-default" [disabled]="editorForm.form.invalid" (click)="add()">Add</button>
         <button type="submit" class="btn btn-success" [disabled]="!editorForm.form.valid">Submit</button>
     </form>
 </div>

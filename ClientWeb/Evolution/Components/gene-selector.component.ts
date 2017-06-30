@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Gene from "../Models/gene";
+import GeneInteractionService from "../Services/gene-interaction.service";
 
 @Component({
     moduleId: module.id,
@@ -9,10 +10,17 @@ import Gene from "../Models/gene";
     templateUrl: '../Html/gene-selector.component.html',
     styles: [String(require('../Css/gene-selector.component.css'))],
 })
-export class GeneSelectorComponent extends BaseGeneComponent {
-
-    constructor(private appState: AppState) {
+export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
+    constructor(private appState: AppState, private geneInteraction: GeneInteractionService) {
         super();
+    }
+
+    ngOnInit(): void {
+        this.geneInteraction.geneAdded$.subscribe(
+            gene => this.add(gene),
+            err => this.error(err),
+            () => alert('Added!')       //TODO: never perform. Why?
+        );
     }
 
     get availableGenes(): Gene[]{

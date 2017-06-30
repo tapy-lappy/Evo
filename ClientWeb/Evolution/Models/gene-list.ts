@@ -18,6 +18,7 @@ interface GeneDictionary{
 export default class GeneList{
     private arrayHelper = new ArrayHelper<Gene>();
     private _genes: GeneDictionary = {} as GeneDictionary; //Gene[] = [];
+    //TODO: we need better solution than having two genes collections: array & dictionary
     get genesIndexed(){return this._genes;}
     get genes(): Gene[]{
         let result: Gene[] = [];
@@ -45,7 +46,7 @@ export default class GeneList{
         // if(this._genes.some(g => g.name === gene.name))
         //     this.arrayHelper.removeFrom(gene, this._genes);
         if(this._genes[gene.name])
-            this._genes[gene.name] = undefined;
+            this._genes[gene.name] = undefined;         //TODO: need to fully remove key-value pair, not leaving key-undefined
         return this;
     }
 }
