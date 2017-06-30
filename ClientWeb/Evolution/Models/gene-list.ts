@@ -37,7 +37,7 @@ export default class GeneList{
     }
 
     add(gene: Gene): this{
-        //if(!this._genes.some(g => g.name === gene.name))
+        //if(!this._genes.some(g => g.name === gene.name))      //.some() for arrays
         //    this.arrayHelper.addTo(gene, this._genes);
         if(!this.contains(gene))
             this._genes[gene.name] = gene;
