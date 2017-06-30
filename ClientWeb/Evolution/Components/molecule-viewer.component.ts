@@ -20,8 +20,8 @@ import cTxt from 'raw-loader!../Molecules/G.pdb';
 
 
 //https://github.com/webpack-contrib/bundle-loader
-// let loadG = require("bundle-loader?lazy&name=[name]!../Molecules/G.pdb");
-// let strT = require('includes-loader!../Molecules/T.pdb');
+let loadG = require("bundle-loader?lazy&name=[name]!../Molecules/G.pdb");
+let strT = require('includes-loader!../Molecules/T.pdb');
 
 
 //require('../../Libraries/Molvwr/hand');
@@ -76,11 +76,11 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         );
 
         // The chunk is not requested(with option 'lazy') until you call the load function:
-        // loadG(function(file: string) {
-        //     // use file like it was required with
-        //     // var file = require("./file.js");
-        //     console.log(`Molecule PDB file: ${file} has been downloaded.`);
-        // });
+        loadG(function(file: string) {
+            // use file like it was required with
+            // var file = require("./file.js");
+            console.log(`Molecule PDB file: ${file} has been downloaded.`);
+        });
     }
 
     private displayMolecule(molecule: SiteEnum | Gene) {
