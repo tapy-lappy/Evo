@@ -1,10 +1,11 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import Gene from "../Models/gene";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import GeneInteractionService from "../Services/gene-interaction.service";
+import {Observable} from "rxjs/Observable";
 
 
 @Component({
@@ -14,7 +15,7 @@ import GeneInteractionService from "../Services/gene-interaction.service";
     templateUrl: '../Html/gene-editor.component.html'
 })
 
-export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy {
+export class GeneEditorComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     private currentChosenSite: Site;
     //get diagnostic(){return JSON.stringify(this.gene);}
     private gene: Gene = new Gene('', [], '');      //TODO: create DI factory to initialize constructor of Gene with this empty values and then use it in component's constructor
@@ -71,13 +72,19 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnDestroy 
 
     @ViewChild('editorForm')
     private editorForm: HTMLFormElement;
+    ngOnInit(): void {
+        this.geneInteraction.additionSuccessed$.subscribe(success => {
+            if (success)
+                //Remark: cleans form AND because this.gene bounded to form by [(gene.name)] etc. it sets all the gene properties to NULL and
+                //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):
+                this.editorForm.reset()
+        });
+    }
+
     add(){
         //Note: Using local LET variable to prevent setting all the this.gene properties to NULL when we reset the form
         let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
         this.geneInteraction.add(gene);
-        //Remark: cleans form AND because this.gene bounded to form by [(gene.name)] etc. it sets all the gene properties to NULL and
-        //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):
-        this.editorForm.reset();
     }
     onSubmit(){
         this.submitted = true;

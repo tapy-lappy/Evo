@@ -20,3 +20,10 @@
         <button [disabled]="!hasSelectedGenes" (click)="remove(selectedGene.value)" ngClass="btn btn-default">Remove selected</button>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs6" *ngIf="errors">
+        <div class="alert alert-info" *ngFor="let err of errors">
+            {{err}}
+        </div>
+    </div>
+</div>
