@@ -1,6 +1,7 @@
 //import {InjectionToken} from "@angular/core";
 import Gene from "./gene";
 import {ArrayHelper} from "../Helpers/array-helper";
+import {Observable} from "rxjs/Observable";
 
 // enum GeneEnum{
 //     Human = 48, Ape = 24, Worm = 8, Jellyfish = 16, Unknown = -1
@@ -38,16 +39,25 @@ export default class GeneList{
     add(gene: Gene): this{
         //if(!this._genes.some(g => g.name === gene.name))      //this._genes.find(g => g.name === gene.name)
         //    this.arrayHelper.addTo(gene, this._genes);
-        if(!this._genes[gene.name])
+        if(!this.contains(gene))
             this._genes[gene.name] = gene;
+        else this.error(gene, 'has been already added.');
         return this;
     }
     remove(gene: Gene){
         // if(this._genes.some(g => g.name === gene.name))
         //     this.arrayHelper.removeFrom(gene, this._genes);
-        if(this._genes[gene.name])
+        if(this.contains(gene))
             this._genes[gene.name] = undefined;         //TODO: need to fully remove key-value pair, not leaving key-undefined
         return this;
+    }
+
+    contains(gene: Gene): boolean{
+        return this._genes[gene.name] != undefined;
+    }
+
+    error(gene: Gene, message?: string):never{
+        throw Error(`${gene.name} ${message}`);
     }
 }
 
