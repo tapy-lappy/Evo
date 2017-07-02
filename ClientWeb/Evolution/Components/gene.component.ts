@@ -115,6 +115,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         this.appState.state.mutationChanged$.subscribe(
             enabled => {
                 //subsribeAgain(enabled);
+                this.mutationEnabled = enabled;
                 this.initGene();
             },
             err => this.error(err)
