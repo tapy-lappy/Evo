@@ -71,7 +71,7 @@ export default class Common{
                 publicPath: this.Metadata.IS_PRODUCTION ? helper.concat(publicPath, '/') : '/',           //https://webpack.js.org/configuration/output/#output-publicpath
                 filename: '[name].bundle.js',
                 sourceMapFilename: '[name].bundle.map',
-                chunkFilename: '[id].[name].chunk.js',
+                chunkFilename: 'chunk-[name]-[id].js',                      //bundle-loader loads chuncks by using 'chunkFilename' rule(format)
                 //USEFUL - HMR(Image how it works) with CSS replacement - https://medium.com/@rajaraodv/webpack-hot-module-replacement-hmr-e756a726a07#.coqd1yp0s
                 hotUpdateMainFilename: "hot/[hash].hot-update.json",        //by default - HMR manifest
                 hotUpdateChunkFilename: "hot/[hash].[id].hot-update.js"     //by default - HMR chunk
