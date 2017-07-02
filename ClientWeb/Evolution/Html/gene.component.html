@@ -33,7 +33,7 @@
         <div *ngIf="gene.mutationSites.length > 0" ngClass="row">
             <div ngClass="col-xs-1 gene-label-sites-container">Mutated</div>
             <div ngClass="col-xs-10 col-xs-offset-1 gene-sites-container">
-                <span *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutateSite(site)">{{site.name}}</span> <!--[class]="site.isMutated ? 'site-mutated': site.name"-->
+                <span *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutateSite($event, site)">{{site.name}}</span> <!--[class]="site.isMutated ? 'site-mutated': site.name"-->
             </div>
         </div>
     </div>
