@@ -24,9 +24,9 @@ const defaultState: State = {
     selectedGenes: new GeneList(),      //[],
     availableGenes: new GeneList(
         //TODO: find a way to map/transform SiteEnum to Site
-        new Gene('HFE', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G)], 'Excess of iron in the body'),  //Surplus
-        new Gene('ALDH2', [new Site(SiteEnum.G),new Site(SiteEnum.T),new Site(SiteEnum.U)], 'Alcohol intolerance')
-    ).add(new Gene('GJB2', [new Site(SiteEnum.A)], 'Deafness')),        //[GeneEnum.Human, GeneEnum.Ape, GeneEnum.Jellyfish, GeneEnum.Worm],
+        new Gene('HFE', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.C), new Site(SiteEnum.U), new Site(SiteEnum.C)], 'Excess of iron in the body'),  //Surplus
+        new Gene('ALDH2', [new Site(SiteEnum.G), new Site(SiteEnum.T),new Site(SiteEnum.U), new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G)], 'Alcohol intolerance')
+    ).add(new Gene('GJB2', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.T), new Site(SiteEnum.U)], 'Deafness')),        //[GeneEnum.Human, GeneEnum.Ape, GeneEnum.Jellyfish, GeneEnum.Worm],
     mutationChanged$: undefined,
     mutationChange: undefined   //Note: possible to use empty implementation: (enabled: boolean) => {}
 }
