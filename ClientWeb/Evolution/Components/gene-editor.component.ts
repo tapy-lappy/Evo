@@ -75,7 +75,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     ngOnInit(): void {
         this.geneInteraction.additionSuccessed$.subscribe(success => {
             if (success)
-                //Remark: cleans form AND because this.gene bounded to form by [(gene.name)] etc. it sets all the gene properties to NULL and
+                //Remark: cleans form AND because this.gene bounded to form by [(ngModel)]="gene.name" etc. it sets all the gene properties to NULL and
                 //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):
                 this.editorForm.reset()
         });
