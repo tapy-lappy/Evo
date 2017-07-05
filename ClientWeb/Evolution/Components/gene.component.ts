@@ -150,10 +150,6 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         let geneService = this.getGeneService();                    //Done
         geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
-    mutateSite(site: Site){
-        let mutationService = this.getMutationService();
-        mutationService.mutateSite(site);
-    }
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
@@ -163,6 +159,10 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
         this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
+    }
+    mutateSite(event: MouseEvent, site: Site){
+        this.stopPropagation(event);
+        this.getMutationService().mutateSite(site);
     }
 
 }
