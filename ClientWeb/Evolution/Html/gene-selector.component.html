@@ -22,8 +22,8 @@
 </div>
 <div class="row">
     <div class="col-xs6" *ngIf="errors">
-        <div class="alert alert-info" *ngFor="let err of errors">
-            {{err}}
+        <div class="alert alert-warning alert-warning-border-red" *ngFor="let err of errors">
+            <u>{{err}}</u>
         </div>
     </div>
 </div>
