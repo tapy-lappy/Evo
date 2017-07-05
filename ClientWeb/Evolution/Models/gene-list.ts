@@ -11,7 +11,7 @@ import {Observable} from "rxjs/Observable";
 
 //export {GENE_ENUM_TOKEN, GeneEnum}
 
-//TODO: indexing by string: this._genes['gene_name']
+//Remark: object indexed by strings(string index array): this._genes['gene_name']
 interface GeneDictionary{
     [key: string]: Gene;
 }
@@ -47,8 +47,12 @@ export default class GeneList{
     remove(gene: Gene){
         // if(this._genes.some(g => g.name === gene.name))
         //     this.arrayHelper.removeFrom(gene, this._genes);
-        if(this.contains(gene))
-            this._genes[gene.name] = undefined;         //TODO: need to fully remove key-value pair, not leaving key-undefined
+        if(this.contains(gene)) {
+            //this._genes[gene.name] = undefined;         //TODO: need to fully remove key-value pair, not leaving key-undefined
+            delete this._genes[gene.name];                //Done
+            // console.log(this._genes);
+            // console.log(Object.keys(this._genes));     //https://learn.javascript.ru/array-methods#object-keys-obj
+        }
         return this;
     }
 
