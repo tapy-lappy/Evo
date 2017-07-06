@@ -34,8 +34,13 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     get array(): Array<T>{return this.toArray();}
     //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 
-    constructor(source: IDictionary<T> | Array<T>){
-        this.source = source;
+    //TODO: find a way to declare that MAPPER must be used ONLY with a Array<T> initialization array(maybe some constrain for params - TS advanced type check)
+    constructor(source: IDictionary<T> | Array<T>, mapper?:(gene:T)=>KeyValuePair){
+        if(source instanceof Array) {
+            this.source = {};
+            source.map(i => mapper(i)).forEach(i => this.add(i));
+        }
+        else this.source = source;
     }
 
     get length(): number{

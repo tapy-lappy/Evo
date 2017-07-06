@@ -29,7 +29,7 @@ export default class GeneStorage{
     }
 
     constructor(...genes: Array<Gene>) {
-        this._genes = new DictionaryArray(genes);
+        this._genes = new DictionaryArray(genes, this.createKeyValue);
     }
 
     private execute(callback: (param: KeyValuePair) => void,
