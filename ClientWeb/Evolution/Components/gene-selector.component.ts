@@ -54,11 +54,11 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
     }
 
     get availableGenes(): Gene[]{
-        return this.appState.state.availableGenes.genes;
+        return this.appState.state.availableGenes.geneArray;
     }
 
     get selectedGenes(): Gene[]{
-        return this.appState.state.selectedGenes.genes;
+        return this.appState.state.selectedGenes.geneArray;
     }
 
     get hasAvailableGenes(){
@@ -70,15 +70,15 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
     }
 
     add(gene: string|Gene){
-        if(typeof gene === 'string')
-            gene = this.appState.state.availableGenes.genesIndexed[gene];
+        if(typeof gene === 'string')    //type guard by typeof
+            gene = this.appState.state.availableGenes.geneDictionary[gene];
         this.appState.state.selectedGenes.add(gene);
         this.appState.state.availableGenes.remove(gene);
     }
     remove(gene: string|Gene)
     {
         if(typeof gene === 'string')
-            gene = this.appState.state.selectedGenes.genesIndexed[gene];
+            gene = this.appState.state.selectedGenes.geneDictionary[gene];
         this.appState.state.availableGenes.add(gene);
         this.appState.state.selectedGenes.remove(gene);
     }

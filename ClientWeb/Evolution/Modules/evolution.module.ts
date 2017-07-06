@@ -15,8 +15,8 @@ import { AppState } from '../AppState/app-state';
 import {GeneSelectorComponent} from "../Components/gene-selector.component";
 import {GeneListComponent} from "../Components/gene-list.component";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-//import {GeneEnum, GENE_ENUM_TOKEN, default as GeneList} from "../Enums/gene-enum";  //import default class as GeneList alias
-import GeneList from "../Models/gene-list";
+//import {GeneEnum, GENE_ENUM_TOKEN, default as GeneStorage} from "../Enums/gene-enum";  //import default class as GeneStorage alias
+import GeneList from "../Models/gene-storage";      //TODO: actually it was renamed to GeneStorage but because it's default exported class we may have different name here to represent that GeneStorage
 import {HighlightDirective} from "../Directives/highlight.directive";
 import {MoleculeViewerComponent} from "../Components/molecule-viewer.component";
 import {ArrayHelper} from "../Helpers/array-helper";

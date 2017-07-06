@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/distinctUntilChanged';
-import {/*GeneEnum,*/ default as GeneList} from "../Models/gene-list";
+import {/*GeneEnum,*/ default as GeneStorage} from "../Models/gene-storage";
 import {Subject} from "rxjs/Subject";
 import {Observable} from "rxjs/Observable";
 import Gene from "../Models/gene";
@@ -12,8 +12,8 @@ import Site from "../Models/site";
 export interface State {
 // define your state here
     mutationEnabled: boolean,
-    selectedGenes: GeneList,//GeneEnum[],
-    availableGenes: GeneList,//Array<GeneEnum>,
+    selectedGenes: GeneStorage,//GeneEnum[],
+    availableGenes: GeneStorage,//Array<GeneEnum>,
     mutationChanged$?: Observable<boolean>,         //Remark: added ? to make property optional and avoid problem with its default implementation into defaultState
     mutationChange?: (enabled: boolean) => void     //Remark: added ? to make property optional and avoid problem with its default implementation into defaultState
 }
@@ -21,12 +21,12 @@ export interface State {
 const defaultState: State = {
 // define your initial state here
     mutationEnabled: false,
-    selectedGenes: new GeneList(),      //[],
-    availableGenes: new GeneList(
+    selectedGenes: new GeneStorage(),      //[],
+    availableGenes: new GeneStorage(
         //TODO: find a way to map/transform SiteEnum to Site
         new Gene('HFE', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.C), new Site(SiteEnum.U), new Site(SiteEnum.C)], 'Excess of iron in the body'),  //Surplus
         new Gene('ALDH2', [new Site(SiteEnum.G), new Site(SiteEnum.T),new Site(SiteEnum.U), new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G)], 'Alcohol intolerance')
-    ).add(new Gene('GJB2', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.T), new Site(SiteEnum.U)], 'Deafness')),        //[GeneEnum.Human, GeneEnum.Ape, GeneEnum.Jellyfish, GeneEnum.Worm],
+    ).add(new Gene('GJB2', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.T), new Site(SiteEnum.U)], 'Deafness')),
     mutationChanged$: undefined,
     mutationChange: undefined   //Note: possible to use empty implementation: (enabled: boolean) => {}
 }

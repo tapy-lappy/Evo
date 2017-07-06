@@ -14,6 +14,6 @@ export class GeneListComponent extends BaseGeneComponent {
     }
 
     get geneList(){
-        return this.appState.state.selectedGenes.genes;
+        return this.appState.state.selectedGenes.geneArray;
     }
 }

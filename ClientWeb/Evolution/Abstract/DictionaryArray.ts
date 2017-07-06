@@ -5,33 +5,41 @@ interface IDictionary<T>{
 // interface IKeyValuePair<T>{
 //     keyValuePairs: {key: T}[];
 // }
-interface IArray<T>{            //TODO: it's possible to use standartized Array<T> instead of IArray<T>
-    [index: number]: T;
-}
 
 interface IDictionaryArray<T>{
     dictionary: IDictionary<T>;
-    array: IArray<T>;
+    array: Array<T>;
     length: number;
-    //new (source: IDictionary<T> | IArray<T>): IDictionaryArray<T>;      //constructon annotation in interface
+    //new (source: IDictionary<T> | Array<T>): IDictionaryArray<T>;      //constructon annotation in interface
 }
+
+export type KeyValuePair = {keyIndex: number|string, value: any};
+export type Predicate<T> = (item1:T)=>boolean;
+export type Selector<T> = (item:T)=>string;
+/**
+ * Condition of removing item
+ * @param value Represent a item to remove
+ * @param predicate Function to set up condition of checking that @value exists in the DictionaryArray<T>
+ * @param selector Function to adjust how to get key(string) to remove item from DictionaryArray<T>
+ */
+export type Condition<T> = {value: T, predicate: Predicate<T>, selector: Selector<T>};
 
 export default class DictionaryArray<T> implements IDictionaryArray<T>{
     //private source: { [index:string]: T; } | { [index:number]: T; };      //it's possible to use this object notation
-    private source: IDictionary<T> | IArray<T>;
+    private source: IDictionary<T> | Array<T>;
     //readonly _dictionary: IDictionary<T> = {} as IDictionary<T>;
     get dictionary(){return this.toDictionary();}
     //pairs: IKeyValuePair<T> = {keyValuePairs: []};
-    //readonly _array: IArray<T> = {};
-    get array(): IArray<T>{return this.toArray();}
+    //readonly _array: Array<T> = {};
+    get array(): Array<T>{return this.toArray();}
     //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 
-    constructor(source: IDictionary<T> | IArray<T>){
+    constructor(source: IDictionary<T> | Array<T>){
         this.source = source;
     }
 
     get length(): number{
-        return this.array ? Object.keys(this.array).length : 0;
+        return this.array ? Object.keys(this.array).length : 0;     //https://learn.javascript.ru/array-methods#object-keys-obj
     }
 
     get checkSource(){return this.source != undefined && this.source != null;}
@@ -53,39 +61,64 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
         return dictionary as {[key: string]: T};
     }
 
-    cast<U extends IDictionary<T> | IArray<T>>(): U{
+    cast<U extends IDictionary<T> | Array<T>>(): U{     //Note: generic constraint - <U extends IDictionary<T> | Array<T>>
         return <U>this.source;
     }
-    contains(keyIndexValue: string|number|T){
-        if(typeof keyIndexValue === "string")
-            return this.cast<IDictionary<T>>()[keyIndexValue] != undefined;
-        else if (typeof keyIndexValue === "number")
-            return this.cast<IArray<T>>()[keyIndexValue] != undefined;
-        else
-            return this.cast<Array<T>>().some(item => item === keyIndexValue);
+
+    contains(keyIndexCondition: string|number|Condition<T>,){
+        if(typeof keyIndexCondition === "string")
+            return this.cast<IDictionary<T>>()[keyIndexCondition] != undefined;
+        else if (typeof keyIndexCondition === "number")
+            return this.cast<Array<T>>()[keyIndexCondition] != undefined;
+        // else{
+        //     console.log(this.array.indexOf(keyIndexValue));
+        //     return this.array.indexOf(keyIndexValue) !== -1;
+        // }
+        else if(keyIndexCondition!.predicate)       //TODO: !.
+            return this.array.some(item => keyIndexCondition.predicate(item));      //may use find() instead some()
+        return false;
     }
-    add(value: T, keyIndex?: number|string){
+    add(keyValuePair: {keyIndex: number|string, value: T}){
+        if(!keyValuePair && !keyValuePair.keyIndex)
+            throw Error(`Key or index is not provided`);
+        let keyIndex = keyValuePair.keyIndex;
+        let value = keyValuePair.value;
         if(typeof keyIndex === "string") {
             if(this.contains(keyIndex))
                 throw Error(`Item with key: ${keyIndex} is already there`);
             this.cast<IDictionary<T>>()[keyIndex] = value;
         }
-        else {
-            if(!keyIndex && this.contains(value))                                   //keyIndex is not provided
-                throw Error(`Item: ${value} is already there`);
-            else if(this.contains(keyIndex))                                        //typeof keyIndex === 'number'
+        else if(typeof keyIndex === "number"){
+            if(this.contains(keyIndex))
                 throw Error(`Item with an index[${keyIndex}] is already there`);
-            this.cast<Array<T>>().push(value);                                      //if all fine
+            this.cast<Array<T>>()[keyIndex] = value;
         }
     }
     remove(index:number):void;
     remove(key:string):void;
-    remove(keyIndex: number|string){
-        if(!this.contains(keyIndex))
-            throw Error(`Item with index/key: ${keyIndex} is absent`);
-        if(typeof keyIndex === "number")
-            delete this.cast<IArray<T>>()[keyIndex];
-        else if (typeof keyIndex === "string")
-            delete this.cast<IDictionary<T>>()[keyIndex];
+    remove(condition: Condition<T>): void;
+    remove(keyIndexCondition: number|string|Condition<T>){
+        // if((typeof keyIndexValue === 'number' || typeof keyIndexValue === 'string') && !this.contains(keyIndexValue))
+        //     throw Error(`Item with index/key: ${keyIndexValue} is absent`);
+        if(this.contains(keyIndexCondition)) {
+            if (typeof keyIndexCondition === "number")
+                delete this.cast<Array<T>>()[keyIndexCondition];
+            else if (typeof keyIndexCondition === "string")
+                delete this.cast<IDictionary<T>>()[keyIndexCondition];
+            else if (keyIndexCondition) {
+                // let index = this.getIndex(keyIndexCondition);       //TODO: won't work when array items is KeyValuePairs
+                // delete this.cast<Array<T>>()[index];
+                let item = this.getItem(keyIndexCondition);
+                delete this.cast<IDictionary<T>>()[keyIndexCondition.selector(item)];
+            }
+        }
+    }
+    getIndex(condition: Condition<T>):number{
+        if(!this.contains(condition)) return undefined;
+        return this.array.indexOf(this.getItem(condition));
+    }
+    getItem(condition: Condition<T>):T{
+        if(!this.contains(condition)) return undefined;
+        return this.array.filter(condition.predicate)[0];
     }
 }
