@@ -1,6 +1,7 @@
 //https://stackoverflow.com/a/35370453
 export interface IDictionary<T>{
     [key: string]: T;
+    //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 }
 // interface IKeyValuePair<T>{
 //     keyValuePairs: {key: T}[];
@@ -10,7 +11,7 @@ interface IDictionaryArray<T>{
     dictionary: IDictionary<T>;
     array: Array<T>;
     length: number;
-    //new (source: IDictionary<T> | Array<T>): IDictionaryArray<T>;      //constructon annotation in interface
+    //new (source: IDictionary<T> | Array<T>): IDictionaryArray<T>;      //TODO: constructor annotation in interface
 }
 
 export type KeyValuePair = {keyIndex: number|string, value: any};
@@ -19,6 +20,7 @@ export type Selector<T> = (item:T)=>string;
 type KeyValuePairTransformer<T> = (item:T)=>KeyValuePair;
 export type ArrayMapper<T> = {mapper: KeyValuePairTransformer<T>};
 export type ArrayConverter<T> = Array<T> & ArrayMapper<T>;    //type aliasing together with intersection types(&)
+//Remark: need to put cursor to Condition<...> and press Ctrl + Q to see this info:
 /**
  * Condition of removing item
  * @param value Represent a item to remove
@@ -30,12 +32,9 @@ export type Condition<T> = {value: T, predicate: Predicate<T>, selector: Selecto
 export default class DictionaryArray<T> implements IDictionaryArray<T>{
     //private source: { [index:string]: T; } | { [index:number]: T; };      //it's possible to use this object notation
     private source: IDictionary<T> | Array<T>;
-    //readonly _dictionary: IDictionary<T> = {} as IDictionary<T>;
     get dictionary(){return this.toDictionary();}
     //pairs: IKeyValuePair<T> = {keyValuePairs: []};
-    //readonly _array: Array<T> = {};
     get array(): Array<T>{return this.toArray();}
-    //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 
     //mixin(intersection types T1 & T2)
     static convertArray<T, T1 extends Array<T>, T2 extends ArrayMapper<T>>(instance1: T1, instance2: T2) : T1 & T2 {
@@ -69,18 +68,18 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
         return this.array ? Object.keys(this.array).length : 0;     //https://learn.javascript.ru/array-methods#object-keys-obj
     }
 
-    get checkSource(){return this.source != undefined && this.source != null;}
-    toArray(): T[]{
+    private get checkSource(){return this.source != undefined && this.source != null;}
+    private toArray(): T[]{
         if(!this.checkSource) return [];
         let array:any = this.source;    //Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
         return Object.keys(array).map(prop => array[prop]);
     }
-    // toKeyValuePairs(): { key: T; }[] {
+    // private toKeyValuePairs(): { key: T; }[] {
     //     if(!this.checkSource) return [];
     //     let dictionary:any = this.source;//Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
     //     return Object.keys(dictionary).map(key => {return {key: dictionary[key]};});
     // }
-    toDictionary(): {[key: string]: T} {      //transformation to indexed object
+    private toDictionary(): IDictionary<T>/*{[key: string]: T}*/ {      //transformation to indexed object
         if(!this.checkSource) return {};
         let dictionary:any = {};//Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
         let collection:any = this.source;//Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
@@ -88,7 +87,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
         return dictionary as {[key: string]: T};
     }
 
-    cast<U extends IDictionary<T> | Array<T>>(): U{     //Note: generic constraint - <U extends IDictionary<T> | Array<T>>
+    private cast<U extends IDictionary<T> | Array<T>>(): U{     //Note: generic constraint - <U extends IDictionary<T> | Array<T>>
         return <U>this.source;
     }
 
@@ -125,15 +124,13 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     remove(key:string):void;
     remove(condition: Condition<T>): void;
     remove(keyIndexCondition: number|string|Condition<T>){
-        // if((typeof keyIndexValue === 'number' || typeof keyIndexValue === 'string') && !this.contains(keyIndexValue))
-        //     throw Error(`Item with index/key: ${keyIndexValue} is absent`);
         if(this.contains(keyIndexCondition)) {
             if (typeof keyIndexCondition === "number")
                 delete this.cast<Array<T>>()[keyIndexCondition];
             else if (typeof keyIndexCondition === "string")
                 delete this.cast<IDictionary<T>>()[keyIndexCondition];
             else if (keyIndexCondition) {
-                // let index = this.getIndex(keyIndexCondition);       //TODO: won't work when array items is KeyValuePairs
+                // let index = this.getIndex(keyIndexCondition);       //TODO: won't work when array items is KeyValuePairs because index will have number type
                 // delete this.cast<Array<T>>()[index];
                 let item = this.getItem(keyIndexCondition);
                 delete this.cast<IDictionary<T>>()[keyIndexCondition.selector(item)];
