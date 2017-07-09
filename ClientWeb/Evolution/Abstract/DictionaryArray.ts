@@ -1,5 +1,5 @@
 //https://stackoverflow.com/a/35370453
-interface IDictionary<T>{
+export interface IDictionary<T>{
     [key: string]: T;
 }
 // interface IKeyValuePair<T>{
@@ -16,6 +16,9 @@ interface IDictionaryArray<T>{
 export type KeyValuePair = {keyIndex: number|string, value: any};
 export type Predicate<T> = (item1:T)=>boolean;
 export type Selector<T> = (item:T)=>string;
+type KeyValuePairTransformer<T> = (item:T)=>KeyValuePair;
+export type ArrayMapper<T> = {mapper: KeyValuePairTransformer<T>};
+export type ArrayConverter<T> = Array<T> & ArrayMapper<T>;    //type aliasing together with intersection types(&)
 /**
  * Condition of removing item
  * @param value Represent a item to remove
@@ -34,11 +37,27 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     get array(): Array<T>{return this.toArray();}
     //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 
-    //TODO: find a way to declare that MAPPER must be used ONLY with a Array<T> initialization array(maybe some constrain for params - TS advanced type check)
-    constructor(source: IDictionary<T> | Array<T>, mapper?:(gene:T)=>KeyValuePair){
-        if(source instanceof Array) {
+    //mixin(intersection types T1 & T2)
+    static convertArray<T, T1 extends Array<T>, T2 extends ArrayMapper<T>>(instance1: T1, instance2: T2) : T1 & T2 {
+        let result = <T1 & T2>{};
+        Object.keys(instance1).forEach(p => (<any>result)[p] = (<any>instance1)[p]);
+        Object.keys(instance2).forEach(p => (result as any)[p] = (instance2 as any)[p]);
+        return result;
+    }
+
+    //User-Defined Type Guards - https://www.typescriptlang.org/docs/handbook/advanced-types.html
+    isArrayConverter(source: IDictionary<T> | ArrayConverter<T>): source is ArrayConverter<T>{
+        return (<ArrayConverter<T>>source).mapper !== undefined;
+    }
+
+    constructor(source: IDictionary<T> | ArrayConverter<T>){
+        if(this.isArrayConverter(source)){
             this.source = {};
-            source.map(i => mapper(i)).forEach(i => this.add(i));
+            Object.keys(source)
+            //TODO: maybe better way is to use destruction to separate mixin on Array<T> and ArrayMapper<T>?
+                .filter(p => p !== 'mapper')        //exclude mapper mixin's property from source array items(separation of mixin here)
+                .map(p => source.mapper(source[p as any]))
+                .forEach(keyValuePair => this.add(keyValuePair));
         }
         else this.source = source;
     }

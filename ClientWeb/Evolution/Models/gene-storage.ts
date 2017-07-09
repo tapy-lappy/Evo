@@ -2,7 +2,7 @@
 import Gene from "./gene";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {Observable} from "rxjs/Observable";
-import DictionaryArray, {Condition, KeyValuePair} from "../Abstract/DictionaryArray";
+import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair, IDictionary} from "../Abstract/DictionaryArray";
 import Site from "./site";
 import {SiteEnum} from "../Enums/site-enum";
 
@@ -29,7 +29,14 @@ export default class GeneStorage{
     }
 
     constructor(...genes: Array<Gene>) {
-        this._genes = new DictionaryArray(genes, this.createKeyValue);
+        let convertedArray = DictionaryArray.convertArray<Gene, Array<Gene>, ArrayMapper<Gene>>(genes || [], {mapper: this.createKeyValue});
+        this._genes = new DictionaryArray<Gene>(convertedArray);
+
+        // let dict:IDictionary<Gene> = {
+        //     "AOR": new Gene("Aor", [], ''),
+        //     "AOR12": new Gene("Aor", [], ''),
+        // }
+        // this._genes = new DictionaryArray<Gene>(dict);
     }
 
     private execute(callback: (param: KeyValuePair) => void,
