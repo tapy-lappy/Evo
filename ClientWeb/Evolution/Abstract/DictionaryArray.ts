@@ -53,13 +53,16 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     constructor(source: IDictionary<T> | ArrayConverter<T>){
         if(this.isArrayConverter(source)){
             this.source = {};
-            Object.keys(source)
-            //TODO: maybe better way is to use destruction to separate mixin on Array<T> and ArrayMapper<T>?
-                .filter(p => p !== 'mapper')        //exclude mapper mixin's property from source array items(separation of mixin here)
-                .map(p => source.mapper(source[p as any]))
-                .forEach(keyValuePair => this.add(keyValuePair));
+            let {mapper, ...array} : {mapper: KeyValuePairTransformer<T>} = source;     //Note: destruction - https://www.typescriptlang.org/docs/handbook/variable-declarations.html
+            if(array instanceof Array)
+                array.map(item => mapper(item)).forEach(keyValuePair => this.add(keyValuePair));
+            // Object.keys(source)
+            //     .filter(p => p !== 'mapper')        //exclude mapper mixin's property from source array items(separation of mixin here)
+            //     .map(p => source.mapper(source[p as any]))
+            //     .forEach(keyValuePair => this.add(keyValuePair));
         }
-        else this.source = source;
+        else
+            this.source = source;
     }
 
     get length(): number{
