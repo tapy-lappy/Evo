@@ -2,7 +2,7 @@
 import Gene from "./gene";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {Observable} from "rxjs/Observable";
-import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair, IDictionary} from "../Abstract/DictionaryArray";
+import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair, IDictionary} from "../Common/DictionaryArray";
 import Site from "./site";
 import {SiteEnum} from "../Enums/site-enum";
 

@@ -130,7 +130,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
             else if (typeof keyIndexCondition === "string")
                 delete this.cast<IDictionary<T>>()[keyIndexCondition];
             else if (keyIndexCondition) {
-                // let index = this.getIndex(keyIndexCondition);       //TODO: won't work when array items is KeyValuePairs because index will have number type
+                // let index = this.getIndex(keyIndexCondition);       //Note: won't work when array items is KeyValuePairs because 'index' will have number type even if a source item must be accessed by string key
                 // delete this.cast<Array<T>>()[index];
                 let item = this.getItem(keyIndexCondition);
                 delete this.cast<IDictionary<T>>()[keyIndexCondition.selector(item)];
