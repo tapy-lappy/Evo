@@ -48,17 +48,26 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     isArrayConverter(source: IDictionary<T> | ArrayConverter<T>): source is ArrayConverter<T>{
         return (<ArrayConverter<T>>source).mapper !== undefined;
     }
+    convertObjectLiteralToArray<T>(obj: any) : T[]{
+        let result:T[] = [];
+        Object.keys(obj).forEach(p => result.push(obj[p]));
+        return result;
+    }
 
     constructor(source: IDictionary<T> | ArrayConverter<T>){
         if(this.isArrayConverter(source)){
             this.source = {};
             let {mapper, ...array} : {mapper: KeyValuePairTransformer<T>} = source;     //Note: destruction - https://www.typescriptlang.org/docs/handbook/variable-declarations.html
-            if(array instanceof Array)
+            array = this.convertObjectLiteralToArray(array);        //transform object literal to array
+            if(array instanceof Array) {
                 array.map(item => mapper(item)).forEach(keyValuePair => this.add(keyValuePair));
-            // Object.keys(source)
-            //     .filter(p => p !== 'mapper')        //exclude mapper mixin's property from source array items(separation of mixin here)
-            //     .map(p => source.mapper(source[p as any]))
-            //     .forEach(keyValuePair => this.add(keyValuePair));
+                //Object.keys(array).map((item: string) => mapper((<Array<T>>array)[item as any])).forEach(keyValuePair => this.add(keyValuePair)); //do the same
+            }
+            // else     //Workaround: in case if we do not get array from mixin
+            //     Object.keys(source)
+            //         .filter(p => p !== 'mapper')        //exclude mapper mixin's property from source array items(separation of mixin here)
+            //         .map(p => source.mapper(source[p as any]))
+            //         .forEach(keyValuePair => this.add(keyValuePair));
         }
         else
             this.source = source;
