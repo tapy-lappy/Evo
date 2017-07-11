@@ -12,13 +12,13 @@ import {Observable} from "rxjs/Observable";
     moduleId: module.id,
     selector: 'gene-editor',
     styles: [String(require('../Css/gene-editor.component.less'))],
-    templateUrl: '../Html/gene-editor.component.html'
+    templateUrl: '../Html/gene-editor.component.html',
+    providers: [{provide: Gene, useValue: new Gene('', [], '')}]        //https://angular.io/guide/dependency-injection-in-action#the-provide-object-literal
 })
 
 export class GeneEditorComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     private currentChosenSite: Site;
     //get diagnostic(){return JSON.stringify(this.gene);}
-    private gene: Gene = new Gene('', [], '');      //TODO: create DI factory to initialize constructor of Gene with this empty values and then use it in component's constructor
     private validationMessageClasses = 'alert alert-danger';
     private submitted = false;
     private validationSettings = {
@@ -29,7 +29,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
 
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
-    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService) {
+    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService, private gene:Gene) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];
