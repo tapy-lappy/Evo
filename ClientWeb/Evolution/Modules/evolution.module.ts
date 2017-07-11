@@ -44,10 +44,13 @@ const routes: Routes = [
     declarations: [componentDeclarations, directiveDeclarations, pipeDeclarations],
     bootstrap: [AppComponent],
     providers: [
-        AppState, GeneList, LogService, ArrayHelper,
+        {provide: AppState, useValue: new AppState()},    //useValue - because AppState should be only one local state and we shouldn't create instance of local state each time
+        {provide: GeneList, useClass: GeneList},    //GeneList //both form of use are equivalent
+        LogService, ArrayHelper,
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},      //https://angular.io/guide/dependency-injection#the-provider-class-and-provide-object-literal
         {provide: SITE_ENUMS_TOKEN, useValue:  SiteEnum},
         //{provide: GENE_ENUM_TOKEN, useValue: GeneEnum}
+        {provide: URL, useValue:'http://localhost:9001'}
     ]//,
     //schemas: [NO_ERRORS_SCHEMA]       //this is needed if you wanna use not Angular/HTML(e.g. <pdb>) tag into HTML templates of your components
 })
