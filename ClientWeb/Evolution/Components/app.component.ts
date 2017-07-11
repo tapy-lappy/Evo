@@ -7,6 +7,10 @@ import {GeneSelectorComponent} from "./gene-selector.component";
 import GeneInteractionService from "../Services/gene-interaction.service";
 import {SiteInteractionService} from "../Services/site-interaction.service";
 import Gene from "../Models/gene";
+import {
+    DiscriminatedEnum1, DiscriminatedEnum3, DiscriminatedEnums, Enum3,
+    getEnumValue
+} from "../Common/DiscriminatedUnion";
 
 @Component({
     moduleId: module.id,
@@ -28,6 +32,11 @@ export class AppComponent extends BaseGeneComponent implements OnInit{
             gene => this.removeFromDnaSelector(gene),
             error => this.error(error)
         );
+
+        //Check it works:
+        let discriminatedEnum3: DiscriminatedEnum3 = {kind: "enum3", value: Enum3.prefferences};
+        let unitedDiscriminatedEnum: DiscriminatedEnums = discriminatedEnum3;
+        alert(getEnumValue(unitedDiscriminatedEnum) + " " + Enum3[getEnumValue(unitedDiscriminatedEnum)]);  //0 prefferences
     }
 
     toogleMutation() {
