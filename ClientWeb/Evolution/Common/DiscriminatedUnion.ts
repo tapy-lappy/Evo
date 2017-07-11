@@ -1,24 +1,24 @@
 // Discriminated Unions(tagged unions, algebraic data types)
 // Combination of string literal types, union types, type guards and type aliases
 
-enum Enum1{id, name, description};
-enum Enum2{age, address};
-enum Enum3{prefferences, options};
+export enum Enum1{id, name, description};
+export enum Enum2{age, address};
+export enum Enum3{prefferences, options};
 //Non hierarchical(without inheritance) - discriminated interfaces:
-interface DiscriminatedEnum1{
+export interface DiscriminatedEnum1{
     kind: "enum1",      //discriminant property
     value: Enum1
 }
-interface DiscriminatedEnum2{
+export interface DiscriminatedEnum2{
     kind: "enum2",
     value: Enum2
 }
-interface DiscriminatedEnum3{
+export interface DiscriminatedEnum3{
     kind: "enum3",
     value: Enum3
 }
-type Enums = Enum1 | Enum2 | Enum3;
-type DiscriminatedEnums = DiscriminatedEnum1 | DiscriminatedEnum2 | DiscriminatedEnum3;     //union & aliasing
+export type Enums = Enum1 | Enum2 | Enum3;
+export type DiscriminatedEnums = DiscriminatedEnum1 | DiscriminatedEnum2 | DiscriminatedEnum3;     //union & aliasing
 
 /*
  https://www.typescriptlang.org/docs/handbook/advanced-types.html - Exhaustiveness checking
@@ -30,7 +30,7 @@ function assertNever(enums: never):never{
     throw new Error(`Unexisted enum type: ${enums}`);
 }
 
-function getEnumValue(enums: DiscriminatedEnums): Enums{
+export function getEnumValue(enums: DiscriminatedEnums): Enums{
     switch (enums.kind){
         case "enum1": return enums.value;
         case "enum2": return enums.value;
