@@ -7,29 +7,24 @@ import {Resolvable} from "../Abstract/resolvable";
 
 @Injectable()
 export default class GeneService implements Resolvable{
-    protected _gene: Gene;
+    constructor(private _gene: Gene, private mutationService: MutationService) {}
 
-    constructor(private geneItem: Gene, private mutationService: MutationService) {
-        let sites = this.getGeneSites();
-        this._gene = new Gene(geneItem.name, sites);
-    }
-
-    getGeneSites():Site[]{
-        let sites: Site[] = [];
-        for(let i=0; i<this.geneItem.sites.length; i++ )
-        {
-            let randomValue = Math.random();
-            let siteItem:SiteEnum;
-            if(randomValue >= 0.8) siteItem = SiteEnum.A;
-            else if(randomValue >= 0.6) siteItem = SiteEnum.C;
-            else if(randomValue >= 0.4) siteItem = SiteEnum.G;
-            else if(randomValue >= 0.2) siteItem = SiteEnum.T;
-            else siteItem = SiteEnum.U;
-
-            sites.push(new Site(siteItem));
-        }
-        return sites;
-    }
+    // getGeneSites():Site[]{
+    //     let sites: Site[] = [];
+    //     for(let i=0; i<this.geneItem.sites.length; i++ )
+    //     {
+    //         let randomValue = Math.random();
+    //         let siteItem:SiteEnum;
+    //         if(randomValue >= 0.8) siteItem = SiteEnum.A;
+    //         else if(randomValue >= 0.6) siteItem = SiteEnum.C;
+    //         else if(randomValue >= 0.4) siteItem = SiteEnum.G;
+    //         else if(randomValue >= 0.2) siteItem = SiteEnum.T;
+    //         else siteItem = SiteEnum.U;
+    //
+    //         sites.push(new Site(siteItem));
+    //     }
+    //     return sites;
+    // }
 
     get gene(): Gene{
         return this.checkMutation(this._gene, this.mutationService.isEnabled);
