@@ -6,6 +6,7 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import GeneInteractionService from "../Services/gene-interaction.service";
 import {Observable} from "rxjs/Observable";
+import {SiteEnum} from "../Enums/site-enum";
 
 
 @Component({
@@ -42,11 +43,11 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
         this.querySubscription = activeRoute.queryParams.subscribe((params: Params) => {
             this.gene.description = params['description'];
             this.gene.sites = [];       //cleaning sites array to prevent accumulation if we use two links which route to this component and switch between them
-            if(params['sites']) {
-                let sites = JSON.parse(params['sites'].replace(/'/g, '"'));
+            if(params['siteEnums']) {
+                let siteEnums = JSON.parse(params['siteEnums'].replace(/'/g, '"'));
                 //https://learn.javascript.ru/array-iteration
-                sites.forEach((site: any) => {           //map - to transform array to array of other items
-                    this.gene.sites.push(<Site>site);
+                siteEnums.forEach((se: {site:SiteEnum}) => {           //map - to transform array to array of other items
+                    this.gene.sites.push(new Site(se.site));
                 });
                 this.currentChosenSite = this.gene.sites[0];
             }
@@ -82,6 +83,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     }
 
     add(){
+        //TODO: Angular/TS allows to do copies simplier - find it
         //Note: Using local LET variable to prevent setting all the this.gene properties to NULL when we reset the form
         let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
         this.geneInteraction.add(gene);

@@ -12,8 +12,8 @@
         <div ngClass="row">
             <div [ngClass]="col-xs-12">
                 <nav>
-                    <a routerLink="gene/Jellyfish/edit" [queryParams]="{'description':'test', 'sites': '[{\'site\':4}, {\'site\':2}, {\'site\':0}]'}">Add gene</a>
-                    <a [routerLink]="['gene', 'Worm', 'edit']" [queryParams]="{'sites': '[{\'site\':4}]'}">Add gene</a>
+                    <a routerLink="gene/Jellyfish/edit" [queryParams]="{'description':'test', 'siteEnums': '[{\'site\':4}, {\'site\':2}, {\'site\':0}]'}">Add gene</a>
+                    <a [routerLink]="['gene', 'Worm', 'edit']" [queryParams]="{'siteEnums': '[{\'site\':4}]'}">Add gene</a>
                 </nav>
                 <router-outlet></router-outlet>
             </div>
