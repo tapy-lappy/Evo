@@ -7,6 +7,10 @@ import {GeneSelectorComponent} from "./gene-selector.component";
 import GeneInteractionService from "../Services/gene-interaction.service";
 import {SiteInteractionService} from "../Services/site-interaction.service";
 import Gene from "../Models/gene";
+import {
+    DiscriminatedEnum1, DiscriminatedEnum3, DiscriminatedEnums, Enum3,
+    getEnumValue
+} from "../Common/DiscriminatedUnion";
 
 @Component({
     moduleId: module.id,
