@@ -270,6 +270,13 @@ ModelManifest.xml
 !/ClientWeb/Webpack/**/webpack.dev.config.js
 
 
+
+#===========================================================================
+#IMPORTANT:
+#if file has been already added under GIT then the ignorance rule here
+#doesn't work until that file will be removed under GIT. Only then ignorance
+#rule will start work again.
+#===========================================================================
 !/ClientWeb/Webpack/**/bootstrap.config.js
 
 

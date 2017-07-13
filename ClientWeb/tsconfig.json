@@ -3,7 +3,7 @@
   "compileOnSave": true, //To enable build TypeScript files in Visual Studio IDE automaticaly when changes saved into *.ts file
   "compilerOptions": {
     "rootDirs" :[ //create an output (virtual) directory from following roots(root directories):
-      "Evolution", "Angular2", "wwwroot/html", "wwwroot/css", "wwwroot/images"
+      "Evolution", /*"Angular2",*/ "wwwroot/html", "wwwroot/css", "wwwroot/images"
     ],            //works only for relative module import(like: import './main') - https://www.typescriptlang.org/docs/handbook/module-resolution.html
     //"traceResolution": true,  //to provide detail description what is happening during module resolution process(works only with TS compiler): E:\TravelOrganizer\ClientWeb>tsc -traceResolution
 
@@ -44,13 +44,21 @@
   "include": [
     "src/**/*.ts",
     "Evolution/**/*.ts",
-    "Angular2/**/*.ts",
+    //"Angular2/**/*.ts",
     "Webpack/**/*.ts"   //there are typings definition files(*.d.ts) that are used in angular components
   ],
   "exclude": [
     //For TS files here in their JS files refferences on MAP will be removed: //# sourceMappingURL=webpack.config.js.map
-    //TS files here won't be included in transpiling TS to JS, so *.js and *.js.map files won't be generated for them
+    //TS files here will be included in transpiling TS to JS, but *.js.map files won't be generated for them(ispite of *.js files still will be generated)
+
+    //WebStorm automatically generate JS files(and what we actually need - it's JS files for Webpack) BUT it does not include.
+    //Buy it's connected only with text editor as WebStorm is.
+
+    //Instead of that when application started on Webpack server, Webpack will execute compilation TS and transpiling it to JS. That means
+    //if we have some TS file here and Webpack is launched - when we changes in that TS file Webpack server won't notice that change and so
+    //won't recompile this chunk
+
     "**/webpack.config.ts",
-    "Webpack/**/webpack.?*.config.ts"
+    "Webpack/**/webpack.?*.config.ts" //putting these Webpack files here allows not re-compile them when Webpack is launched
   ]
 }

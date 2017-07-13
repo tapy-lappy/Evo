@@ -2,22 +2,19 @@
 /// <reference path="typings/webpack.d.ts" />
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { 
+var _a = require('webpack'), 
 //ContextReplacementPlugin,
-DefinePlugin, 
-//ProgressPlugin,
-//DllReferencePlugin,
-//    LoaderOptionsPlugin,      //commented for now
-optimize: { CommonsChunkPlugin } } = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+DefinePlugin = _a.DefinePlugin, CommonsChunkPlugin = _a.optimize.CommonsChunkPlugin;
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 //const { ConcatSource } = require('webpack-sources');
 //const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 //const AssetsPlugin = require('assets-webpack-plugin');
-const helper = require("./helpers/path.helper");
-const publicPath = 'wwwroot/dist/web';
-class Common {
-    constructor(options = {}) {
+var helper = require("./helpers/path.helper");
+var publicPath = 'wwwroot/dist/web';
+var Common = (function () {
+    function Common(options) {
+        if (options === void 0) { options = {}; }
         this.Metadata = {
             ENV: JSON.stringify(options.ENV),
             IS_PRODUCTION: options.ENV != null && options.ENV.indexOf('prod') !== -1,
@@ -29,16 +26,16 @@ class Common {
         //console.log('METADATA', JSON.stringify(this.Metadata, null, 2));
         this.Configuration = this.webpackConfig();
     }
-    webpackConfig() {
-        const DLL = require(helper.root('src/dll'));
-        const polyfills = DLL.polyfills(this.Metadata);
-        const vendors = DLL.vendors();
-        const rxjs = DLL.rxjs();
-        const bootstrap = DLL.bootstrap();
+    Common.prototype.webpackConfig = function () {
+        var DLL = require(helper.root('src/dll'));
+        var polyfills = DLL.polyfills(this.Metadata);
+        var vendors = DLL.vendors();
+        var rxjs = DLL.rxjs();
+        var bootstrap = DLL.bootstrap();
         //console.log("All vendors: ", JSON.stringify([].concat(vendors, rxjs), null, 2));
-        const extractCSS = new ExtractTextPlugin('css/[name].css');
-        const extractLESS = new ExtractTextPlugin({ filename: 'css/[name].LESS.css', ignoreOrder: true });
-        const extractPDB = new ExtractTextPlugin({ filename: 'pdbAssets/[name].pdb' });
+        var extractCSS = new ExtractTextPlugin('css/[name].css');
+        var extractLESS = new ExtractTextPlugin({ filename: 'css/[name].LESS.css', ignoreOrder: true });
+        var extractPDB = new ExtractTextPlugin({ filename: 'pdbAssets/[name].pdb' });
         return {
             target: 'web',
             entry: {
@@ -309,7 +306,7 @@ class Common {
                 modules: ["node_modules",] //Note: directories where to look for modules - "Libraries" contains only 3d party libs and doesn't contain modules
             },
         };
-    }
-}
+    };
+    return Common;
+}());
 exports.default = Common;
-//# sourceMappingURL=webpack.common.config.js.map
