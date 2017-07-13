@@ -2,9 +2,8 @@
 
 import {Component, OnInit} from '@angular/core';
 import {SiteInteractionService} from "../Services/site-interaction.service";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
-import {DnaEnum} from "../Enums/dna-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
@@ -21,8 +20,8 @@ import cTxt from 'raw-loader!../Molecules/G.pdb';
 
 
 //https://github.com/webpack-contrib/bundle-loader
-let loadG = require("bundle-loader?lazy&name=[name]!../Molecules/G.pdb");
-let strT = require('includes-loader!../Molecules/T.pdb');
+//let loadG = require("bundle-loader?lazy&name=[name]!../Molecules/G.pdb");     //needed for loading chunks where is 'export', not raw sources - it sends only file name to loadG() function
+//let strT = require('includes-loader!../Molecules/T.pdb');       //undefined
 
 
 //require('../../Libraries/Molvwr/hand');
@@ -52,10 +51,11 @@ NOTE: leading -!(before raw-loader) is prepended to ignore other preLoaders and 
  All normal and pre loaders can be omitted (overridden) by prefixing -! in the request.
  All normal, post and pre loaders can be omitted (overridden) by prefixing !! in the request.
  */
-const Adenine = require('-!raw-loader!../Molecules/A.mol');
+const Adenine = require('-!raw-loader!../Molecules/A.mol');     //import source file as a string
 import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
+import Gene from "../Models/gene";
 const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
@@ -64,26 +64,26 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
     templateUrl: '../Html/molecule-viewer.component.html'
 })
 
-export class MoleculeViewerComponent extends DnaComponent implements OnInit {
+export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit {
     constructor(private siteInteraction: SiteInteractionService) {
         super();
     }
 
     ngOnInit() {
         this.siteInteraction.siteClicked$.subscribe(
-            site => this.displayMolecule(site),
+            molecule => this.displayMolecule(molecule),
             err => this.error(err)
         );
 
         // The chunk is not requested(with option 'lazy') until you call the load function:
-        loadG(function(file: string) {
-            // use file like it was required with
-            // var file = require("./file.js");
-            console.log(`Molecule PDB file: ${file} has been downloaded.`);
-        });
+        // loadG(function(file: string) {
+        //     // use file like it was required with
+        //     // var file = require("./file.js");
+        //     console.log(`Molecule PDB file: ${file} has been downloaded.`);
+        // });
     }
 
-    private displayMolecule(molecule: SiteEnum | DnaEnum) {
+    private displayMolecule(molecule: SiteEnum | Gene) {
         const moleculeData = this.getMoleculeData(molecule);
         let el = $("#moleculeViewer").get(0);
         $(el).attr('data-molvwr', moleculeData.url);
@@ -120,18 +120,18 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
         return rgb;
     }
 
-    private getMoleculeData(molecule: SiteEnum|DnaEnum){
+    private getMoleculeData(molecule: SiteEnum|Gene){
         // const arginine = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/aminoacids/arginine.txt';
         // const dna = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/dna.txt';
         // const diamond = 'https://raw.githubusercontent.com/gleborgne/molvwr/master/demo%20website/molsamples/pdb/diamond.txt';
 
-        // for (let dna in DnaEnum) {
+        // for (let dna in GeneEnum) {
         //     dna.
         // }
 
-        //if(typeof molecule == "DnaEnum")
+        //if(typeof molecule == "GeneEnum")
         let url, format: string;
-        if (molecule > 4) {   //TODO: fix this condition to work with enums
+        if (molecule instanceof Gene) {
             url = '../Evolution/Molecules/dna.pdb';
             format ='pdb';
         }
@@ -145,7 +145,7 @@ export class MoleculeViewerComponent extends DnaComponent implements OnInit {
                 case SiteEnum.U: url = Uracil; break;
                 default:
                     //Otherwise - using URL to download data:
-                    url = `../Evolution/Molecules/${SiteEnum[molecule]}.mol`;
+                    url = `../Evolution/Molecules/${this.getSiteName(molecule)}.mol`;       //${SiteEnum[<SiteEnum>molecule]}
                     //url = `Evolution/Molecules/${SiteEnum[molecule]}.mol`;
                     //url = helper.root(`Evolution/Molecules/${SiteEnum[molecule]}.mol`);
                     break;

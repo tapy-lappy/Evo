@@ -49,16 +49,16 @@
     <Content Include="Angular2\src\vendor.js">
       <DependentUpon>vendor.ts</DependentUpon>
     </Content>
-    <Content Include="Evolution\Abstract\DnaComponent.js" />
+    <Content Include="Evolution\Abstract\base-gene.component.js" />
     <Content Include="Evolution\AppState\app-state.js" />
     <Content Include="Evolution\Components\app.component.js" />
-    <Content Include="Evolution\Components\dna-list.component.js" />
-    <Content Include="Evolution\Components\dna-selector.component.js" />
+    <Content Include="Evolution\Components\gene-list.component.js" />
+    <Content Include="Evolution\Components\gene-selector.component.js" />
     <Content Include="Evolution\Components\gene.component.js" />
     <Content Include="Evolution\Config\app-config.js" />
     <Content Include="Evolution\Css\common-text.css" />
     <Content Include="Evolution\Css\dna-selector.component.css" />
-    <Content Include="Evolution\Enums\dna-enum.js" />
+    <Content Include="Evolution\Enums\gene-storage.js" />
     <Content Include="Evolution\Enums\site-enum.js" />
     <Content Include="Evolution\Html\app.component.html" />
     <Content Include="Evolution\Html\dna-list.component.html" />
@@ -93,14 +93,14 @@
     <TypeScriptCompile Include="Angular2\src\polyfills.ts" />
     <TypeScriptCompile Include="Angular2\src\vendor.ts" />
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="Evolution\Abstract\DnaComponent.ts" />
+    <TypeScriptCompile Include="Evolution\Abstract\base-gene.component.ts" />
     <TypeScriptCompile Include="Evolution\AppState\app-state.ts" />
     <TypeScriptCompile Include="Evolution\Components\app.component.ts" />
-    <TypeScriptCompile Include="Evolution\Components\dna-list.component.ts" />
-    <TypeScriptCompile Include="Evolution\Components\dna-selector.component.ts" />
+    <TypeScriptCompile Include="Evolution\Components\gene-list.component.ts" />
+    <TypeScriptCompile Include="Evolution\Components\gene-selector.component.ts" />
     <TypeScriptCompile Include="Evolution\Components\gene.component.ts" />
     <TypeScriptCompile Include="Evolution\Config\app-config.ts" />
-    <TypeScriptCompile Include="Evolution\Enums\dna-enum.ts" />
+    <TypeScriptCompile Include="Evolution\Enums\gene-storage.ts" />
     <TypeScriptCompile Include="Evolution\Enums\site-enum.ts" />
     <TypeScriptCompile Include="Evolution\main.ts" />
     <TypeScriptCompile Include="Evolution\Models\gene.ts" />
@@ -143,11 +143,11 @@
     <Content Include="Angular2\main.js.map">
       <DependentUpon>main.js</DependentUpon>
     </Content>
-    <Content Include="Evolution\Abstract\DnaComponent.js.map" />
+    <Content Include="Evolution\Abstract\base-gene.component.jsnent.js.map" />
     <Content Include="Evolution\AppState\app-state.js.map" />
     <Content Include="Evolution\Components\app.component.js.map" />
-    <Content Include="Evolution\Components\dna-list.component.js.map" />
-    <Content Include="Evolution\Components\dna-selector.component.js.map" />
+    <Content Include="Evolution\Components\gene-list.component.jss.map" />
+    <Content Include="Evolution\Components\gene-selector.component.jss.map" />
     <Content Include="Evolution\Components\gene.component.js.map" />
     <Content Include="Evolution\Config\app-config.js.map" />
     <Content Include="Evolution\Enums\dna-enum.jss.map" />

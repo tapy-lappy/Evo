@@ -1,14 +1,15 @@
 import MutationService from "../Services/mutation.service";
 import GeneService from "../Services/gene.service";
-import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
+import Gene from "../Models/gene";
+import {Provider} from "@angular/core";
 
-let geneServiceFactory = (dna: DnaEnum, mutationService: MutationService): GeneService =>{
-    let service = new GeneService(dna, mutationService);
+let geneServiceFactory = (gene: Gene, mutationService: MutationService): GeneService =>{
+    let service = new GeneService(gene, mutationService);
     return service;
 };
 
-export const geneServiceProvider = {
+export const geneServiceProvider:Provider = {
     provide: GeneService,
     useFactory: geneServiceFactory,
-    deps: [ DNA_ENUM_TOKEN, MutationService ]        //the sequence is IMPORTANT! - need to match sequence of factory function params
+    deps: [ Gene, MutationService ]        //the sequence is IMPORTANT! - need to match sequence of factory function params
 };

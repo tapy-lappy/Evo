@@ -43,7 +43,7 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
 
         plugins: [
             new NamedModulesPlugin(),            // prints more readable module names in the browser console on HMR updates
-            new WebpackNotifierPlugin({ //to notify about webpack has finished bundling
+            new WebpackNotifierPlugin({ //to notify about webpack has finished bundling(works only in VS)
                 //excludeWarnings: true,
                 title: "Webpack Notifier Plugin message",
                 contentImage: helper.root('wwwroot/images/warning.png'),
@@ -65,7 +65,7 @@ module.exports = function webpackDevConfig(options: EnvOptions = {}): IWebpackCo
         devServer: {
             //contentBase: path.join(__dirname, "wwwroot/dist"), //for static files - what directory(ies) web-dev-server will looking at file changes and if that changes happens it will recompile whole BUNDLE
             publicPath: common.Configuration.output.publicPath,  //to let webpack-dev-server to know what URL should be used to display BUNDLE file: http://localhost:9001/bundle/web/page1.bundle.js - /web/ because we add folder for that
-            host: JSON.parse(common.Metadata.HOST),            //TODO: according to using JSON.stringify in common need do replacement here to avoid error
+            host: JSON.parse(common.Metadata.HOST),            //TODO: according to using JSON.stringify in common need to do replacement here to avoid error
             port: common.Metadata.PORT,
             staticOptions: {},              //It is possible to configure advanced options for serving static files from contentBase
             stats: {                        //This option lets you precisely control what bundle information gets displayed. This can be a nice middle ground if you want some bundle information, but not all of it.

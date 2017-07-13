@@ -9,15 +9,15 @@ import MutationService from "../Services/mutation.service";
 import {mutationServiceProvider} from "../Providers/mutation-service-provider";
 import Gene from "../Models/gene";
 import {geneServiceProvider} from "../Providers/gene-service-provider";
-import {DnaEnum, DNA_ENUM_TOKEN} from "../Enums/dna-enum";
+//import {GeneEnum, GENE_ENUM_TOKEN} from "../Enums/gene-enum";
 import Site from "../Models/site";
 import {AppState} from "../AppState/app-state";
 import DI from "../Helpers/di-helper";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import DnaInteractionService from "../Services/dna-interaction.service";
+import GeneInteractionService from "../Services/gene-interaction.service";
 import {Subscription} from "rxjs/Subscription";
 import {SiteInteractionService} from "../Services/site-interaction.service";
-import {DnaComponent} from "../Abstract/DnaComponent";
+import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {Molecule} from "../../Libraries/Molvwr/molecule";
 
 @Component({
@@ -27,20 +27,18 @@ import {Molecule} from "../../Libraries/Molvwr/molecule";
     styles: [String(require('../Css/gene.component.less'))],
     //only when they are here - it will create new instance of this component every time:
     providers: [geneServiceProvider, mutationServiceProvider, Gene],
-    inputs: ['dna'],
+    inputs: ['gene'],
     //outputs: ['removeEvent:remove']
 })
-export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
-    // @Input() dna: DnaEnum;
-    // @Output('remove') removeEvent = new EventEmitter<DnaEnum>();
-    dna: DnaEnum;
-    //removeEvent = new EventEmitter<DnaEnum>();
+export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestroy {
+    // @Input() dna: GeneEnum;
+    // @Output('remove') removeEvent = new EventEmitter<GeneEnum>();
     gene: Gene;
     molecule: Molecule;
     kinds: string[];
 
     constructor(@Optional() protected log: LogService,
-                private dnaInteraction: DnaInteractionService,
+                private geneInteraction: GeneInteractionService,
                 private siteInteraction: SiteInteractionService,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
@@ -50,12 +48,29 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
         super();
     }
 
-    private initGene(){
+    private getMutationService(appState?: AppState):MutationService{
+        //This function is slower than the corresponding fromResolvedProviders because it needs to resolve the passed-in providers first
+        //let injector: ReflectiveInjector = ReflectiveInjector.resolveAndCreate([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        //let mutationService = this.injector.get(MutationService);
+
+        //This is faster then previous
+        // let resolvedProviders = ReflectiveInjector.resolve([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+        // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
+        // let mutationService = injector.get(MutationService);
+        return DI.resolve<MutationService>(MutationService, [mutationServiceProvider,
+            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+    }
+    private getGeneService():GeneService{
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
         //let geneService = this.injector.get(GeneService, "Error: GeneService can't be injected into GeneComponent!");
-        //let allDnaEnumeration = this.injector.get(DNA_ENUM_TOKEN);
-        let geneService = DI.resolve<GeneService>(GeneService, geneServiceProvider,{provide: DNA_ENUM_TOKEN, useValue: this.dna}, mutationServiceProvider, AppState);
+        //let allDnaEnumeration = this.injector.get(GENE_ENUM_TOKEN);
+        return DI.resolve<GeneService>(GeneService, geneServiceProvider, {provide: Gene, useValue: this.gene},//{provide: GENE_ENUM_TOKEN, useValue: this.dna},
+            {provide: MutationService, useValue: this.getMutationService()});
+    }
+    private initGene(){
+        let geneService = this.getGeneService();
         this.gene = geneService.gene;
+        //this.log.info(JSON.stringify(this.gene));
     }
 
     ngOnInit() {
@@ -85,21 +100,23 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
             }
         );
 
-        const reinitializeGene: () => void = this.initGene;
-        const subsribeAgain: (enabled: boolean) => void = (enabled) => {
-            //Note: call() & apply() allow to bind fuction to specific context and then immediately execute the function:
-            reinitializeGene.call(this);    //https://metanit.com/web/javascript/4.10.php
-
-            /*Remark: each time in reinitializeGene() we recreate GeneService which demands MutationService which demands
-             * Remark: new instance of AppState. Each time! So really we create NEW instance of AppState each time we create
-             * Remark: GeneService. But we DO NOT subscibe on .mutationChanged$ event of that NEW instance of AppState. So,
-             * Remark: we must REsubscribe on event of NEW generated AppState each time.*/
-            //Note: bind() just allow to bind function to specific context, but doesn't start execution:
-            this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
-        };
+        // const reinitializeGene: () => void = this.initGene;      //aliasing
+        // const subsribeAgain: (enabled: boolean) => void = (enabled) => {
+        //     //Note: call() & apply() allow to bind fuction to specific context and then immediately execute the function:
+        //     reinitializeGene.call(this);    //https://metanit.com/web/javascript/4.10.php
+        //
+        //     /*Remark: each time in reinitializeGene() we recreate GeneService which demands MutationService which demands
+        //      * Remark: new instance of AppState. Each time! So really we create NEW instance of AppState each time we create
+        //      * Remark: GeneService. But we DO NOT subscibe on .mutationChanged$ event of that NEW instance of AppState. So,
+        //      * Remark: we must REsubscribe on event of NEW generated AppState each time.*/
+        //     //Note: bind() just allow to bind function to specific context, but doesn't start execution:
+        //     this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
+        // };
         this.appState.state.mutationChanged$.subscribe(
             enabled => {
-                subsribeAgain(enabled);
+                //subsribeAgain(enabled);
+                this.mutationEnabled = enabled;
+                this.initGene();
             },
             err => this.error(err)
         );
@@ -129,30 +146,23 @@ export class GeneComponent extends DnaComponent implements OnInit, OnDestroy {
     mutateGene(){
         this.stopPropagation(event);
         this.mutationEnabled = !this.mutationEnabled;
-        this.appState.state.mutationChange(this.mutationEnabled);
-    }
-    mutate(site: Site){
-        //This function is slower than the corresponding fromResolvedProviders because it needs to resolve the passed-in providers first
-        //let injector: ReflectiveInjector = ReflectiveInjector.resolveAndCreate([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
-        //let mutationService = this.injector.get(MutationService);
-
-        //This is faster then previous
-        // let resolvedProviders = ReflectiveInjector.resolve([mutationServiceProvider, AppState]);        //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
-        // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
-        // let mutationService = injector.get(MutationService);
-
-        let mutationService = DI.resolve<MutationService>(MutationService, [mutationServiceProvider, AppState]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
-        mutationService.mutateSite(site);
+        //this.appState.state.mutationChange(this.mutationEnabled); //TODO: this cause wrong behaviour, need to fix it
+        let geneService = this.getGeneService();                    //Done
+        geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.dnaInteraction.dnaRemove(this.dna);
+        this.geneInteraction.remove(this.gene);
     }
 
-    siteClicked(event: Event, molecule: SiteEnum|DnaEnum){
+    siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
         this.stopPropagation(event);
         this.siteInteraction.siteClick(molecule);
+    }
+    mutateSite(event: MouseEvent, site: Site){
+        this.stopPropagation(event);
+        this.getMutationService().mutateSite(site);
     }
 
 }

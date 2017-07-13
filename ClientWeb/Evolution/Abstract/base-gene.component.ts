@@ -1,16 +1,16 @@
-import {DnaEnum} from "../Enums/dna-enum";
 import {Input} from "@angular/core";
-import DnaHelper from "../Helpers/dna-helper";
+import GeneHelper from "../Helpers/gene-helper";
+import {SiteEnum} from "../Enums/site-enum";
 
-export abstract class DnaComponent {
+export abstract class BaseGeneComponent {
     @Input() mutationEnabled: boolean = false;
 
     protected stopPropagation(event: Event){
         event.stopPropagation();
     }
 
-    getDnaName(dna:DnaEnum):string{
-        return DnaHelper.getDnaName(dna);
+    getSiteName(site:SiteEnum):string{
+        return GeneHelper.getSiteName(site);
     }
 
     //The never type represents the type of values that never occur.        https://www.typescriptlang.org/docs/handbook/basic-types.html
