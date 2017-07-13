@@ -253,9 +253,29 @@ ModelManifest.xml
 
 /ClientWeb/Webpack/**/*.map
 /ClientWeb/Webpack/**/*.js
+
+#===========================================================================
+#IMPORTANT:
+#the rule WON'T WORK if after the rule(in the same line) you use comments:
+#   !webpack.common.config.js     #this won't work!!!
+#instead of you shoud place the comment on the line before the rule:
+#   #comment here and it will work!!!
+#   !webpack.common.config.js
+#===========================================================================
+	#exclude file from ignore list https://git-scm.com/docs/gitignore
+	#PATTERN FORMAT
+	#An optional prefix "!" which negates the pattern; any matching file excluded by a previous pattern will become included again.
+    #It is not possible to re-include a file if a parent directory of that file is excluded.
+!/ClientWeb/Webpack/**/webpack.common.config.js
+!/ClientWeb/Webpack/**/webpack.dev.config.js
+
+
 !/ClientWeb/Webpack/**/bootstrap.config.js
-/ClientWeb/webpack.config.js
-/ClientWeb/webpack.config.js.map
+
+
+#There are no ignorance for now as /ClientWeb/*.js, so webpack.config.js doesn't ingnored at all, so do not need to eliminate it from ignorance list:
+#!/ClientWeb/webpack.config.js
+
 /ClientWeb/ts.code.samples.js
 /ClientWeb/ts.code.samples.js.map
 
