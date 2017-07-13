@@ -1,7 +1,7 @@
+"use strict";
 /// <reference path="./Webpack/typings/global.d.ts" />
 /// <reference path="./Webpack/typings/webpack.d.ts" />
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 //import {root} from "./Webpack/helpers/path.helper";
 var helper = require("./Webpack/helpers/path.helper");
 // type definition for WebpackConfig is defined in webpack.d.ts

@@ -1,7 +1,7 @@
+"use strict";
 /// <reference path="typings/global.d.ts" />
 /// <reference path="typings/webpack.d.ts" />
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var _a = require('webpack'), 
 //ContextReplacementPlugin,
 DefinePlugin = _a.DefinePlugin, CommonsChunkPlugin = _a.optimize.CommonsChunkPlugin;
@@ -139,7 +139,7 @@ var Common = (function () {
                     },
                     {
                         test: /\.json$/,
-                        loader: 'json-loader',
+                        loader: 'json-loader'
                     },
                     {
                         test: /\.(png|jpe?g|gif|ico)$/,
@@ -178,7 +178,7 @@ var Common = (function () {
                                     context: './Evolution/Molecules'
                                 }
                             }
-                        ],
+                        ]
                     },
                     // {
                     //     test: /\.txt$/,
@@ -304,9 +304,9 @@ var Common = (function () {
                 // unsafeCache: true,
                 //modules: [ root('node_modules') ]
                 modules: ["node_modules",] //Note: directories where to look for modules - "Libraries" contains only 3d party libs and doesn't contain modules
-            },
+            }
         };
     };
     return Common;
 }());
-exports.default = Common;
+exports["default"] = Common;
