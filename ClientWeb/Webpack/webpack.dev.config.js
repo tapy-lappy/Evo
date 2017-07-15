@@ -1,15 +1,16 @@
+"use strict";
 /// <reference path="typings/global.d.ts" />
 /// <reference path="typings/webpack.d.ts" />
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const webpack_common_config_1 = require("./webpack.common.config");
-const { HotModuleReplacementPlugin, NamedModulesPlugin, ProvidePlugin } = require('webpack');
-const WebpackNotifierPlugin = require('webpack-notifier');
-const webpackMerge = require('webpack-merge');
-const helper = require("./helpers/path.helper");
+exports.__esModule = true;
+var webpack_common_config_1 = require("./webpack.common.config");
+var _a = require('webpack'), HotModuleReplacementPlugin = _a.HotModuleReplacementPlugin, NamedModulesPlugin = _a.NamedModulesPlugin, ProvidePlugin = _a.ProvidePlugin;
+var WebpackNotifierPlugin = require('webpack-notifier');
+var webpackMerge = require('webpack-merge');
+var helper = require("./helpers/path.helper");
 //let Common = require(helper.webpackConfig('webpack.common.config'));
-module.exports = function webpackDevConfig(options = {}) {
-    const common = new webpack_common_config_1.default(options);
+module.exports = function webpackDevConfig(options) {
+    if (options === void 0) { options = {}; }
+    var common = new webpack_common_config_1["default"](options);
     return webpackMerge(common.Configuration, {
         //cache: true,                                  //TODO: need or not?
         //devtool: "cheap-eval-source-map", //For HMR - https://github.com/webpack/webpack/issues/2478#issuecomment-220205767  //https://webpack.js.org/configuration/devtool/     https://webpack.js.org/guides/development/
@@ -24,7 +25,7 @@ module.exports = function webpackDevConfig(options = {}) {
                     use: [].concat(common.Metadata.HMR ? { loader: '@angularclass/hmr-loader' } : []) //to turn on HMR for TS/HTML templates when using Angular2
                         .concat([
                         {
-                            loader: 'awesome-typescript-loader',
+                            loader: 'awesome-typescript-loader'
                         }
                     ]),
                     exclude: [
@@ -40,7 +41,7 @@ module.exports = function webpackDevConfig(options = {}) {
                 title: "Webpack Notifier Plugin message",
                 contentImage: helper.root('wwwroot/images/warning.png'),
                 message: "Wow, Build Successful!",
-                alwaysNotify: true,
+                alwaysNotify: true
             }),
         ].concat(common.Metadata.HMR ? new HotModuleReplacementPlugin() : []),
         //https://webpack.js.org/configuration/dev-server
@@ -60,7 +61,6 @@ module.exports = function webpackDevConfig(options = {}) {
             inline: common.Metadata.HMR,
             hot: common.Metadata.HMR //enable HMR on the server - 'hot: true'  doesn't allow PAGE to reload automatically when changes was done in *.ts files. Instead of this it load only pieces of changed *.ts files to browser
             //quiet: false
-        },
+        }
     });
 };
-//# sourceMappingURL=webpack.dev.config.js.map

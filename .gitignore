@@ -52,6 +52,7 @@ artifacts/
 *.obj
 *.pch
 *.pdb
+!/ClientWeb/Evolution/Molecules/**/*.pdb
 *.pgc
 *.pgd
 *.rsp
@@ -268,6 +269,7 @@ ModelManifest.xml
     #It is not possible to re-include a file if a parent directory of that file is excluded.
 !/ClientWeb/Webpack/**/webpack.common.config.js
 !/ClientWeb/Webpack/**/webpack.dev.config.js
+!/ClientWeb/Webpack/**/path.helper.js
 
 
 
