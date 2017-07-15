@@ -30,7 +30,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
 
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
-    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService, private gene:Gene) {
+    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService<Gene>, private gene:Gene) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];
@@ -74,7 +74,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     @ViewChild('editorForm')
     private editorForm: HTMLFormElement;
     ngOnInit(): void {
-        this.geneInteraction.additionSuccessed$.subscribe(success => {
+        this.geneInteraction.confirmed$.subscribe(success => {
             if (success)
                 //Remark: cleans form AND because this.gene bounded to form by [(ngModel)]="gene.name" etc. it sets all the gene properties to NULL and
                 //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):

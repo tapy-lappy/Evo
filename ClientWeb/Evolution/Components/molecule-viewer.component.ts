@@ -65,13 +65,13 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
 })
 
 export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit {
-    constructor(private siteInteraction: SiteInteractionService) {
+    constructor(private siteInteraction: SiteInteractionService<SiteEnum|Gene|Molecule>) {
         super();
     }
 
     ngOnInit() {
         this.siteInteraction.siteClicked$.subscribe(
-            molecule => this.displayMolecule(molecule),
+            molecule => this.displayMolecule(<SiteEnum|Gene>molecule),
             err => this.error(err)
         );
 

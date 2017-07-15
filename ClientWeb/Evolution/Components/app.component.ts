@@ -21,7 +21,7 @@ import {
 })
 export class AppComponent extends BaseGeneComponent implements OnInit{
 
-    constructor(private appState: AppState, private geneInteraction: GeneInteractionService){
+    constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>){
         super();
         this.setToogleMutationClasses();
     }

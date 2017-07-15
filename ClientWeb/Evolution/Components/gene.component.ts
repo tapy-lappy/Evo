@@ -38,8 +38,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     kinds: string[];
 
     constructor(@Optional() protected log: LogService,
-                private geneInteraction: GeneInteractionService,
-                private siteInteraction: SiteInteractionService,
+                private geneInteraction: GeneInteractionService<Gene>,
+                private siteInteraction: SiteInteractionService<SiteEnum|Gene|Molecule>,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
                 //private geneService: GeneService,
@@ -86,7 +86,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         }
 
         this.siteInteraction.moleculaDisplayed$.subscribe(
-            molecule => {
+            (molecule:Molecule) => {
                 this.molecule = molecule;
                 this.kinds = [];
                 for(let prop in molecule.kinds){

@@ -15,7 +15,7 @@ import {Observable} from "rxjs/Observable";
 export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
     private errors: string[] = [];
 
-    constructor(private appState: AppState, private geneInteraction: GeneInteractionService, private arrayHelper: ArrayHelper<string>) {
+    constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>, private arrayHelper: ArrayHelper<string>) {
         super();
     }
 
@@ -42,7 +42,7 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
                         //this.error(err);
                         success = false;
                     }
-                    this.geneInteraction.additionSuccesseed(success);
+                    this.geneInteraction.confirmed(success);
                 },
                 //  err => {
                 //     this.error(err);            //catch error from .catch()

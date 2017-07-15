@@ -5,16 +5,16 @@ import {Molecule} from "../../Libraries/Molvwr/molecule";
 import Gene from "../Models/gene";
 
 @Injectable()
-export class SiteInteractionService {
-    private siteClickedSources = new Subject<SiteEnum|Gene>();
+export class SiteInteractionService<T> {
+    private siteClickedSources = new Subject<T>();
     siteClicked$ = this.siteClickedSources.asObservable();
-    siteClick(molecule: SiteEnum|Gene){
+    siteClick(molecule: T){
         this.siteClickedSources.next(molecule);
     }
 
-    private moleculaDisplaySources = new Subject<Molecule>();
+    private moleculaDisplaySources = new Subject<T>();
     moleculaDisplayed$ = this.moleculaDisplaySources.asObservable();
-    moleculaDisplay(molecule: Molecule){
+    moleculaDisplay(molecule: T){
         this.moleculaDisplaySources.next(molecule);
     }
 }

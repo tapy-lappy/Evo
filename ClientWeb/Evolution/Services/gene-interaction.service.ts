@@ -4,19 +4,19 @@ import Gene from "../Models/gene";
 import {Observable} from "rxjs/Observable";
 
 @Injectable()
-export default class GeneInteractionService {
-    private geneRemovedSources = new Subject<Gene>();
+export default class GeneInteractionService<T> {
+    private geneRemovedSources = new Subject<T>();
     geneRemoved$ = this.geneRemovedSources.asObservable();
-    remove(geneItem: Gene){
-        this.geneRemovedSources.next(geneItem);
+    remove(item: T){
+        this.geneRemovedSources.next(item);
     }
 
-    private geneAddedSources = new Subject<Gene>();
+    private geneAddedSources = new Subject<T>();
     geneAdded$ = this.geneAddedSources.asObservable();
-    add(gene: Gene){
-        this.geneAddedSources.next(gene);
+    add(item: T){
+        this.geneAddedSources.next(item);
     }
-    private additionSuccessSource = new Subject<boolean>();
-    additionSuccessed$ = this.additionSuccessSource.asObservable();
-    additionSuccesseed(successed: boolean){this.additionSuccessSource.next(successed);}
+    private confirmSource = new Subject<boolean>();
+    confirmed$ = this.confirmSource.asObservable();
+    confirmed(successed: boolean){this.confirmSource.next(successed);}
 }
