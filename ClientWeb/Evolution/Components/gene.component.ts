@@ -36,6 +36,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     gene: Gene;
     molecule: Molecule;
     kinds: string[];
+    private moleculaDisplayed: Subscription;
+    private mutationChanged:Subscription;
 
     constructor(@Optional() protected log: LogService,
                 private geneInteraction: GeneInteractionService<Gene>,
@@ -85,7 +87,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
             this.log.info(new CustomLog(`Gene ${this.gene.name} created!!!`));
         }
 
-        this.siteInteraction.moleculaDisplayed$.subscribe(
+        this.moleculaDisplayed = this.siteInteraction.moleculaDisplayed$.subscribe(
             (molecule:Molecule) => {
                 this.molecule = molecule;
                 this.kinds = [];
@@ -112,7 +114,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         //     //Note: bind() just allow to bind function to specific context, but doesn't start execution:
         //     this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
         // };
-        this.appState.state.mutationChanged$.subscribe(
+        this.mutationChanged = this.appState.state.mutationChanged$.subscribe(
             enabled => {
                 //subsribeAgain(enabled);
                 this.mutationEnabled = enabled;
@@ -141,6 +143,10 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         let css = 'text-shadow: '.concat(...slides, 'font-size: 20px;');
         //let css = "text-shadow: -1px -1px hsl(0,100%,50%), 1px 1px hsl(6, 100%, 50%), 3px 2px hsl(12, 100%, 50%), 5px 3px hsl(18, 100%, 50%), 7px 4px hsl(24, 100%, 50%), 9px 5px hsl(30, 100%, 50%), 11px 6px hsl(36, 100%, 50%), 13px 7px hsl(42, 100%, 50%), 14px 8px hsl(48, 100%, 50%), 16px 9px hsl(54, 100%, 50%), 18px 10px hsl(60, 100%, 50%), 20px 11px hsl(66, 100%, 50%), 22px 12px hsl(72, 100%, 50%), 23px 13px hsl(78, 100%, 50%), 25px 14px hsl(84, 100%, 50%), 27px 15px hsl(90, 100%, 50%), 28px 16px hsl(96, 100%, 50%), 30px 17px hsl(102, 100%, 50%), 32px 18px hsl(108, 100%, 50%), 33px 19px hsl(114, 100%, 50%), 35px 20px hsl(120, 100%, 50%), 36px 21px hsl(126, 100%, 50%), 38px 22px hsl(132, 100%, 50%), 39px 23px hsl(138, 100%, 50%), 41px 24px hsl(144, 100%, 50%), 42px 25px hsl(150, 100%, 50%), 43px 26px hsl(156, 100%, 50%), 45px 27px hsl(162, 100%, 50%), 46px 28px hsl(168, 100%, 50%), 47px 29px hsl(174, 100%, 50%), 48px 30px hsl(180, 100%, 50%), 49px 31px hsl(186, 100%, 50%), 50px 32px hsl(192, 100%, 50%), 51px 33px hsl(200, 100%, 50%), 52px 34px hsl(206, 100%, 50%), 53px 35px hsl(212, 100%, 50%); font-size: 20px;";
         this.log.log(new CustomLog(`Gene ${this.gene.name} is destroyed!`, css));
+
+        //Unsubscribe
+        this.moleculaDisplayed.unsubscribe();
+        this.mutationChanged.unsubscribe();
     }
 
     mutateGene(){

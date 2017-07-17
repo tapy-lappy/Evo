@@ -1,5 +1,5 @@
 //Code -> Insert Live Template (Ctrl + J)
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
@@ -11,6 +11,7 @@ import {
     DiscriminatedEnum1, DiscriminatedEnum3, DiscriminatedEnums, Enum3,
     getEnumValue
 } from "../Common/DiscriminatedUnion";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     moduleId: module.id,
@@ -19,7 +20,8 @@ import {
     styles: [String(require('../Css/common-background.less'))],
     providers: [ArrayHelper, GeneInteractionService, SiteInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
-export class AppComponent extends BaseGeneComponent implements OnInit{
+export class AppComponent extends BaseGeneComponent implements OnInit, OnDestroy{
+    private geneRemoved:Subscription;
 
     constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>){
         super();
@@ -28,10 +30,13 @@ export class AppComponent extends BaseGeneComponent implements OnInit{
 
     ngOnInit(): void {
         this.mutationEnabled = this.appState.state.mutationEnabled;
-        this.geneInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
+        this.geneRemoved = this.geneInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
             gene => this.removeFromDnaSelector(gene),
             error => this.error(error)
         );
+    }
+    ngOnDestroy(): void {
+        this.geneRemoved.unsubscribe();
     }
 
     toogleMutation() {

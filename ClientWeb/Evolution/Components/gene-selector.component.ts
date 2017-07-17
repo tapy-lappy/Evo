@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Gene from "../Models/gene";
 import GeneInteractionService from "../Services/gene-interaction.service";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {Observable} from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     moduleId: module.id,
@@ -12,8 +13,9 @@ import {Observable} from "rxjs/Observable";
     templateUrl: '../Html/gene-selector.component.html',
     styles: [String(require('../Css/gene-selector.component.css'))],
 })
-export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
+export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, OnDestroy{
     private errors: string[] = [];
+    private geneAdded: Subscription;
 
     constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>, private arrayHelper: ArrayHelper<string>) {
         super();
@@ -51,6 +53,9 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit{
                 //     alert('Added!');
                 // }       //Question: never perform. Why? Question: because it's a handler for completition FROM OBSERVABLE but not from SUBSCRIPTION
         );
+    }
+    ngOnDestroy(){
+        this.geneAdded.unsubscribe();
     }
 
     get availableGenes(): Gene[]{

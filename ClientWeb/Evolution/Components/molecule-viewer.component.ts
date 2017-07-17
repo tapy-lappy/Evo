@@ -1,6 +1,6 @@
 /// <reference path="../typings/molecules.d.ts" />
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SiteInteractionService} from "../Services/site-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
@@ -56,6 +56,7 @@ import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
 import Gene from "../Models/gene";
+import {Subscription} from "rxjs/Subscription";
 const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
@@ -64,13 +65,15 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
     templateUrl: '../Html/molecule-viewer.component.html'
 })
 
-export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit {
+export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit, OnDestroy {
+    private siteClicked$:Subscription;
+
     constructor(private siteInteraction: SiteInteractionService<SiteEnum|Gene|Molecule>) {
         super();
     }
 
     ngOnInit() {
-        this.siteInteraction.siteClicked$.subscribe(
+        this.siteClicked$ = this.siteInteraction.siteClicked$.subscribe(
             molecule => this.displayMolecule(<SiteEnum|Gene>molecule),
             err => this.error(err)
         );
@@ -81,6 +84,9 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         //     // var file = require("./file.js");
         //     console.log(`Molecule PDB file: ${file} has been downloaded.`);
         // });
+    }
+    ngOnDestroy(): void {
+        this.siteClicked$.unsubscribe();
     }
 
     private displayMolecule(molecule: SiteEnum | Gene) {

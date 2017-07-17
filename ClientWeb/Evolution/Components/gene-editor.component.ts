@@ -30,6 +30,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
 
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
+    private confirmed:Subscription;
     constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService<Gene>, private gene:Gene) {
         super();
         //https://metanit.com/web/angular2/7.3.php
@@ -69,6 +70,8 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
          */
         this.routerSubscription.unsubscribe();
         this.querySubscription.unsubscribe();
+        //but unsubscribing from Observables you subscribed by your own - it'a a MUST:
+        this.confirmed.unsubscribe();
     }
 
     @ViewChild('editorForm')
