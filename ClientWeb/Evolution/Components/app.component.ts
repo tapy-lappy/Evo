@@ -20,8 +20,10 @@ import {Subscription} from "rxjs/Subscription";
     styles: [String(require('../Css/common-background.less'))],
     providers: [ArrayHelper, GeneInteractionService, SiteInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
-export class AppComponent extends BaseGeneComponent implements OnInit, OnDestroy{
-    private geneRemoved:Subscription;
+export class AppComponent extends BaseGeneComponent implements OnInit/*, OnDestroy*/{
+    //This is a parent component and it controls lifetime of the service, so service automatically will die with this parent component
+    //and we do not need to unsubscribe in ngOnDestroy():
+    //private geneRemoved:Subscription;     //https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
 
     constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>){
         super();
@@ -30,14 +32,14 @@ export class AppComponent extends BaseGeneComponent implements OnInit, OnDestroy
 
     ngOnInit(): void {
         this.mutationEnabled = this.appState.state.mutationEnabled;
-        this.geneRemoved = this.geneInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
+        /*this.geneRemoved =*/ this.geneInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
             gene => this.removeFromDnaSelector(gene),
             error => this.error(error)
         );
     }
-    ngOnDestroy(): void {
-        this.geneRemoved.unsubscribe();
-    }
+    // ngOnDestroy(): void {
+    //     this.geneRemoved.unsubscribe();
+    // }
 
     toogleMutation() {
         this.mutationEnabled = !this.mutationEnabled;
