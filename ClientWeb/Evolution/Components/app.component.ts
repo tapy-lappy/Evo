@@ -11,20 +11,30 @@ import {
     getEnumValue
 } from "../Common/DiscriminatedUnion";
 import {Subscription} from "rxjs/Subscription";
+import {
+    GeneInteractionToken, RemoveGeneInteractionMultiCastEventToken,
+    SiteInteractionToken
+} from "../Services/di-interaction-service-tokens";
 
 @Component({
     moduleId: module.id,
     selector: 'evolution-main',
     templateUrl: '../Html/app.component.html',
     styles: [String(require('../Css/common-background.less'))],
-    providers: [ArrayHelper, MultiCastEvent, InteractEvent]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
+    providers: [ArrayHelper,
+        //MultiCastEvent, InteractEvent,        //Error: provide ONLY one common shared SINGLETON instance for each components tree
+        //Done: create one SINGLETON instance for specific token:
+        {provide: SiteInteractionToken, useClass: InteractEvent},
+        {provide: GeneInteractionToken, useClass: InteractEvent},
+        {provide: RemoveGeneInteractionMultiCastEventToken, useClass: MultiCastEvent}
+    ]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
 export class AppComponent extends BaseGeneComponent implements OnInit/*, OnDestroy*/{
     //This is a parent component and it controls lifetime of the service, so service automatically will die with this parent component
     //and we do not need to unsubscribe in ngOnDestroy():
     //private geneRemoved:Subscription;     //https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
 
-    constructor(private appState: AppState, private geneInteraction: MultiCastEvent<Gene>){
+    constructor(private appState: AppState, private geneInteraction: RemoveGeneInteractionMultiCastEventToken<Gene>){
         super();
         this.setToogleMutationClasses();
     }

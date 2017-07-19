@@ -17,7 +17,10 @@ import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
 import {Subscription} from "rxjs/Subscription";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {Molecule} from "../../Libraries/Molvwr/molecule";
-import {InteractEvent, MultiCastEvent} from "../Services/event-interaction.service";
+import {
+    RemoveGeneInteractionMultiCastEventToken,
+    SiteInteractionToken
+} from "../Services/di-interaction-service-tokens";
 
 @Component({
     moduleId: module.id,
@@ -39,8 +42,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     private mutationChanged:Subscription;
 
     constructor(@Optional() protected log: LogService,
-                private geneInteraction: MultiCastEvent<Gene>,
-                private siteInteraction: InteractEvent<SiteEnum|Gene, Molecule>,
+                private geneRemovedEvent: RemoveGeneInteractionMultiCastEventToken<Gene>,
+                private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
                 //private geneService: GeneService,
@@ -158,7 +161,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.geneInteraction.event(this.gene);
+        this.geneRemovedEvent.event(this.gene);
     }
 
     siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){

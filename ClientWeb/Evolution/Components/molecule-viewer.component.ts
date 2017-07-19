@@ -1,7 +1,6 @@
 /// <reference path="../typings/molecules.d.ts" />
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {InteractEvent} from "../Services/event-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
@@ -57,6 +56,7 @@ const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
 import Gene from "../Models/gene";
 import {Subscription} from "rxjs/Subscription";
+import {SiteInteractionToken} from "../Services/di-interaction-service-tokens";
 const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
@@ -68,7 +68,7 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
 export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     private siteClicked$:Subscription;
 
-    constructor(private siteInteraction: InteractEvent<SiteEnum|Gene, Molecule>) {
+    constructor(private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>) {
         super();
     }
 

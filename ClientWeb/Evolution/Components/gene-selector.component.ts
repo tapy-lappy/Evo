@@ -4,7 +4,7 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Gene from "../Models/gene";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {Subscription} from "rxjs/Subscription";
-import {InteractEvent} from "../Services/event-interaction.service";
+import {GeneInteractionToken} from "../Services/di-interaction-service-tokens";
 
 @Component({
     moduleId: module.id,
@@ -16,7 +16,7 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, 
     private errors: string[] = [];
     private geneAdded: Subscription;
 
-    constructor(private appState: AppState, private geneInteraction: InteractEvent<Gene,boolean>, private arrayHelper: ArrayHelper<string>) {
+    constructor(private appState: AppState, private geneInteraction: GeneInteractionToken<Gene,boolean>, private arrayHelper: ArrayHelper<string>) {
         super();
     }
 

@@ -34,6 +34,10 @@ interface IEvent<T>{
     generated$: Observable<T>;
     event(value:T):void;
 }
+interface IInteractEvent<TInput, TOutput> extends IEvent<TInput>{
+    confirmed$: Observable<TOutput>;
+    confirm(value:TOutput):void;
+}
 @Injectable()
 class SingleEvent<T> implements IEvent<T>{
     generated$:Observable<T>;
@@ -60,9 +64,9 @@ class MultiCastEvent<T> implements IEvent<T>{     //multicast event
     }
 }
 @Injectable()
-class InteractEvent<TInput, TOutput> extends MultiCastEvent<TInput>{
+class InteractEvent<TInput, TOutput> extends MultiCastEvent<TInput> implements IInteractEvent<TInput, TOutput>{
     private confirmSource = new Subject<TOutput>();
     confirmed$ = this.confirmSource.asObservable();
     confirm(successed: TOutput){this.confirmSource.next(successed);}
 }
-export {SingleEvent, MultiCastEvent, InteractEvent};
+export {MultiCastEvent, InteractEvent, IEvent, IInteractEvent};

@@ -5,7 +5,7 @@ import {Subscription} from "rxjs/Subscription";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import {SiteEnum} from "../Enums/site-enum";
-import {InteractEvent} from "../Services/event-interaction.service";
+import {GeneInteractionToken} from "../Services/di-interaction-service-tokens";
 
 
 @Component({
@@ -30,7 +30,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
     private confirmed:Subscription;
-    constructor(private activeRoute: ActivatedRoute, private geneInteraction: InteractEvent<Gene, boolean>, private gene:Gene) {
+    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionToken<Gene, boolean>, private gene:Gene) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];
