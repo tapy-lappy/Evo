@@ -1,7 +1,7 @@
 /// <reference path="../typings/molecules.d.ts" />
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SiteInteractionService} from "../Services/site-interaction.service";
+import {InteractEvent} from "../Services/event-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
@@ -68,13 +68,13 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
 export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     private siteClicked$:Subscription;
 
-    constructor(private siteInteraction: SiteInteractionService<SiteEnum|Gene|Molecule>) {
+    constructor(private siteInteraction: InteractEvent<SiteEnum|Gene, Molecule>) {
         super();
     }
 
     ngOnInit() {
-        this.siteClicked$ = this.siteInteraction.siteClicked$.subscribe(
-            molecule => this.displayMolecule(<SiteEnum|Gene>molecule),
+        this.siteClicked$ = this.siteInteraction.generated$.subscribe(
+            molecule => this.displayMolecule(molecule),
             err => this.error(err)
         );
 
@@ -113,7 +113,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
                         (kind as Kind).invertedRGB = `rgb(${invertedColors[0]}, ${invertedColors[1]}, ${invertedColors[2]})`;
                     }
                 }
-                this.siteInteraction.moleculaDisplay(molecule);
+                this.siteInteraction.confirm(molecule);
             });
     }
 

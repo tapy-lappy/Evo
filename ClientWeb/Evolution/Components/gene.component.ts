@@ -14,11 +14,10 @@ import Site from "../Models/site";
 import {AppState} from "../AppState/app-state";
 import DI from "../Helpers/di-helper";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import GeneInteractionService from "../Services/gene-interaction.service";
 import {Subscription} from "rxjs/Subscription";
-import {SiteInteractionService} from "../Services/site-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {InteractEvent, MultiCastEvent} from "../Services/event-interaction.service";
 
 @Component({
     moduleId: module.id,
@@ -40,8 +39,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     private mutationChanged:Subscription;
 
     constructor(@Optional() protected log: LogService,
-                private geneInteraction: GeneInteractionService<Gene>,
-                private siteInteraction: SiteInteractionService<SiteEnum|Gene|Molecule>,
+                private geneInteraction: MultiCastEvent<Gene>,
+                private siteInteraction: InteractEvent<SiteEnum|Gene, Molecule>,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
                 //private geneService: GeneService,
@@ -60,7 +59,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
         // let mutationService = injector.get(MutationService);
         return DI.resolve<MutationService>(MutationService, [mutationServiceProvider,
-            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too(even inspite of the fact that AppState is already specified into EvolutionModule).
     }
     private getGeneService():GeneService{
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
@@ -87,8 +86,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
             this.log.info(new CustomLog(`Gene ${this.gene.name} created!!!`));
         }
 
-        this.moleculaDisplayed = this.siteInteraction.moleculaDisplayed$.subscribe(
-            (molecule:Molecule) => {
+        this.moleculaDisplayed = this.siteInteraction.confirmed$.subscribe(
+            (molecule) => {
                 this.molecule = molecule;
                 this.kinds = [];
                 for(let prop in molecule.kinds){
@@ -159,12 +158,12 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.geneInteraction.remove(this.gene);
+        this.geneInteraction.event(this.gene);
     }
 
     siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
         this.stopPropagation(event);
-        this.siteInteraction.siteClick(molecule);
+        this.siteInteraction.event(molecule);
     }
     mutateSite(event: MouseEvent, site: Site){
         this.stopPropagation(event);

@@ -4,8 +4,7 @@ import {AppState} from "../AppState/app-state";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {GeneSelectorComponent} from "./gene-selector.component";
-import GeneInteractionService from "../Services/gene-interaction.service";
-import {SiteInteractionService} from "../Services/site-interaction.service";
+import {InteractEvent, MultiCastEvent} from "../Services/event-interaction.service";
 import Gene from "../Models/gene";
 import {
     DiscriminatedEnum1, DiscriminatedEnum3, DiscriminatedEnums, Enum3,
@@ -18,21 +17,21 @@ import {Subscription} from "rxjs/Subscription";
     selector: 'evolution-main',
     templateUrl: '../Html/app.component.html',
     styles: [String(require('../Css/common-background.less'))],
-    providers: [ArrayHelper, GeneInteractionService, SiteInteractionService]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
+    providers: [ArrayHelper, MultiCastEvent, InteractEvent]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
 })
 export class AppComponent extends BaseGeneComponent implements OnInit/*, OnDestroy*/{
     //This is a parent component and it controls lifetime of the service, so service automatically will die with this parent component
     //and we do not need to unsubscribe in ngOnDestroy():
     //private geneRemoved:Subscription;     //https://angular.io/guide/component-interaction#parent-and-children-communicate-via-a-service
 
-    constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>){
+    constructor(private appState: AppState, private geneInteraction: MultiCastEvent<Gene>){
         super();
         this.setToogleMutationClasses();
     }
 
     ngOnInit(): void {
         this.mutationEnabled = this.appState.state.mutationEnabled;
-        /*this.geneRemoved =*/ this.geneInteraction.geneRemoved$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
+        /*this.geneRemoved =*/ this.geneInteraction.generated$.subscribe(      //TODO: do we really need to subscribe in app.component? I suppose would be better to subscribe inside GeneSelectorComponent itself
             gene => this.removeFromDnaSelector(gene),
             error => this.error(error)
         );

@@ -2,10 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from "../AppState/app-state";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Gene from "../Models/gene";
-import GeneInteractionService from "../Services/gene-interaction.service";
 import {ArrayHelper} from "../Helpers/array-helper";
-import {Observable} from "rxjs/Observable";
 import {Subscription} from "rxjs/Subscription";
+import {InteractEvent} from "../Services/event-interaction.service";
 
 @Component({
     moduleId: module.id,
@@ -17,12 +16,12 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, 
     private errors: string[] = [];
     private geneAdded: Subscription;
 
-    constructor(private appState: AppState, private geneInteraction: GeneInteractionService<Gene>, private arrayHelper: ArrayHelper<string>) {
+    constructor(private appState: AppState, private geneInteraction: InteractEvent<Gene,boolean>, private arrayHelper: ArrayHelper<string>) {
         super();
     }
 
     ngOnInit(): void {
-        this.geneInteraction.geneAdded$
+        this.geneAdded = this.geneInteraction.generated$
             // .do(()=>{
             //     console.log('Started adding new gene...');
             //     throw Error('Generate error');              //to make .catch() perform(or if you comment it - perform .subscribe() error processing handler)
@@ -44,7 +43,7 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, 
                         //this.error(err);
                         success = false;
                     }
-                    this.geneInteraction.confirmed(success);
+                    this.geneInteraction.confirm(success);
                 },
                 //  err => {
                 //     this.error(err);            //catch error from .catch()

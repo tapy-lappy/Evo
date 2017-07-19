@@ -4,9 +4,8 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
-import GeneInteractionService from "../Services/gene-interaction.service";
-import {Observable} from "rxjs/Observable";
 import {SiteEnum} from "../Enums/site-enum";
+import {InteractEvent} from "../Services/event-interaction.service";
 
 
 @Component({
@@ -31,7 +30,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     private routerSubscription: Subscription;
     private querySubscription: Subscription;
     private confirmed:Subscription;
-    constructor(private activeRoute: ActivatedRoute, private geneInteraction: GeneInteractionService<Gene>, private gene:Gene) {
+    constructor(private activeRoute: ActivatedRoute, private geneInteraction: InteractEvent<Gene, boolean>, private gene:Gene) {
         super();
         //https://metanit.com/web/angular2/7.3.php
         //this.gene.name = activeRoute.snapshot.params['geneName'];
@@ -77,7 +76,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     @ViewChild('editorForm')
     private editorForm: HTMLFormElement;
     ngOnInit(): void {
-        this.geneInteraction.confirmed$.subscribe(success => {
+        this.confirmed = this.geneInteraction.confirmed$.subscribe(success => {
             if (success)
                 //Remark: cleans form AND because this.gene bounded to form by [(ngModel)]="gene.name" etc. it sets all the gene properties to NULL and
                 //Remark: also sets this.currentChosenSite which is also bounded(so do not need to clean up it manually):
@@ -89,7 +88,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
         //TODO: Angular/TS allows to do copies simplier - find it
         //Note: Using local LET variable to prevent setting all the this.gene properties to NULL when we reset the form
         let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
-        this.geneInteraction.add(gene);
+        this.geneInteraction.event(gene);
     }
     onSubmit(){
         this.submitted = true;
