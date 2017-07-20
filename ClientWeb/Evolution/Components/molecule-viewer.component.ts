@@ -1,7 +1,6 @@
 /// <reference path="../typings/molecules.d.ts" />
 
-import {Component, OnInit} from '@angular/core';
-import {SiteInteractionService} from "../Services/site-interaction.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
 import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
@@ -56,6 +55,8 @@ import * as Cytosine from '-!raw-loader!../Molecules/C.mol';
 const Guanine  = require('-!raw-loader!../Molecules/G.mol');
 import * as Thymine from '-!raw-loader!../Molecules/T.mol';
 import Gene from "../Models/gene";
+import {Subscription} from "rxjs/Subscription";
+import {SiteInteractionToken} from "../Services/di-interaction-service-tokens";
 const Uracil = require('-!raw-loader!../Molecules/U.mol');
 
 @Component({
@@ -64,13 +65,15 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
     templateUrl: '../Html/molecule-viewer.component.html'
 })
 
-export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit {
-    constructor(private siteInteraction: SiteInteractionService) {
+export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit, OnDestroy {
+    private siteClicked$:Subscription;
+
+    constructor(private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>) {
         super();
     }
 
     ngOnInit() {
-        this.siteInteraction.siteClicked$.subscribe(
+        this.siteClicked$ = this.siteInteraction.generated$.subscribe(
             molecule => this.displayMolecule(molecule),
             err => this.error(err)
         );
@@ -81,6 +84,9 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         //     // var file = require("./file.js");
         //     console.log(`Molecule PDB file: ${file} has been downloaded.`);
         // });
+    }
+    ngOnDestroy(): void {
+        this.siteClicked$.unsubscribe();
     }
 
     private displayMolecule(molecule: SiteEnum | Gene) {
@@ -107,7 +113,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
                         (kind as Kind).invertedRGB = `rgb(${invertedColors[0]}, ${invertedColors[1]}, ${invertedColors[2]})`;
                     }
                 }
-                this.siteInteraction.moleculaDisplay(molecule);
+                this.siteInteraction.confirm(molecule);
             });
     }
 

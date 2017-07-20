@@ -14,11 +14,13 @@ import Site from "../Models/site";
 import {AppState} from "../AppState/app-state";
 import DI from "../Helpers/di-helper";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
-import GeneInteractionService from "../Services/gene-interaction.service";
 import {Subscription} from "rxjs/Subscription";
-import {SiteInteractionService} from "../Services/site-interaction.service";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {
+    RemoveGeneInteractionMultiCastEventToken,
+    SiteInteractionToken
+} from "../Services/di-interaction-service-tokens";
 
 @Component({
     moduleId: module.id,
@@ -36,10 +38,12 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     gene: Gene;
     molecule: Molecule;
     kinds: string[];
+    private moleculaDisplayed: Subscription;
+    private mutationChanged:Subscription;
 
     constructor(@Optional() protected log: LogService,
-                private geneInteraction: GeneInteractionService,
-                private siteInteraction: SiteInteractionService,
+                private geneRemovedEvent: RemoveGeneInteractionMultiCastEventToken<Gene>,
+                private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
                 //private geneService: GeneService,
@@ -58,7 +62,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         // let injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
         // let mutationService = injector.get(MutationService);
         return DI.resolve<MutationService>(MutationService, [mutationServiceProvider,
-            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too.
+            {provide: AppState, useValue: this.appState}]);       //using this way of DI demands specifying all DI three: mutationServiceProvider use mutationServiceFactory which depends on AppState, so I specified AppState too(even inspite of the fact that AppState is already specified into EvolutionModule).
     }
     private getGeneService():GeneService{
         //DONE: find a way how to use GeneService properly(maybe without DI, using constructor with params)
@@ -85,8 +89,8 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
             this.log.info(new CustomLog(`Gene ${this.gene.name} created!!!`));
         }
 
-        this.siteInteraction.moleculaDisplayed$.subscribe(
-            molecule => {
+        this.moleculaDisplayed = this.siteInteraction.confirmed$.subscribe(
+            (molecule) => {
                 this.molecule = molecule;
                 this.kinds = [];
                 for(let prop in molecule.kinds){
@@ -112,7 +116,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         //     //Note: bind() just allow to bind function to specific context, but doesn't start execution:
         //     this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
         // };
-        this.appState.state.mutationChanged$.subscribe(
+        this.mutationChanged = this.appState.state.mutationChanged$.subscribe(
             enabled => {
                 //subsribeAgain(enabled);
                 this.mutationEnabled = enabled;
@@ -141,6 +145,10 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         let css = 'text-shadow: '.concat(...slides, 'font-size: 20px;');
         //let css = "text-shadow: -1px -1px hsl(0,100%,50%), 1px 1px hsl(6, 100%, 50%), 3px 2px hsl(12, 100%, 50%), 5px 3px hsl(18, 100%, 50%), 7px 4px hsl(24, 100%, 50%), 9px 5px hsl(30, 100%, 50%), 11px 6px hsl(36, 100%, 50%), 13px 7px hsl(42, 100%, 50%), 14px 8px hsl(48, 100%, 50%), 16px 9px hsl(54, 100%, 50%), 18px 10px hsl(60, 100%, 50%), 20px 11px hsl(66, 100%, 50%), 22px 12px hsl(72, 100%, 50%), 23px 13px hsl(78, 100%, 50%), 25px 14px hsl(84, 100%, 50%), 27px 15px hsl(90, 100%, 50%), 28px 16px hsl(96, 100%, 50%), 30px 17px hsl(102, 100%, 50%), 32px 18px hsl(108, 100%, 50%), 33px 19px hsl(114, 100%, 50%), 35px 20px hsl(120, 100%, 50%), 36px 21px hsl(126, 100%, 50%), 38px 22px hsl(132, 100%, 50%), 39px 23px hsl(138, 100%, 50%), 41px 24px hsl(144, 100%, 50%), 42px 25px hsl(150, 100%, 50%), 43px 26px hsl(156, 100%, 50%), 45px 27px hsl(162, 100%, 50%), 46px 28px hsl(168, 100%, 50%), 47px 29px hsl(174, 100%, 50%), 48px 30px hsl(180, 100%, 50%), 49px 31px hsl(186, 100%, 50%), 50px 32px hsl(192, 100%, 50%), 51px 33px hsl(200, 100%, 50%), 52px 34px hsl(206, 100%, 50%), 53px 35px hsl(212, 100%, 50%); font-size: 20px;";
         this.log.log(new CustomLog(`Gene ${this.gene.name} is destroyed!`, css));
+
+        //Unsubscribe
+        this.moleculaDisplayed.unsubscribe();
+        this.mutationChanged.unsubscribe();
     }
 
     mutateGene(){
@@ -153,12 +161,12 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
 
     removeGene(){
         //this.removeEvent.emit(this.dna);
-        this.geneInteraction.remove(this.gene);
+        this.geneRemovedEvent.event(this.gene);
     }
 
     siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
         this.stopPropagation(event);
-        this.siteInteraction.siteClick(molecule);
+        this.siteInteraction.event(molecule);
     }
     mutateSite(event: MouseEvent, site: Site){
         this.stopPropagation(event);

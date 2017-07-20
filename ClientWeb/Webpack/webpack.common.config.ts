@@ -289,7 +289,8 @@ export default class Common{
                 new HtmlWebpackPlugin({ //To generate more than one HTML file, declare the plugin more than once
                     title: 'Evo',
                     filename: 'index.html',
-                    template: './indexWebpackTemplate.html',
+                    //Load a custom template (ejs by default see the FAQ for details):
+                    template: './indexWebpackTemplate.ejs',  //You can use the lodash syntax out of the box. https://github.com/jantimon/html-webpack-plugin#writing-your-own-templates
                     inject: 'body',
                     favicon: helper.root('wwwroot/images/dna.jpg'),
                     chunks: ['polyfills', 'common', 'vendors', 'bootstrap', 'main'],  //Add only specific chunks onto page
