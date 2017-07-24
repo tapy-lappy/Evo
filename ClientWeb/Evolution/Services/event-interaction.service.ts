@@ -38,6 +38,8 @@ interface IInteractEvent<TInput, TOutput> extends IEvent<TInput>{
     confirmed$: Observable<TOutput>;
     confirm(value:TOutput):void;
 }
+
+//TODO: We do not ust this:
 @Injectable()
 class SingleEvent<T> implements IEvent<T>{
     generated$:Observable<T>;
@@ -55,6 +57,7 @@ class SingleEvent<T> implements IEvent<T>{
         //this.observable$.subscribe(this.subscriber);  //TODO: this must be done in component because we need to unsubscribe also!!!
     }
 }
+
 @Injectable()
 class MultiCastEvent<T> implements IEvent<T>{     //multicast event
     private source = new Subject<T>();
