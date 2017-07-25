@@ -39,7 +39,7 @@ interface IInteractEvent<TInput, TOutput> extends IEvent<TInput>{
     confirm(value:TOutput):void;
 }
 
-//TODO: We do not ust this:
+//TODO: We do not use this:
 @Injectable()
 class SingleEvent<T> implements IEvent<T>{
     generated$:Observable<T>;

@@ -24,7 +24,7 @@ abstract class BaseInteractionToken<T1,T2> extends BaseEventToken<T1> implements
 
 //Abstract provider token classes to register SINGLETON event instance with each of them:
 abstract class RemoveGeneInteractionMultiCastEventToken<T> extends BaseEventToken<T>{}
-//Question: When you IMPLEMENT(not extend) base class: https://angular.io/guide/dependency-injection-in-action#the-parent-class-interface
+//Question: When you IMPLEMENT(not extends) base class: https://angular.io/guide/dependency-injection-in-action#the-parent-class-interface
 /*It's also possible to use base class as a class-interface("narrowing" interface) but that leads to neccessarity to implement all the members
 * of that base class as it serves as interface. So, to reduce code dublication we do not use that approach(but it's possible):*/
 // abstract class RemoveGeneInteractionMultiCastEventToken<T> implements BaseEventToken<T>{
