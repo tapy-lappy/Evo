@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-xs-12" (click)="stopEventPropagation($event)">
+        <h4>Gene mutation</h4>
+        <form [formGroup]="mutationForm">
+            <div class="form-group">
+                <label class="center-block">Site:</label>
+                <input class="form-control" formControlName="site">
+            </div>
+        </form>
+
+        <p>Form value: {{ mutationForm.value | json }}</p>
+        <p>Form status: {{ mutationForm.status | json }}</p>
+    </div>
+</div>
