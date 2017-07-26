@@ -2,6 +2,8 @@ import {Component, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
+import {SiteEnum} from "../Enums/site-enum";
+import EnumHelper from "../Helpers/enum-helper";
 
 @Component({
     moduleId: module.id,
@@ -20,6 +22,8 @@ export class GeneMutationComponent extends BaseGeneComponent{
     }
 
     initForm(){
+        let sites = EnumHelper.getNames(SiteEnum);
+        console.log(sites);
         this.mutationForm = this.formBuiler.group({
             site: ['', Validators.required]
         })

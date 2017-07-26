@@ -1,12 +1,12 @@
 import {SiteEnum} from "../Enums/site-enum";
-import GeneHelper from "../Helpers/gene-helper";
+import EnumHelper from "../Helpers/enum-helper";
 
 export default class Site {
     site: SiteEnum;
     isMutated: boolean;
 
     get name(): string{
-        return GeneHelper.getEnumNameByValue(SiteEnum, this.site);
+        return EnumHelper.getEnumNameByValue(SiteEnum, this.site);
     }
 
     constructor(site:SiteEnum){ this.site = site;}

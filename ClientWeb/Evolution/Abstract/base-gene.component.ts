@@ -1,5 +1,5 @@
 import {Input} from "@angular/core";
-import GeneHelper from "../Helpers/gene-helper";
+import EnumHelper from "../Helpers/enum-helper";
 import {SiteEnum} from "../Enums/site-enum";
 
 export abstract class BaseGeneComponent {
@@ -10,7 +10,7 @@ export abstract class BaseGeneComponent {
     }
 
     getSiteName(site:SiteEnum):string{
-        return GeneHelper.getEnumNameByValue(SiteEnum, site);
+        return EnumHelper.getEnumNameByValue(SiteEnum, site);
     }
 
     //The never type represents the type of values that never occur.        https://www.typescriptlang.org/docs/handbook/basic-types.html

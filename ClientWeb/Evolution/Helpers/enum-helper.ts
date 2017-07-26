@@ -12,7 +12,7 @@ class Test{
 
 
 @Injectable()
-export default class GeneHelper{
+export default class EnumHelper{
     // //static getSiteName<T extends number>(enumValue: T): string{         //{[key: string]: T}
     // static getSiteName<T, K extends keyof T>(enumValue: K): /*keyof T*/ T[K]{
     //     //return SiteEnum[enumValue];   //work but not generic
@@ -40,8 +40,8 @@ export default class GeneHelper{
     //     // let value: Map<number>['does not matter what will be here'] = dict["AOR"]; // number
     //
     //         // console.log(typeof enumValue);  //number
-    //         // console.log(GeneHelper.getNames(typeof enumValue)); //["n", "u", "m", "b", "e", "r"]
-    //     //return GeneHelper.getNames(enumValue)[0];
+    //         // console.log(EnumHelper.getNames(typeof enumValue)); //["n", "u", "m", "b", "e", "r"]
+    //     //return EnumHelper.getNames(enumValue)[0];
     // }
 
 
@@ -55,7 +55,7 @@ export default class GeneHelper{
     //Done:
     /*
     * Sample of call:
-    * let value = GeneHelper.getEnumValueByName(SiteEnum, 'G');
+    * let value = EnumHelper.getEnumValueByName(SiteEnum, 'G');
     *
     * T - it's enum type, enumName:K - it's a string T[K] - it's number
     * */
@@ -65,8 +65,8 @@ export default class GeneHelper{
 
     /*
     Sample of call:
-    * let name = GeneHelper.getEnumNameByValue(SiteEnum, 3);
-    * let name2 = GeneHelper.getEnumNameByValue(SiteEnum, SiteEnum.U);
+    * let name = EnumHelper.getEnumNameByValue(SiteEnum, 3);
+    * let name2 = EnumHelper.getEnumNameByValue(SiteEnum, SiteEnum.U);
     *
     * T - it's number OR enum item, enumValue:T - it's number OR enum item, keyof T - it's string
     * */
@@ -78,11 +78,11 @@ export default class GeneHelper{
     //https://stackoverflow.com/a/18112157 - explanation of problem
     //https://stackoverflow.com/a/21294925 - implementation from there:
     //Approach: imposible to use T istead of any here, as following: static getNamesAndValues<T extends number>(enumType: T)
-    //Approach: because when you will call this method with enum type, as following: GeneHelper.getNamesAndValuesInOneArray(SiteEnum);
+    //Approach: because when you will call this method with enum type, as following: EnumHelper.getNamesAndValuesInOneArray(SiteEnum);
     //Approach: you will get: Error:(30, 58) TS2345:Argument of type 'typeof SiteEnum' is not assignable to parameter of type 'number'.
     //Approach: so, type guard <T extends number> here just to cast to specific type "as T".
     static getNamesAndValues<T extends number>(enumType: any) {     //Note: enum's type guard: <T extends number>
-        return GeneHelper.getNames(enumType).map(n => ({ name: n, value: enumType[n] as T }));
+        return EnumHelper.getNames(enumType).map(n => ({ name: n, value: enumType[n] as T }));
     }
     static getNamesAndValuesInOneArray(enumType:any): (number | string)[]{
         // let items = [];
@@ -91,15 +91,15 @@ export default class GeneHelper{
         // }
         // return items;
         //OR just the same:
-        return GeneHelper.getObjValues(enumType);
+        return EnumHelper.getObjValues(enumType);
     }
 
     static getNames(enumType: any): string[] {
-        return GeneHelper.getObjValues(enumType).filter(v => typeof v === "string") as string[];
+        return EnumHelper.getObjValues(enumType).filter(v => typeof v === "string") as string[];
     }
 
     static getValues<T extends number>(enumType: any): T[] {
-        return GeneHelper.getObjValues(enumType).filter(v => typeof v === "number") as T[];
+        return EnumHelper.getObjValues(enumType).filter(v => typeof v === "number") as T[];
     }
 
     private static getObjValues(enumType: any): (number | string)[] {
