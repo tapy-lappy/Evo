@@ -23,7 +23,7 @@ const defaultState: State = {
     mutationEnabled: false,
     selectedGenes: new GeneStorage(),      //[],
     availableGenes: new GeneStorage(
-        new Gene('HFE', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G, true), new Site(SiteEnum.C), new Site(SiteEnum.U), new Site(SiteEnum.C)], 'Excess of iron in the body'),  //Surplus
+        new Gene('HFE', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.C), new Site(SiteEnum.U), new Site(SiteEnum.C)], 'Excess of iron in the body'),  //Surplus
         new Gene('ALDH2', [new Site(SiteEnum.G), new Site(SiteEnum.T),new Site(SiteEnum.U), new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G)], 'Alcohol intolerance')
     ).add(new Gene('GJB2', [new Site(SiteEnum.A), new Site(SiteEnum.C), new Site(SiteEnum.G), new Site(SiteEnum.T), new Site(SiteEnum.U)], 'Deafness')),
     mutationChanged$: undefined,

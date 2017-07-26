@@ -1,51 +1,8 @@
 import {Injectable} from "@angular/core";
 import {SiteEnum} from "../Enums/site-enum";
 
-//TODO: only for test & development purpose. MUST BE REMOVED!
-interface Map<T> {
-    [key: string]: T;
-}
-class Test{
-    name: string;
-    age: number;
-}
-
-
 @Injectable()
 export default class EnumHelper{
-    // //static getSiteName<T extends number>(enumValue: T): string{         //{[key: string]: T}
-    // static getSiteName<T, K extends keyof T>(enumValue: K): /*keyof T*/ T[K]{
-    //     //return SiteEnum[enumValue];   //work but not generic
-    //     //let key: keyof T = (<T>enumValue)[<K>enumValue];
-    //
-    //
-    //     let value: keyof T = T[enumValue];            //CHECK!
-    //     //return enumType[enumValue];         //returns SiteEnum.A, not a string       static getSiteName<T, K extends keyof T>(enumType: T, enumValue: K): /*keyof T*/ T[K]{
-    //
-    //
-    //     //return (<T>enumValue)[(<K>enumValue)];      //undefined
-    //
-    //     // let keys: keyof {[key: string]: T};
-    //     // let value: Map<number>['A'];
-    //
-    //     // let dict:Map<number> = {
-    //     //     "AOR": 89,
-    //     //     "AOR12": 78,
-    //     // }
-    //     // let dictKeys: keyof Test;       //undefined
-    //     // let keys1: keyof Map<number>;   //undefined
-    //     // let value: Map<number>['foo'];  //undefined
-    //
-    //     // let keys: keyof Map<number> = dict.toString(); // string
-    //     // let value: Map<number>['does not matter what will be here'] = dict["AOR"]; // number
-    //
-    //         // console.log(typeof enumValue);  //number
-    //         // console.log(EnumHelper.getNames(typeof enumValue)); //["n", "u", "m", "b", "e", "r"]
-    //     //return EnumHelper.getNames(enumValue)[0];
-    // }
-
-
-
     //TODO: how to use with enums this approach: https://www.typescriptlang.org/docs/handbook/advanced-types.html  - see Index types
     //TODO:     let name: string = getProperty(person, 'name');
     //TODO:     let age: number = getProperty(person, 'age');
