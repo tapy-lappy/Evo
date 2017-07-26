@@ -1,10 +1,24 @@
-<div class="row">
-    <div class="col-xs-12" (click)="stopEventPropagation($event)">
+<div class="row" (click)="stopEventPropagation($event)">
+    <div class="col-xs-12">
         <h4>Gene mutation</h4>
-        <form [formGroup]="mutationForm">
+        <form [formGroup]="mutationForm" novalidate>       <!--novalidate attribute in the <form> element prevents the browser from attempting native HTML validations-->
             <div class="form-group">
-                <label class="center-block">Site:</label>
-                <input class="form-control" formControlName="site">
+                <label class="center-block">Descriebe mutation influence:
+                    <input class="form-control" formControlName="description" placeholder="description of mutation" />
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="center-block">Sites:</label>
+                <div formArrayName="sites" class="well well-lg">
+                    <div class="form-group" *ngFor="let site of sitesFormGroups.controls; let i=index" [formGroupName]="i">
+                        <input disabled formControlName="mutationLabel">    <!--TODO: not input, when switch checkbox also change the label-->
+                        <span>#{{i + 1}}</span>
+                        <input type="checkbox" formControlName="isMutated">
+                        <select class="form-control" formControlName="site">    <!--TODO: maybe use enum values instead of strings in site control-->
+                            <option *ngFor="let item of siteItems" [ngValue]="item">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </form>
 

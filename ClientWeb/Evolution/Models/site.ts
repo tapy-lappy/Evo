@@ -9,7 +9,10 @@ export default class Site {
         return EnumHelper.getEnumNameByValue(SiteEnum, this.site);
     }
 
-    constructor(site:SiteEnum){ this.site = site;}
+    constructor(site:SiteEnum, mutated?:boolean){
+        this.site = site;
+        this.isMutated = mutated || false;
+    }
 
     setSiteCssClasses(){
         return {
