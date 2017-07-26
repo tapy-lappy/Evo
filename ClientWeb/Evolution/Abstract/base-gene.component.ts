@@ -10,7 +10,7 @@ export abstract class BaseGeneComponent {
     }
 
     getSiteName(site:SiteEnum):string{
-        return GeneHelper.getSiteName(site);
+        return GeneHelper.getEnumNameByValue(SiteEnum, site);
     }
 
     //The never type represents the type of values that never occur.        https://www.typescriptlang.org/docs/handbook/basic-types.html

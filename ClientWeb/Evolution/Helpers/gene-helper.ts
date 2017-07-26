@@ -13,14 +13,6 @@ class Test{
 
 @Injectable()
 export default class GeneHelper{
-    //TODO: generic to have one method to process getting enum name, because this code is repeatable
-    //Done
-    //TODO: needed refactoring - apply new generic function getEnumNameByValue instead of this one:
-    static getSiteName(site:SiteEnum): string{
-        return SiteEnum[site];
-    }
-
-
     // //static getSiteName<T extends number>(enumValue: T): string{         //{[key: string]: T}
     // static getSiteName<T, K extends keyof T>(enumValue: K): /*keyof T*/ T[K]{
     //     //return SiteEnum[enumValue];   //work but not generic

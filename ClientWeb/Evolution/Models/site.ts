@@ -6,7 +6,7 @@ export default class Site {
     isMutated: boolean;
 
     get name(): string{
-        return GeneHelper.getSiteName(this.site);
+        return GeneHelper.getEnumNameByValue(SiteEnum, this.site);
     }
 
     constructor(site:SiteEnum){ this.site = site;}
