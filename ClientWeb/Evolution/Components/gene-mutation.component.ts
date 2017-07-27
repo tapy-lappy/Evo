@@ -9,7 +9,7 @@ import Site from "../Models/site";
 @Component({
     moduleId: module.id,
     selector: 'gene-mutation',
-    //styles: [String(require('../Css/gene-mutation.component.less'))],
+    styles: [String(require('../Css/gene-mutation.component.less'))],
     templateUrl: '../Html/gene-mutation.component.html',
 })
 

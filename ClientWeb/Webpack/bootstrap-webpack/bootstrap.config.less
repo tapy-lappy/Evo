@@ -1,3 +1,5 @@
+@import "../../node_modules/bootstrap/less/forms.less";
+
 @font-size-base:          14px;
 
 @btn-default-color:              #444;
@@ -6,9 +8,16 @@
 @import "../../Evolution/Css/common-text";
 //https://stackoverflow.com/a/16830938
 //https://stackoverflow.com/questions/30569685/importing-css-into-less
-@import (less) "../../Evolution/Css/gene-selector.component.css";
+@import (less) "../../Evolution/Css/gene-selector.component.css";     //@import (less) - import CSS file as LESS file
 .form-control-dna-selector{
   .italic;
   .form-control;
   .dna-selector !important;
+}
+
+@import "../../node_modules/bootstrap/less/grid.less";
+.narrowed-row{
+  .row;
+  margin-left: 10px;
+  margin-right: 10px;
 }
