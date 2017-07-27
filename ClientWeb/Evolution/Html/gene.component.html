@@ -15,8 +15,10 @@
                 </li>
             </ul>
         </div>
-        <div ngClass="col-xs-1 col-xs-offset-3 gene-remove-button-container">
+        <div ngClass="col-xs-1 col-xs-offset-2">
             <button ngClass="btn btn-info btn-xs gene-remove-button" (click)="mutateGene($event)">Mutate</button>
+        </div>
+        <div class="col-xs-1">
             <button ngClass="btn btn-danger btn-xs gene-remove-button" (click)="removeGene()">X</button>
         </div>
     </div>
@@ -29,7 +31,7 @@
                 <span *ngFor="let site of gene.sites" [class]="site.name" (click)="siteClicked($event, site.site)">{{site.name}}</span>       <!--[class.site-mutated]="site.isMutated"-->
             </div>
         </div>
-        <div *ngIf="mutationEnabled">
+        <div *ngIf="mutationEnabled; else mutatedSites">
             <gene-mutation [gene]="gene"></gene-mutation>
         </div>
         <ng-template #mutatedSites>
