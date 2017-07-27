@@ -26,9 +26,9 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
         this.mutationForm = this.formBuilder.group({
             description: ['description message', Validators.required],
             //empty array init:                     this.formBuilder.array([])
-            //group with site instance init:        this.formBuilder.group(new Site())
-            //array of groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
-            sites: this.formBuilder.array([])
+            //form group with site instance init:        this.formBuilder.group(new Site())
+            //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
+            formGroups: this.formBuilder.array([])
         })
     }
     ngOnInit(): void {
@@ -45,13 +45,16 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
             //     mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
             // }));
         const arrayOfFormGroups = this.formBuilder.array(formGroups);
-        this.mutationForm.setControl('sites', arrayOfFormGroups);
+        this.mutationForm.setControl('formGroups', arrayOfFormGroups);
     }
     private get sitesFormGroups():FormArray{
-        return this.mutationForm.get('sites') as FormArray;
+        return this.mutationForm.get('formGroups') as FormArray;     //Remark: this is FormArray of FormGroups
     }
 
     private stopEventPropagation(event: Event){
         this.stopPropagation(event);
+    }
+    private labelSiteMutation(isMutated:FormControl){
+        return isMutated.value ? 'Mutated' : 'Original';    //isMutated - it's FormControl here(it creates based on Site structure where it's one of properties)
     }
 }
