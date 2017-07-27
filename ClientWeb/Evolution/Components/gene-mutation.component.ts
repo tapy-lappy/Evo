@@ -15,7 +15,7 @@ import Site from "../Models/site";
 
 export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     @Input() gene: Gene;
-    private siteItems = EnumHelper.getNames(SiteEnum);
+    private siteItems: Array<SiteEnum> = EnumHelper.getValues(SiteEnum);//EnumHelper.getNames(SiteEnum);
     private mutationForm: FormGroup;
 
     constructor(private formBuilder: FormBuilder) {
@@ -37,13 +37,13 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     }
     private setSites(sites:Site[]){
         const formGroups = sites.map(site => this.formBuilder.group(
-            /*site*/    //TODO: clarify why doesn't work with the same 'site' structure from instance and why it works when I map all the 'site' properties manually:
+            site));    //TODO: clarify why doesn't work with the same 'site' structure from instance and why it works when I map all the 'site' properties manually:
             //Question: maybe site is processed as a property itself and it's needed to use it through this property: site.site, site.isMutated, not just like isMutated itself(in markup)
-            {
-                site: this.formBuilder.control(this.getSiteName(site.site)),       //TODO: maybe use enum values instead of strings in site control
-                isMutated: site.isMutated,
-                mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
-            }));
+            // {
+            //     site: this.formBuilder.control(this.getSiteName(site.site)),       //TODO: maybe use enum values instead of strings in site control
+            //     isMutated: site.isMutated,
+            //     mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
+            // }));
         const arrayOfFormGroups = this.formBuilder.array(formGroups);
         this.mutationForm.setControl('sites', arrayOfFormGroups);
     }

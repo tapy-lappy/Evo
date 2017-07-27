@@ -11,11 +11,11 @@
                 <label class="center-block">Sites:</label>
                 <div formArrayName="sites" class="well well-lg">
                     <div class="form-group" *ngFor="let site of sitesFormGroups.controls; let i=index" [formGroupName]="i">
-                        <input formControlName="mutationLabel">    <!--TODO: not input, when switch checkbox also change the label-->
+                        <!--<input formControlName="mutationLabel">    <!--TODO: not input, when switch checkbox also change the label-->
                         <span>#{{i + 1}}</span>
                         <input type="checkbox" formControlName="isMutated">
                         <select class="form-control" formControlName="site">    <!--TODO: maybe use enum values instead of strings in site control-->
-                            <option *ngFor="let item of siteItems" [ngValue]="item">{{item}}</option>
+                            <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
                         </select>
                     </div>
                 </div>
