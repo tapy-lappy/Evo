@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
@@ -38,10 +38,11 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     private setSites(sites:Site[]){
         const formGroups = sites.map(site => this.formBuilder.group(
             /*site*/    //TODO: clarify why doesn't work with the same 'site' structure from instance and why it works when I map all the 'site' properties manually:
+            //Question: maybe site is processed as a property itself and it's needed to use it through this property: site.site, site.isMutated, not just like isMutated itself(in markup)
             {
-                site: this.getSiteName(site.site),       //TODO: maybe use enum values instead of strings in site control
+                site: this.formBuilder.control(this.getSiteName(site.site)),       //TODO: maybe use enum values instead of strings in site control
                 isMutated: site.isMutated,
-                mutationLabel: site.isMutated ? 'Mutated' : 'No mutation'
+                mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
             }));
         const arrayOfFormGroups = this.formBuilder.array(formGroups);
         this.mutationForm.setControl('sites', arrayOfFormGroups);
