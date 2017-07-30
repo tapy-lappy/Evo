@@ -1,0 +1,34 @@
+<div class="row" (click)="stopEventPropagation($event)">
+    <div class="col-xs-12">
+        <h4 class="text-center center-block">Gene mutation</h4>
+        <form [formGroup]="mutationForm" novalidate>       <!--novalidate attribute in the <form> element prevents the browser from attempting native HTML validations-->
+            <div class="form-group row">
+                <div class="col-xs-4 col-xs-push-1">
+                    <label for="description" class="center-block">Descriebe mutation influence:</label>
+                </div>
+                <div class="col-xs-6 col-xs-push-1">
+                    <textarea id="description" class="form-control" formControlName="description"
+                              placeholder="description of mutation" cols="40" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="text-center center-block">Sites:</label>
+                <div formArrayName="formGroups" class="well well-lg narrowed-row">
+                    <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" [formGroupName]="i">
+                        <div class="col-xs-3">
+                            <span>#{{i + 1}}</span>
+                            <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
+                            <input type="checkbox" formControlName="isMutated" id="mutated" />
+                            <select class="form-control auto-width display-inline" formControlName="site">
+                                <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <p>Form value: {{ mutationForm.value | json }}</p>
+        <p>Form status: {{ mutationForm.status | json }}</p>
+    </div>
+</div>

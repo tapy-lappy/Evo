@@ -151,7 +151,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         this.mutationChanged.unsubscribe();
     }
 
-    mutateGene(){
+    mutateGene(event: Event){
         this.stopPropagation(event);
         this.mutationEnabled = !this.mutationEnabled;
         //this.appState.state.mutationChange(this.mutationEnabled); //TODO: this cause wrong behaviour, need to fix it
