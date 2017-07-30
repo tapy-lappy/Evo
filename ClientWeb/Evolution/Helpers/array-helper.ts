@@ -9,7 +9,7 @@ export class ArrayHelper<T> {
     }
     removeFrom(value: T, array: Array<T>){
         if (value && array && array.some(v => v == value)) {
-            return array.filter(v => v != value);
+            return array.filter(v => v != value);       //create new array instance based on prev array
         }
         return array;
     }

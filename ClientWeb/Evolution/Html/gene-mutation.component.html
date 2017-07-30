@@ -17,12 +17,18 @@
                     <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" [formGroupName]="i">
                         <div class="col-xs-3">
                             <span>#{{i + 1}}</span>
-                            <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
                             <input type="checkbox" formControlName="isMutated" id="mutated" />
+                            <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
+                            <button type="button" class="btn btn-xs btn-danger gene-button" (click)="removeSite(formGroup.controls.id.value)">X</button>
                             <select class="form-control auto-width display-inline" formControlName="site">
                                 <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="narrowed-row">
+                    <div class="col-xs-3 col-lg-push-6">
+                        <button type="button" class="btn btn-sm btn-info" (click)="addNewSite()">Add</button>
                     </div>
                 </div>
             </div>

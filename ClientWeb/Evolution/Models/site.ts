@@ -4,6 +4,7 @@ import EnumHelper from "../Helpers/enum-helper";
 export default class Site {
     site: SiteEnum;
     isMutated: boolean;
+    id: Symbol;
 
     get name(): string{
         return EnumHelper.getEnumNameByValue(SiteEnum, this.site);
@@ -11,6 +12,7 @@ export default class Site {
 
     constructor(site:SiteEnum, mutated?:boolean){
         this.site = site;
+        this.id = Symbol(this.site);
         this.isMutated = mutated || false;
     }
 

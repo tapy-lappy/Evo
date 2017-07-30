@@ -54,7 +54,16 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     private stopEventPropagation(event: Event){
         this.stopPropagation(event);
     }
-    private labelSiteMutation(isMutated:FormControl){
-        return isMutated.value ? 'Mutated' : 'Original';    //isMutated - it's FormControl here(it creates based on Site structure where it's one of properties)
+    private labelSiteMutation(isMutatedCtrl:FormControl){
+        return isMutatedCtrl.value ? 'Mutated' : 'Original';    //isMutatedCtrl - it's FormControl here(it's based on Site structure where isMutated it's one of properties)
+    }
+    private addNewSite():void{
+        this.sitesFormGroups.push(this.formBuilder.group(new Site(SiteEnum.A)));
+    }
+    private removeSite(id:any):void{
+        let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
+            return fg.controls.id.value === id      //fg.controls.id - it's FormControl
+        });
+        let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1);
     }
 }
