@@ -1,7 +1,8 @@
 <div class="row" (click)="stopEventPropagation($event)">
     <div class="col-xs-12">
         <h4 class="text-center center-block">Gene mutation</h4>
-        <form [formGroup]="mutationForm" novalidate>       <!--novalidate attribute in the <form> element prevents the browser from attempting native HTML validations-->
+        <form [formGroup]="mutationForm" (ngSubmit)="onSubmit()"
+              novalidate>       <!--novalidate attribute in the <form> element prevents the browser from attempting native HTML validations-->
             <div class="form-group row">
                 <div class="col-xs-4 col-xs-push-1">
                     <label for="description" class="center-block">Descriebe mutation influence:</label>
@@ -20,15 +21,18 @@
                             <input type="checkbox" formControlName="isMutated" id="mutated" />
                             <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
                             <button type="button" class="btn btn-xs btn-danger gene-button" (click)="removeSite(formGroup.controls.id.value)">X</button>
-                            <select class="form-control auto-width display-inline" formControlName="site">
+                            <select class="form-control auto-width display-inline" formControlName="site" (change)="mutate()">
                                 <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="narrowed-row">
-                    <div class="col-xs-3 col-lg-push-6">
+                    <div class="col-xs-2">
                         <button type="button" class="btn btn-sm btn-info" (click)="addNewSite()">Add</button>
+                    </div>
+                    <div class="col-xs-1">
+                        <button type="submit" [disabled]="mutationForm.pristine" class="btn btn-sm btn-success">Submit</button>
                     </div>
                 </div>
             </div>
@@ -36,5 +40,7 @@
 
         <p>Form value: {{ mutationForm.value | json }}</p>
         <p>Form status: {{ mutationForm.status | json }}</p>
+        <p>Description value: {{mutationForm.get('description').value}}</p>
+        <p>Nested: {{mutationForm.get('formGroups').value | json}}</p>
     </div>
 </div>
