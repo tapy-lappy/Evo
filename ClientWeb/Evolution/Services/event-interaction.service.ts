@@ -30,6 +30,26 @@ import {Observer} from "rxjs/Observer";
 //     }
 // }
 
+
+//https://embed.plnkr.co/?show=preview
+// @Injectable()
+// export class HeroService {
+//
+//     delayMs = 500;
+//
+//     // Fake server get; assume nothing can go wrong
+//     getHeroes(): Observable<Hero[]> {
+//         return of(heroes).delay(this.delayMs); // simulate latency with delay    - it creates Observable
+//     }
+//
+//     // Fake server update; assume nothing can go wrong
+//     updateHero(hero: Hero): Observable<Hero>  {
+//         const oldHero = heroes.find(h => h.id === hero.id);
+//         const newHero = Object.assign(oldHero, hero); // Demo: mutate cached hero
+//         return of(newHero).delay(this.delayMs); // simulate latency with delay
+//     }
+// }
+
 interface IEvent<T>{
     generated$: Observable<T>;
     event(value:T):void;

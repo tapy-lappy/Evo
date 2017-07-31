@@ -5,6 +5,7 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
 import EnumHelper from "../Helpers/enum-helper";
 import Site from "../Models/site";
+import ObjectHelper from "../Helpers/object-helper";
 
 @Component({
     moduleId: module.id,
@@ -18,7 +19,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     private siteItems: Array<SiteEnum> = EnumHelper.getValues(SiteEnum);//EnumHelper.getNames(SiteEnum);
     private mutationForm: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder/*, private mutationService: MutationService*/) {
         super();
         this.initForm();
     }
@@ -46,15 +47,60 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
             // }));
         const arrayOfFormGroups = this.formBuilder.array(formGroups);
         this.mutationForm.setControl('formGroups', arrayOfFormGroups);
+
+        this.sitesFormGroups.controls.forEach((fg:FormGroup) => this.setUpMutationChanges(fg));
     }
     private get sitesFormGroups():FormArray{
         return this.mutationForm.get('formGroups') as FormArray;     //Remark: this is FormArray of FormGroups
     }
-
+    private setUpMutationChanges(fg:FormGroup) {
+        //https://angular.io/guide/reactive-forms#observe-control-changes
+        fg.controls.site.valueChanges.forEach((value:SiteEnum)=>{   //TODO: investigate Observable<any>. Also possible to use .subscriebe() but then need to unsubscriebe
+            let isMutatedCtrl = fg.controls.isMutated;
+            //if(isMutatedCtrl.value !== value)
+                //isMutatedCtrl.patchValue({isMutated: true});    //https://angular.io/guide/reactive-forms#patchvalue
+                isMutatedCtrl.setValue(true);    //https://angular.io/guide/reactive-forms#setvalue
+        });
+    }
     private stopEventPropagation(event: Event){
         this.stopPropagation(event);
     }
-    private labelSiteMutation(isMutated:FormControl){
-        return isMutated.value ? 'Mutated' : 'Original';    //isMutated - it's FormControl here(it creates based on Site structure where it's one of properties)
+    private labelSiteMutation(isMutatedCtrl:FormControl){
+        return isMutatedCtrl.value ? 'Mutated' : 'Original';    //isMutatedCtrl - it's FormControl here(it's based on Site structure where isMutated it's one of properties)
+    }
+    private addNewSite():void{
+        let newFormGroup = this.formBuilder.group(new Site(SiteEnum.A));
+        this.setUpMutationChanges(newFormGroup);
+        this.sitesFormGroups.push(newFormGroup);
+    }
+    private removeSite(id:any):void{
+        let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
+            return fg.controls.id.value === id      //fg.controls.id - it's FormControl
+        });
+        let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove form group by its index
+    }
+    private reset(){
+        this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
+    }
+    private mutate(){
+        //From HTML
+    }
+    private onSubmit(){
+        const preparedGene = this.prepareChanges();
+        //this.mutationService.updateGene(preparedGene);    //TODO: implementation
+        this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
+    }
+    private prepareChanges():Gene{
+        const formModel = this.mutationForm.value;
+        const mutatedSites: Site[] = ObjectHelper.deepCopyArray<Site>(formModel.formGroups);    //Error: formModel.formGroups.controls
+        const gene:Gene = {
+            name: this.gene.name,
+            id: this.gene.id,
+            sites: this.gene.sites,
+            //mutationSites: formModel.formGroups,      //Bad - need deep copy      //TODO
+            mutationSites: mutatedSites,
+            description: formModel.description as string
+        };
+        return gene;
     }
 }

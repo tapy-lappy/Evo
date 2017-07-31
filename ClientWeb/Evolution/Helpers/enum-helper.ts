@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import {SiteEnum} from "../Enums/site-enum";
 
 @Injectable()
 export default class EnumHelper{
