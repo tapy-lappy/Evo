@@ -77,7 +77,11 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
         let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
             return fg.controls.id.value === id      //fg.controls.id - it's FormControl
         });
-        let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove form group by its index
+
+        //TODO: this is removing FormControl from FormGroup, BUT it do not remove it from  mutationForm.value:
+        // let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove form group by its index
+        //Done: this is removing from both:
+        this.sitesFormGroups.removeAt(formGroupIndex);
     }
     private reset(){
         this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
