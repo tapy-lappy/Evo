@@ -32,11 +32,12 @@
             </div>
         </div>
         <div *ngIf="mutationEnabled; else mutatedSites">
-            <gene-mutation [gene]="gene"></gene-mutation>
+            <gene-mutation [gene]="gene" (submitted)="switchMutation($event.mutationSites)(!mutationEnabled);"></gene-mutation>
         </div>
         <ng-template #mutatedSites>
             <div *ngIf="gene.mutationSites.length > 0" ngClass="row">
                 <div ngClass="col-xs-1 gene-label-sites-container">Mutated</div>
+                <!--<span *ngFor="let site of gene.mutationSites">{{site|json}}</span>-->
                 <div ngClass="col-xs-10 col-xs-offset-1 gene-sites-container">
                     <span *ngFor="let site of gene.mutationSites" [ngClass]="site.setSiteCssClasses()" [class]="site.name" (click)="mutateSite($event, site)">{{site.name}}</span> <!--[class]="site.isMutated ? 'site-mutated': site.name"-->
                 </div>

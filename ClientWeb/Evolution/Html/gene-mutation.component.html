@@ -21,7 +21,7 @@
                             <input type="checkbox" formControlName="isMutated" id="mutated" />
                             <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
                             <button type="button" class="btn btn-xs btn-danger gene-button" (click)="removeSite(formGroup.controls.id.value)">X</button>
-                            <select class="form-control auto-width display-inline" formControlName="site" (change)="mutate()">
+                            <select class="form-control auto-width display-inline" formControlName="site">
                                 <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
                             </select>
                         </div>

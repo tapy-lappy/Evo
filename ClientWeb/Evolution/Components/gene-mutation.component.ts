@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
@@ -16,6 +16,7 @@ import ObjectHelper from "../Helpers/object-helper";
 
 export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     @Input() gene: Gene;
+    @Output('submitted') submittedEvent: EventEmitter<Gene> = new EventEmitter<Gene>();
     private siteItems: Array<SiteEnum> = EnumHelper.getValues(SiteEnum);//EnumHelper.getNames(SiteEnum);
     private mutationForm: FormGroup;
 
@@ -34,7 +35,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
     }
     ngOnInit(): void {
         //Explanation: The reason why we populate form with data here - it's that  @Input() gene: Gene is undefined in constructor:
-        this.setSites(this.gene.sites);
+        this.setSites(this.gene.mutationSites.length > 0 ? this.gene.mutationSites : this.gene.sites);
     }
     private setSites(sites:Site[]){
         const formGroups = sites.map(site => this.formBuilder.group(
@@ -73,26 +74,26 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
         this.setUpMutationChanges(newFormGroup);
         this.sitesFormGroups.push(newFormGroup);
     }
-    private removeSite(id:any):void{
+    private removeSite(id:Symbol):void{
         let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
             return fg.controls.id.value === id      //fg.controls.id - it's FormControl
         });
 
-        //TODO: this is removing FormControl from FormGroup, BUT it do not remove it from  mutationForm.value:
-        // let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove form group by its index
+        //TODO: this is removing FormControl from FormGroup(form model), BUT it do not remove it from  mutationForm.value:
+        // let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove only control(but there are no changes in form model)
         //Done: this is removing from both:
-        this.sitesFormGroups.removeAt(formGroupIndex);
+        this.sitesFormGroups.removeAt(formGroupIndex);  //remove form group from form model
     }
     private reset(){
         this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
-    private mutate(){
-        //From HTML
-    }
     private onSubmit(){
-        const preparedGene = this.prepareChanges();
+        const preparedGene = this.prepareChanges();         //Workaround
         //this.mutationService.updateGene(preparedGene);    //TODO: implementation
         this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
+
+        //this.submittedEvent.emit(ObjectHelper.deepTreeCopy(this.gene));   //TODO: need to implement
+        this.submittedEvent.emit(preparedGene);
     }
     private prepareChanges():Gene{
         const formModel = this.mutationForm.value;
@@ -101,8 +102,9 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
             name: this.gene.name,
             id: this.gene.id,
             sites: this.gene.sites,
-            //mutationSites: formModel.formGroups,      //Bad - need deep copy      //TODO
-            mutationSites: mutatedSites,
+            isMutated: this.gene.isMutated,             //Workaround: gene.isMutated is computable. It's bad approach to reinitialize it here
+            //mutationSites: formModel.formGroups,      //TODO: Bad - need deep copy
+            mutationSites: mutatedSites,                //Done
             description: formModel.description as string
         };
         return gene;

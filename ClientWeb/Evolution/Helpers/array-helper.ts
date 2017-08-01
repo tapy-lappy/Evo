@@ -13,5 +13,15 @@ export class ArrayHelper<T> {
         }
         return array;
     }
+    static some<T>(array: Array<T>, predicate: (item:T)=>boolean):boolean{
+        //https://metanit.com/web/javascript/4.8.php
+        return array.some.call(array, predicate);
+    }
+    //TODO: JS context set up: this: void
+    //some<T>(callbackfn: (this: void, value: T, index: number, array: T[]) => boolean): boolean;
 
+    //Remark - useles in this form:
+    // static cast<T>(array:T): T{
+    //     return <T>array;
+    // }
 }
