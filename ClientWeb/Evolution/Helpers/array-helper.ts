@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ArrayHelper<T> {
 
-    addTo(value: T, array: Array<T>){
+    static add<T>(array: Array<T>, value: T,){
         if (value && array && !array.some(v => v == value))
             array.push(value);
     }
-    removeFrom(value: T, array: Array<T>){
+    static remove<T>(value: T, array: Array<T>){
         if (value && array && array.some(v => v == value)) {
             return array.filter(v => v != value);       //create new array instance based on prev array
         }
@@ -17,6 +17,11 @@ export class ArrayHelper<T> {
         //https://metanit.com/web/javascript/4.8.php
         return array.some.call(array, predicate);
     }
+    static every<T>(array: T[], predicate: (item:T)=>boolean):boolean{
+        //https://metanit.com/web/javascript/4.8.php
+        return array.every.apply(array, [predicate]);
+    }
+
     //TODO: JS context set up: this: void
     //some<T>(callbackfn: (this: void, value: T, index: number, array: T[]) => boolean): boolean;
 

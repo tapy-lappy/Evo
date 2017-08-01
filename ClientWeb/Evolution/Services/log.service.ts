@@ -19,7 +19,7 @@ type Handler = (message: string, ...optionalParams: Array<string>) => void;     
 export default class LogService{
     logs: Array<string> = [];
 
-    constructor(private arrayHelper: ArrayHelper<string>){}
+    constructor(){}
 
     protected prepareMessage(message: string, title?: string){
         title = title ? title : 'LOG';
@@ -73,11 +73,11 @@ export default class LogService{
                 if(customLog.styles) {
                     customLog.messageTemplate = '%c'.concat(customLog.messageTemplate);
                     let stylesCombined = (typeof customLog.styles == 'string') ? customLog.styles : customLog.styles.join(';');
-                    this.arrayHelper.addTo(stylesCombined, optionalParams);
+                    ArrayHelper.add<string>(optionalParams, stylesCombined);
                 }
                 if(customLog.content) {
                     customLog.messageTemplate += ' %s';
-                    this.arrayHelper.addTo(customLog.content, optionalParams);
+                    ArrayHelper.add(optionalParams, customLog.content);
                 }
                 handler(customLog.messageTemplate, ...optionalParams);
             };

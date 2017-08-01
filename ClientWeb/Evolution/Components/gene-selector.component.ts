@@ -16,7 +16,7 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, 
     private errors: string[] = [];
     private geneAdded: Subscription;
 
-    constructor(private appState: AppState, private geneInteraction: GeneInteractionToken<Gene,boolean>, private arrayHelper: ArrayHelper<string>) {
+    constructor(private appState: AppState, private geneInteraction: GeneInteractionToken<Gene,boolean>) {
         super();
     }
 
@@ -39,7 +39,7 @@ export class GeneSelectorComponent extends BaseGeneComponent implements OnInit, 
                         this.add(gene);
                     }catch (err)
                     {
-                        this.arrayHelper.addTo(err.message, this.errors);
+                        ArrayHelper.add<string>(this.errors, err.message);
                         //this.error(err);
                         success = false;
                     }
