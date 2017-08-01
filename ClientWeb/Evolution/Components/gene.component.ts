@@ -127,12 +127,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         if(mutationSites)
             this.gene.mutationSites = mutationSites.map(item => new Site(item.site, item.isMutated));   //Workaround
         return enabled => {
-            //subsribeAgain(enabled);
             this.mutationEnabled = enabled;
-
-            //Workaround: must be eliminated:
-            //  this.getGeneService().switchGeneMutation(this.gene, !enabled);
-            //  this.initGene();
         };
     }
 
@@ -165,10 +160,6 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     mutateGene(event: Event){
         this.stopPropagation(event);
         this.mutationEnabled = !this.mutationEnabled;
-
-        // //this.appState.state.mutationChange(this.mutationEnabled); //TODO: this cause wrong behaviour, need to fix it
-        // let geneService = this.getGeneService();                    //Done
-        // geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
 
     removeGene(){

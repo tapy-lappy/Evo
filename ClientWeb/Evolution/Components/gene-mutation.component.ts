@@ -73,6 +73,10 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
         let newFormGroup = this.formBuilder.group(new Site(SiteEnum.A));
         this.setUpMutationChanges(newFormGroup);
         this.sitesFormGroups.push(newFormGroup);
+        this.enableSubmit();
+    }
+    private enableSubmit(){
+        this.mutationForm.markAsDirty({onlySelf: true});     //marks only mutationForm, not it's ancestors
     }
     private removeSite(id:Symbol):void{
         let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
@@ -92,7 +96,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit{
         //this.mutationService.updateGene(preparedGene);    //TODO: implementation
         this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
 
-        //this.submittedEvent.emit(ObjectHelper.deepTreeCopy(this.gene));   //TODO: need to implement
+        //this.submittedEvent.emit(ObjectHelper.deepTreeCopy(this.gene));   //TODO: need to implement deep copy for tree structure(better if as overload for deepCopy(and overload for arrays too!))
         this.submittedEvent.emit(preparedGene);
     }
     private prepareChanges():Gene{
