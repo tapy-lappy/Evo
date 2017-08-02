@@ -13,7 +13,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="text-center center-block">Sites:</label>
+                <div class="narrowed-row">
+                    <div class="col-xs-4">
+                        <label class="text-center center-block">Sites:</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <button type="button" class="btn btn-sm btn-info gene-button" (click)="addNewSite()">Add</button>
+                    </div>
+                </div>
                 <div formArrayName="formGroups" class="well well-lg narrowed-row">
                     <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" [formGroupName]="i">
                         <div class="col-xs-3">
@@ -28,11 +35,11 @@
                     </div>
                 </div>
                 <div class="narrowed-row">
-                    <div class="col-xs-2">
-                        <button type="button" class="btn btn-sm btn-info" (click)="addNewSite()">Add</button>
+                    <div class="col-xs-2 col-xs-push-8">
+                        <button type="submit" [disabled]="mutationForm.pristine" class="btn btn-sm btn-success gene-button">Submit</button>
                     </div>
-                    <div class="col-xs-1">
-                        <button type="submit" [disabled]="mutationForm.pristine" class="btn btn-sm btn-success">Submit</button>
+                    <div class="col-xs-2 col-xs-push-8">
+                        <button type="button" [disabled]="mutationForm.pristine" class="btn btn-sm btn-danger gene-button" (click)="onCancel()">Cancel</button>
                     </div>
                 </div>
             </div>
