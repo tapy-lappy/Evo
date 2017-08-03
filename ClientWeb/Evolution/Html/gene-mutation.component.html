@@ -6,6 +6,7 @@
             <div class="form-group row">
                 <div class="col-xs-4 col-xs-push-1">
                     <label for="description" class="center-block">Descriebe mutation influence:</label>
+                    <div *ngFor="let error of errors">{{error}}</div>
                 </div>
                 <div class="col-xs-6 col-xs-push-1">
                     <textarea id="description" class="form-control" formControlName="description"
@@ -34,7 +35,7 @@
                 </div>
                 <div class="narrowed-row">
                     <div class="col-xs-2 col-xs-push-8">
-                        <button type="submit" [disabled]="mutationForm.pristine" class="btn btn-sm btn-success gene-button">Submit</button>
+                        <button type="submit" [disabled]="mutationForm.pristine && errors.length > 0" class="btn btn-sm btn-success gene-button">Submit</button>
                     </div>
                     <div class="col-xs-2 col-xs-push-8">
                         <button type="button" [disabled]="mutationForm.pristine" class="btn btn-sm btn-danger gene-button" (click)="onCancel()">Cancel</button>
@@ -45,6 +46,7 @@
 
         <p>Form value: {{ mutationForm.value | json }}</p>
         <p>Form status: {{ mutationForm.status | json }}</p>
+        <p>Form pristine: {{ mutationForm.pristine }}</p>
         <p>Description value: {{mutationForm.get('description').value}}</p>
         <p>Nested: {{mutationForm.get('formGroups').value | json}}</p>
     </div>

@@ -3,6 +3,9 @@ export default class ObjectHelper{
     static mixin<T, U>(target: T, source: U): T & U {     //mixin(intersection of types T & U)
         return Object.assign(target, source);
     }
+    static mixin2<T, U, V>(target: T, source1: U, source2: V): T & U & V{
+        return Object.assign(target, source1, source2);         //There are several overloads of Object.assign
+    }
 
     static deepCopy<T>(source:T):T{
         return Object.assign({}, source);

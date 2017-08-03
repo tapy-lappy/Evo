@@ -1,4 +1,7 @@
-import {Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges} from '@angular/core';
+import {
+    Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges,
+    AfterContentChecked
+} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
@@ -14,11 +17,12 @@ import ObjectHelper from "../Helpers/object-helper";
     templateUrl: '../Html/gene-mutation.component.html',
 })
 
-export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges{
+export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges, AfterContentChecked{
     @Input() gene: Gene;
     @Output('submitted') submittedEvent: EventEmitter<Gene> = new EventEmitter<Gene>();
     private siteItems: Array<SiteEnum> = EnumHelper.getValues(SiteEnum);//EnumHelper.getNames(SiteEnum);
     private mutationForm: FormGroup;
+    private errors: string[] = [];
 
     private get sitesFormGroups():FormArray{
         return this.mutationForm.get('formGroups') as FormArray;     //Remark: this is FormArray of FormGroups
@@ -42,6 +46,14 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         this.mutationForm = this.formBuilder.group(this.initialState);
         //Workaround Explanation: The reason why we populate form with data here is because @Input() gene: Gene is undefined in constructor:
         this.setSites(this.gene.mutationSites.length > 0 ? this.gene.mutationSites : this.gene.sites);
+    }
+    ngAfterContentChecked(): void {
+        this.mutationForm.valueChanges.subscribe(data =>{
+           const descriptionCtrl = this.mutationForm.get('description');
+           if(descriptionCtrl && !descriptionCtrl.valid){
+               this.errors.push(descriptionCtrl.errors['required']);
+           }
+        });
     }
 
     private setSites(sites:Site[]){
