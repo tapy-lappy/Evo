@@ -23,9 +23,9 @@
                     </div>
                 </div>
                 <div formArrayName="formGroups" class="well well-lg narrowed-row">
-                    <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" class="col-xs-3">    <!--[formGroupName]="i" not needed anymore because <site-mutation> inside has <div [formGroup]="siteGroup">-->
-                         <site-mutation [siteGroup]="formGroup" [index]="i" (remove)="removeSite($event)"></site-mutation>
-                    </div>
+                     <site-mutation *ngFor="let formGroup of sitesFormGroups.controls; let i=index" class="col-xs-3"  
+                             [siteGroup]="formGroup" [index]="i" (remove)="removeSite($event)"></site-mutation>
+                    <!--[formGroupName]="i" not needed anymore because <site-mutation> inside has <div [formGroup]="siteGroup">-->
                 </div>
                 <div class="narrowed-row">
                     <div class="col-xs-2 col-xs-push-8">

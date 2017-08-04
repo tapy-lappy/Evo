@@ -1,8 +1,10 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {SiteEnum} from "../Enums/site-enum";
 import EnumHelper from "../Helpers/enum-helper";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
+import Site from "../Models/site";
+import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface";
 
 @Component({
     moduleId: module.id,
@@ -12,7 +14,8 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
     outputs: ['remove']
 })
 
-export class SiteMutationComponent extends BaseGeneComponent implements OnInit {
+export class SiteMutationComponent extends BaseGeneComponent implements OnInit/*, ReactFormNestedInterface*/ {
+
     private index: number;
     private siteGroup: FormGroup;
     private remove: EventEmitter<Symbol> = new EventEmitter<Symbol>();
@@ -20,6 +23,16 @@ export class SiteMutationComponent extends BaseGeneComponent implements OnInit {
 
     constructor() {
         super();
+    }
+
+    static build<Site>(data?: Site): FormGroup {
+        const fb = new FormBuilder();
+        return fb.group(data);
+        // {
+        //     site: fb.control(site.site),
+        //     isMutated: site.isMutated,
+        //     mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
+        // }));
     }
 
     ngOnInit() {

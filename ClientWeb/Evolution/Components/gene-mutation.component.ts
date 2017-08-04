@@ -8,6 +8,7 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
 import Site from "../Models/site";
 import ObjectHelper from "../Helpers/object-helper";
+import {SiteMutationComponent} from "./site-mutation.component";
 
 @Component({
     moduleId: module.id,
@@ -55,13 +56,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private setSites(sites:Site[]){
-        const formGroups = sites.map(site => this.formBuilder.group(
-            site));
-            // {
-            //     site: this.formBuilder.control(site.site),
-            //     isMutated: site.isMutated,
-            //     mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
-            // }));
+        const formGroups = sites.map(site => SiteMutationComponent.build(site));
         const arrayOfFormGroups = this.formBuilder.array(formGroups);
         this.mutationForm.setControl('formGroups', arrayOfFormGroups);
     }
@@ -72,7 +67,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private addNewSite():void{
-        let newFormGroup = this.formBuilder.group(new Site(SiteEnum.A));
+        let newFormGroup = SiteMutationComponent.build(new Site(SiteEnum.A));
         this.sitesFormGroups.push(newFormGroup);
         this.enableSubmit();
     }
