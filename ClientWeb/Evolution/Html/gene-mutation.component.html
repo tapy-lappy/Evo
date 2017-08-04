@@ -9,7 +9,7 @@
                     <div *ngFor="let error of errors">{{error}}</div>
                 </div>
                 <div class="col-xs-6 col-xs-push-1">
-                    <textarea id="description" class="form-control" formControlName="description"
+                    <textarea id="description" class="form-control no-resizable" formControlName="description"
                               placeholder="description of mutation" cols="40" rows="3"></textarea>
                 </div>
             </div>
@@ -23,19 +23,13 @@
                     </div>
                 </div>
                 <div formArrayName="formGroups" class="well well-lg narrowed-row">
-                    <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" [formGroupName]="i" class="col-xs-3">
-                        <span>#{{i + 1}}</span>
-                        <input type="checkbox" formControlName="isMutated" id="mutated" />
-                        <label for="mutated">{{labelSiteMutation(formGroup.controls.isMutated)}}</label>
-                        <button type="button" class="btn btn-xs btn-danger gene-button" (click)="removeSite(formGroup.controls.id.value)">X</button>
-                        <select class="form-control auto-width display-inline" formControlName="site">
-                            <option *ngFor="let item of siteItems" [ngValue]="item">{{getSiteName(item)}}</option>
-                        </select>
+                    <div *ngFor="let formGroup of sitesFormGroups.controls; let i=index" class="col-xs-3">    <!--[formGroupName]="i" not needed anymore because <site-mutation> inside has <div [formGroup]="siteGroup">-->
+                         <site-mutation [siteGroup]="formGroup" [index]="i" (remove)="removeSite($event)"></site-mutation>
                     </div>
                 </div>
                 <div class="narrowed-row">
                     <div class="col-xs-2 col-xs-push-8">
-                        <button type="submit" [disabled]="mutationForm.pristine && errors.length > 0" class="btn btn-sm btn-success gene-button">Submit</button>
+                        <button type="submit" [disabled]="mutationForm.pristine || mutationForm.invalid" class="btn btn-sm btn-success gene-button">Submit</button>
                     </div>
                     <div class="col-xs-2 col-xs-push-8">
                         <button type="button" [disabled]="mutationForm.pristine" class="btn btn-sm btn-danger gene-button" (click)="onCancel()">Cancel</button>
