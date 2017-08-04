@@ -9,6 +9,7 @@ import {SiteEnum} from "../Enums/site-enum";
 import Site from "../Models/site";
 import ObjectHelper from "../Helpers/object-helper";
 import {SiteMutationComponent} from "./site-mutation.component";
+import {SiteMutationArrayComponentComponent} from "./site-mutation-array.component";
 
 @Component({
     moduleId: module.id,
@@ -56,9 +57,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private setSites(sites:Site[]){
-        const formGroups = sites.map(site => SiteMutationComponent.build(site));
-        const arrayOfFormGroups = this.formBuilder.array(formGroups);
-        this.mutationForm.setControl('formGroups', arrayOfFormGroups);
+        const arraySiteFormGroups = SiteMutationArrayComponentComponent.build(sites);
+        this.mutationForm.setControl('formGroups', arraySiteFormGroups);
     }
 
 
@@ -66,23 +66,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         this.stopPropagation(event);
     }
 
-    private addNewSite():void{
-        let newFormGroup = SiteMutationComponent.build(new Site(SiteEnum.A));
-        this.sitesFormGroups.push(newFormGroup);
-        this.enableSubmit();
-    }
-    private enableSubmit(){
+    private enableActions(){
         this.mutationForm.markAsDirty({onlySelf: true});     //marks only mutationForm, not it's ancestors
-    }
-    private removeSite(id:Symbol):void{
-        let formGroupIndex = this.sitesFormGroups.controls.findIndex((fg:FormGroup) => {
-            return fg.controls.id.value === id      //fg.controls.id - it's FormControl
-        });
-
-        //TODO: this is removing FormControl from FormGroup(form model), BUT it do not remove it from  mutationForm.value:
-        // let removeFormGroups = this.sitesFormGroups.controls.splice(formGroupIndex, 1); //remove only control(but there are no changes in form model)
-        //Done: this is removing from both:
-        this.sitesFormGroups.removeAt(formGroupIndex);  //remove form group from form model
     }
     ngOnChanges(changes: SimpleChanges): void {
         //to clear control values from the previous gene and restore status flags to the pristine state need

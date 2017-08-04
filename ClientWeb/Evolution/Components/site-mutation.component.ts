@@ -14,7 +14,7 @@ import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface"
     outputs: ['remove']
 })
 
-export class SiteMutationComponent extends BaseGeneComponent implements OnInit/*, ReactFormNestedInterface*/ {
+export class SiteMutationComponent extends BaseGeneComponent implements OnInit/*, ReactFormNestedInterface*/ {  //TODO: ReactFormNestedInterface
 
     private index: number;
     private siteGroup: FormGroup;
