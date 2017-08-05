@@ -2,13 +2,11 @@ import {
     Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges,
     AfterContentChecked
 } from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
-import {SiteEnum} from "../Enums/site-enum";
 import Site from "../Models/site";
 import ObjectHelper from "../Helpers/object-helper";
-import {SiteMutationComponent} from "./site-mutation.component";
 import {SiteMutationArrayComponentComponent} from "./site-mutation-array.component";
 
 @Component({
@@ -30,7 +28,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
 
     private get initialState(){
         return {
-            description: ['description message', Validators.required],   //TODO:, Validators.required
+            description: ['description message', Validators.required],
             //empty array init:                     this.formBuilder.array([])
             //form group with site instance init:        this.formBuilder.group(new Site())
             //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])

@@ -3,7 +3,7 @@ import Site from "../Models/site";
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {SiteMutationComponent} from "./site-mutation.component";
 import {SiteEnum} from "../Enums/site-enum";
-import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface";
+import {ReactFormNestedComponent} from "../Abstract/react-form-nested.interface";
 
 @Component({
     moduleId: module.id,
@@ -13,7 +13,7 @@ import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface"
 //TODO: make array-component generic with AR(add/remove) interface. add() and remove() methods must be set up with appropriate functions
 //TODO: from parent component(if they needed). This allows to use the same approach everywhere and have only one array-component to display
 //TODO: arrays. Setting up AR with callback methods means parent component may adjust their logic.
-export class SiteMutationArrayComponentComponent /*implements ReactFormNestedInterface*/{       //TODO: ReactFormNestedInterface
+export class SiteMutationArrayComponentComponent /*implements ReactFormNestedComponent*/{       //TODO: ReactFormNestedInterface
     @Input() formArray: FormArray;
     @Output('added') addedEvent = new EventEmitter();
     @Output('removed') removeEvent = new EventEmitter();

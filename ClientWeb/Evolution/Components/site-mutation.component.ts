@@ -4,7 +4,7 @@ import {SiteEnum} from "../Enums/site-enum";
 import EnumHelper from "../Helpers/enum-helper";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
-import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface";
+//import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface";
 
 @Component({
     moduleId: module.id,
