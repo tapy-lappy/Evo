@@ -57,19 +57,20 @@ export default class GeneStorage{
         return keyValue;
     }
     add(gene: Gene): this{
-        //TODO: this context in function/objects in JS - use metanit source explanation
-        //Remark: here we bind context to callback function this._genes.add, because without this it won't know with what this._genes instance it must work
+        //Explanation: 'this' context in function/objects in JS: bind() function - https://metanit.com/web/javascript/4.10.php
+        //Explanation: call()/apply() - https://metanit.com/web/javascript/4.8.php
+        //Explanation: here we bind context to callback function this._genes.add, because without this it won't know with what this._genes instance it must work
         return this.execute(this._genes.add.bind(this._genes), this.createKeyValue(gene), this.error, this.errorOption(gene, 'has been already added'));
     }
     remove(gene: Gene){
-        //Remark: here we bind context to callback function this._genes.remove, because without this it won't know with what this._genes instance it must work
+        //Explanation: here we bind context to callback function this._genes.remove, because without this it won't know with what this._genes instance it must work
         //return this.execute(this._genes.remove.bind(this._genes), this.createKeyValue(gene), this.error, this.errorOption(gene, 'has already been removed'));
         let condition:Condition<Gene> = {
             value: gene,
             predicate: (g: Gene)=>g.name === gene.name,
             selector: (g: Gene)=>g.name
         };
-        this._genes.remove(condition);   //Remark: direct call(do not need to bind context)
+        this._genes.remove(condition);   //Explanation: direct call(do not need to bind context)
         return this;
     }
 

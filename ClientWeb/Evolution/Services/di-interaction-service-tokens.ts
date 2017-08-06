@@ -34,6 +34,10 @@ abstract class RemoveGeneInteractionMultiCastEventToken<T> extends BaseEventToke
 //         throw new Error('Method not implemented.');
 //     }
 // }
+//Remark: The key benefit of an abstract class-interface is that you can get the strong-typing of an interface and you can use it
+//Remark: as a provider token in the way you would a normal class(interface can't be used as provider token, because
+//Remark: in JS there are no interfaces). https://angular.io/guide/dependency-injection-in-action#class-interface
+//Note: You can't use an interface as a provider token because interfaces are not JavaScript objects. They exist only in the TypeScript design space.
 
 abstract class SiteInteractionToken<TInput,TOutput> extends BaseInteractionToken<TInput, TOutput>{}
 abstract class GeneInteractionToken<TInput,TOutput> extends BaseInteractionToken<TInput,TOutput>{}
