@@ -5,6 +5,7 @@ import {SiteMutationComponent} from "./site-mutation.component";
 import {SiteEnum} from "../Enums/site-enum";
 import {ReactFormBuilder} from "../Abstract/react-form-builder";
 import {Resolvable} from "../Abstract/resolvable";
+import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
 
 @Component({
     moduleId: module.id,
@@ -14,38 +15,39 @@ import {Resolvable} from "../Abstract/resolvable";
 //TODO: make array-component generic with AR(add/remove) interface. add() and remove() methods must be set up with appropriate functions
 //TODO: from parent component(if they needed). This allows to use the same approach everywhere and have only one array-component to display
 //TODO: arrays. Setting up AR with callback methods means parent component may adjust their logic.
-export class SiteMutationArrayComponent extends ReactFormBuilder implements Resolvable{
+export class SiteMutationArrayComponent implements ReactFormBuilder, Resolvable{
     @Input() formArray: FormArray;
     @Output('added') addedEvent = new EventEmitter();
     @Output('removed') removeEvent = new EventEmitter();
 
     constructor(private fb: FormBuilder) {
-        super();
     }
 
     build<SiteMutationArrayComponent>(initializationData?: Site[]): FormArray {
         //return SiteMutationArrayComponent.build(initializationData);      //static approach
         const array = this.fb.array([]);
         if (initializationData) {
-            initializationData.forEach(site => array.push(SiteMutationComponent.build(site)));  //FixMe: static approach
-            // const sitesFormGroups = data.map(site => SiteMutationComponent.build(site));
+            const builder = this.getFormModelBuilder();
+            initializationData.forEach(site => array.push(builder(site)));
+            // const sitesFormGroups = data.map(site => SiteMutationComponent.build(site));     //static approach
             // const array = fb.array(sitesFormGroups);
         }
         return array;
-
     }
 
     // private static build<Site>(data?: Site[]):FormArray{
     //     const fb = new FormBuilder();
     //     const array = fb.array([]);
     //     data.forEach(site => array.push(SiteMutationComponent.build(site)));
-    //     // const sitesFormGroups = data.map(site => SiteMutationComponent.build(site));  //static approach
-    //     // const array = fb.array(sitesFormGroups);
     //     return array;
     // }
 
+    private getFormModelBuilder(){
+        return ReactFormBuilderFactory.builder(SiteMutationComponent, {provide: FormBuilder, useValue: this.fb});
+    }
+
     private add(){
-        this.formArray.push(SiteMutationComponent.build(new Site(SiteEnum.A)));
+        this.formArray.push(this.getFormModelBuilder()(new Site(SiteEnum.A)));
         this.addedEvent.emit();
     }
 
