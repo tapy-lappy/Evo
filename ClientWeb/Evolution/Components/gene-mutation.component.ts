@@ -7,7 +7,8 @@ import Gene from "../Models/gene";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import ObjectHelper from "../Helpers/object-helper";
-import {SiteMutationArrayComponentComponent} from "./site-mutation-array.component";
+import {SiteMutationArrayComponent} from "./site-mutation-array.component";
+import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
 
 @Component({
     moduleId: module.id,
@@ -55,8 +56,9 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private setSites(sites:Site[]){
-        const arraySiteFormGroups = SiteMutationArrayComponentComponent.build(sites);
-        this.mutationForm.setControl('formGroups', arraySiteFormGroups);
+        //const formModel = SiteMutationArrayComponent.build(sites);    //static approach
+        const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})(sites);
+        this.mutationForm.setControl('formGroups', formModel);
     }
 
 
