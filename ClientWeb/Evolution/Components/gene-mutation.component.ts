@@ -96,16 +96,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
     private prepareChanges():Gene{
         const formModel = this.mutationForm.value;
-        const mutatedSites: Site[] = ObjectHelper.deepCopyArray<Site>(formModel.formGroups);    //Error: formModel.formGroups.controls
-        const gene:Gene = {
-            name: this.gene.name,
-            id: this.gene.id,
-            sites: this.gene.sites,
-            isMutated: this.gene.isMutated,             //Workaround: gene.isMutated is computable. It's bad approach to reinitialize it here
-            //mutationSites: formModel.formGroups,      //TODO: Bad - need deep copy
-            mutationSites: mutatedSites,                //Done
-            description: formModel.description as string
-        };
-        return gene;
+        //Set up mutation sites into gene(TODO: must be done by MutationService):
+        this.gene.mutationSites = ObjectHelper.deepCopy(formModel.formGroups);    //Error: formModel.formGroups.controls
+        return <Gene>ObjectHelper.deepCopy(this.gene);
     }
 }
