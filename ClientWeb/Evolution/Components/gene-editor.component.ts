@@ -11,7 +11,7 @@ import {GeneInteractionToken} from "../Services/di-interaction-service-tokens";
 @Component({
     moduleId: module.id,
     selector: 'gene-editor',
-    styles: [String(require('../Css/gene-editor.component.less'))],
+    styles: [String(require('../Css/validation.less'))],
     templateUrl: '../Html/gene-editor.component.html',
     providers: [{provide: Gene, useValue: new Gene('', [], '')}]        //https://angular.io/guide/dependency-injection-in-action#the-provide-object-literal
 })

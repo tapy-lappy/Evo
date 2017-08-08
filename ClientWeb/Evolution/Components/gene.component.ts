@@ -21,6 +21,8 @@ import {
     RemoveGeneInteractionMultiCastEventToken,
     SiteInteractionToken
 } from "../Services/di-interaction-service-tokens";
+import ObjectHelper from "../Helpers/object-helper";
+import {ArrayHelper} from "../Helpers/array-helper";
 
 @Component({
     moduleId: module.id,
@@ -117,14 +119,18 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         //     this.appState.state.mutationChanged$.subscribe(subsribeAgain.bind(this));   //https://metanit.com/web/javascript/4.10.php
         // };
         this.mutationChanged = this.appState.state.mutationChanged$.subscribe(
-            enabled => {
-                //subsribeAgain(enabled);
-                this.mutationEnabled = enabled;
-                this.initGene();
-            },
+            enabled => this.switchMutation()(enabled),
             err => this.error(err)
         );
     }
+    private switchMutation(mutationSites?: Site[]) : (enabled:boolean)=>void{
+        if(mutationSites)
+            this.gene.mutationSites = mutationSites.map(item => new Site(item.site, item.isMutated));   //Workaround
+        return enabled => {
+            this.mutationEnabled = enabled;
+        };
+    }
+
     ngOnDestroy(): void {
         let slides: string[] = [];
         let direction: boolean = true;
@@ -154,9 +160,6 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     mutateGene(event: Event){
         this.stopPropagation(event);
         this.mutationEnabled = !this.mutationEnabled;
-        //this.appState.state.mutationChange(this.mutationEnabled); //TODO: this cause wrong behaviour, need to fix it
-        let geneService = this.getGeneService();                    //Done
-        geneService.switchGeneMutation(this.gene, this.mutationEnabled);
     }
 
     removeGene(){

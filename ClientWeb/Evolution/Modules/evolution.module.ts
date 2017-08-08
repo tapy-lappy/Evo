@@ -24,10 +24,13 @@ import {GeneEditorComponent} from "../Components/gene-editor.component";
 import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
 import {OptionSelectedDirective} from "../Directives/option-selected.directive";
 import {GeneMutationComponent} from "../Components/gene-mutation.component";
+import {SiteMutationComponent} from "../Components/site-mutation.component";
+import {SiteMutationArrayComponent} from "../Components/site-mutation-array.component";
 
 
 const componentDeclarations = [AppComponent, GeneListComponent, GeneComponent, GeneSelectorComponent,
-    MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent, GeneMutationComponent];
+    MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent, GeneMutationComponent, SiteMutationComponent,
+    SiteMutationArrayComponent];
 const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective, OptionSelectedDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
 
