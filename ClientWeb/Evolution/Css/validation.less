@@ -1,0 +1,18 @@
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948 !important; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442 !important; /* red */
+}
+
+//Additional mark for whole input border to emphasize customer attention if input item looses focus(.ng-touched):
+input.ng-touched.ng-invalid[required], textarea.ng-touched.ng-invalid, select.ng-touched.ng-invalid {
+  .ng-invalid:not(form){};
+  border:solid #a94442 2px;
+}
+
+input.ng-touched.ng-valid[required], textarea.ng-touched.ng-valid, select.ng-touched.ng-valid {
+  .ng-valid.required;
+  border:solid #42A948 2px;
+}

@@ -1,6 +1,6 @@
 import {NgModule, NO_ERRORS_SCHEMA, Type} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes, Route} from '@angular/router';
 import { HttpModule } from '@angular/http';
 import * as config from "../Config/app-config";
@@ -23,10 +23,14 @@ import {ArrayHelper} from "../Helpers/array-helper";
 import {GeneEditorComponent} from "../Components/gene-editor.component";
 import {GeneSubmittedComponent} from "../Components/gene-submitted.component";
 import {OptionSelectedDirective} from "../Directives/option-selected.directive";
+import {GeneMutationComponent} from "../Components/gene-mutation.component";
+import {SiteMutationComponent} from "../Components/site-mutation.component";
+import {SiteMutationArrayComponent} from "../Components/site-mutation-array.component";
 
 
 const componentDeclarations = [AppComponent, GeneListComponent, GeneComponent, GeneSelectorComponent,
-    MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent];
+    MoleculeViewerComponent, GeneEditorComponent, GeneSubmittedComponent, GeneMutationComponent, SiteMutationComponent,
+    SiteMutationArrayComponent];
 const directiveDeclarations:Array<Type<any> | any[]> = [HighlightDirective, OptionSelectedDirective];
 const pipeDeclarations:Array<Type<any> | any[]> = [];
 
@@ -40,7 +44,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [BrowserModule, FormsModule, RouterModule.forRoot(routes), HttpModule],
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot(routes), HttpModule],
     declarations: [componentDeclarations, directiveDeclarations, pipeDeclarations],
     bootstrap: [AppComponent],
     providers: [

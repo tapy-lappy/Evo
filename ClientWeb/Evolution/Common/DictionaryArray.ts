@@ -36,7 +36,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     //pairs: IKeyValuePair<T> = {keyValuePairs: []};
     get array(): Array<T>{return this.toArray();}
 
-    //mixin(intersection types T1 & T2)
+    //mixin(intersection of types T1 & T2)
     static convertArray<T, T1 extends Array<T>, T2 extends ArrayMapper<T>>(instance1: T1, instance2: T2) : T1 & T2 {
         let result = <T1 & T2>{};
         Object.keys(instance1).forEach(p => (<any>result)[p] = (<any>instance1)[p]);

@@ -1,0 +1,49 @@
+<div class="row" (click)="stopEventPropagation($event)">
+    <div class="col-xs-12">
+        <h4 class="text-center center-block">Gene mutation</h4>
+        <form [formGroup]="mutationForm" (ngSubmit)="onSubmit()"
+              novalidate>       <!--novalidate attribute in the <form> element prevents the browser from attempting native HTML validations-->
+            <div class="form-group row">
+                <div class="col-xs-4 col-xs-push-1">
+                    <label for="description" class="center-block">Descriebe mutation influence:</label>
+                    <div *ngFor="let error of errors">{{error}}</div>
+                </div>
+                <div class="col-xs-6 col-xs-push-1">
+                    <textarea id="description" class="form-control no-resizable" formControlName="description"
+                              placeholder="description of mutation" cols="40" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <!--<div class="narrowed-row">-->
+                    <!--<div class="col-xs-10">-->
+                        <!--<h4><label class="text-center center-block">Sites:</label></h4>-->
+                    <!--</div>-->
+                    <!--<div class="col-xs-2">-->
+                        <!--<button type="button" class="btn btn-sm btn-info gene-button" (click)="addNewSite()">Add</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div formArrayName="formGroups" class="well well-lg narrowed-row">-->
+                     <!--<site-mutation *ngFor="let formGroup of sitesFormGroups.controls; let i=index" class="col-xs-3"  -->
+                             <!--[siteGroup]="formGroup" [index]="i" (remove)="removeSite($event)"></site-mutation>-->
+                    <!--&lt;!&ndash;[formGroupName]="i" not needed anymore because <site-mutation> inside has <div [formGroup]="siteGroup">&ndash;&gt;-->
+                <!--</div>-->
+                <site-mutation-array-component [formArray]="sitesFormGroups"
+                                               (added)="enableActions()" (removed)="enableActions()"></site-mutation-array-component>
+                <div class="narrowed-row">
+                    <div class="col-xs-2 col-xs-push-8">
+                        <button type="submit" [disabled]="mutationForm.pristine || mutationForm.invalid" class="btn btn-sm btn-success gene-button">Submit</button>
+                    </div>
+                    <div class="col-xs-2 col-xs-push-8">
+                        <button type="button" [disabled]="mutationForm.pristine" class="btn btn-sm btn-danger gene-button" (click)="onCancel()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <p>Form value: {{ mutationForm.value | json }}</p>
+        <p>Form status: {{ mutationForm.status | json }}</p>
+        <p>Form pristine: {{ mutationForm.pristine }}</p>
+        <p>Description value: {{mutationForm.get('description').value}}</p>
+        <p>Nested: {{mutationForm.get('formGroups').value | json}}</p>
+    </div>
+</div>

@@ -1,5 +1,7 @@
 import Site from "./site";
 import {Injectable, Optional} from "@angular/core";
+import ObjectHelper from "../Helpers/object-helper";
+import {ArrayHelper} from "../Helpers/array-helper";
 
 @Injectable()       //Note: to make class accessible by using constructor with params in Angular
 export default class Gene {
@@ -10,12 +12,10 @@ export default class Gene {
     description: string;
 
 
-    // get sites(): SiteEnum[] {
-    //     return this._sites;
-    // }
-    // set sites(value: SiteEnum[]) {
-    //     this._sites = value;
-    // }
+    get isMutated(){
+        return this.mutationSites.length > 0 &&
+            ArrayHelper.some(this.mutationSites, item=>item.isMutated);
+    }
 
     constructor(name: string, sites: Site[], description?: string) {
         this.name = name;
