@@ -97,7 +97,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         //Fixme: Set up mutation sites into gene with MutationService
         //this.mutationService.updateGene(preparedGene, formModel.formGroups);    //TODO: implementation
 
-        this.gene.mutationSites = ObjectHelper.deepCopy(Array, formModel.formGroups);    //Error: formModel.formGroups.controls
+        this.gene.mutationSites = <Site[]>ObjectHelper.cast(Site, formModel.formGroups);    //Error: formModel.formGroups.controls
         return <Gene>ObjectHelper.deepCopy(Gene, this.gene);
     }
 }

@@ -87,33 +87,51 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     //Note: decorate<Foo>()(new Foo);  // Foo instance
 
     static deepCopy<Ctor extends /*{new(...args:any[]): T;}*/Constructable<T>, T>(ctor: Ctor, source: T): T | T[] {
-        if (source instanceof Array) {
+        if (source instanceof Array)
             return source.map(item => this.deepCopy<typeof item, T>(item.constructor, item)) as Array<T>;
-        }
-        else {
-            //create item by using its constructor:
-            let deepCopyItem: T = this.factory<T>(ctor);             //new type();   //<T>{};
-            //copy item property by property:
-            Object.keys(source).forEach(prop => {       //alternative: for(let prop in source)
-                const currentProperty = (<any>source)[prop];
-                if (currentProperty instanceof Array)
-                    (<any>deepCopyItem)[prop] = this.deepCopy(<Constructable<any[]>><object>currentProperty, currentProperty);//TODO: this.deepCopy(<T><Object>currentProperty);     //recursive call to deep copy of item
-                else if (currentProperty instanceof Object)      //if property value it's nested class(Object)
-                    (<any>deepCopyItem)[prop] = this.deepCopy(currentProperty.constructor, currentProperty);
-                else
-                    (<any>deepCopyItem)[prop] = currentProperty;                                  //set up property's value
-                    //Note: this is only for LIGHT COPY(not DEEP COPY), but at this point we have a deal with simple properties
-                    //Note: which are not nested subclasses neither arrays of object. Both eliminated by prior checks
-                    //deepCopyItem = this.mixin(deepCopyItem, {[prop]: currentProperty});     //alternative way to set up property's value - mixin
-            });
-            return deepCopyItem;
-        }
+        //create item by using its constructor:
+        let deepCopyItem: T = this.factory<T>(ctor);             //new type();   //<T>{};
+        //copy item property by property:
+        Object.keys(source).forEach(prop => {       //alternative: for(let prop in source)
+            const currentProperty = (<any>source)[prop];
+            if (currentProperty instanceof Array)
+                (<any>deepCopyItem)[prop] = this.deepCopy(<Constructable<any[]>><object>currentProperty, currentProperty);//TODO: this.deepCopy(<T><Object>currentProperty);     //recursive call to deep copy of item
+            else if (currentProperty instanceof Object)      //if property value it's nested class(Object)
+                (<any>deepCopyItem)[prop] = this.deepCopy(currentProperty.constructor, currentProperty);
+            else
+                (<any>deepCopyItem)[prop] = currentProperty;                                  //set up property's value
+                //Note: this is only for LIGHT COPY(not DEEP COPY), but at this point we have a deal with simple properties
+                //Note: which are not nested subclasses neither arrays of object. Both eliminated by prior checks
+                //deepCopyItem = this.mixin(deepCopyItem, {[prop]: currentProperty});     //alternative way to set up property's value - mixin
+        });
+        return deepCopyItem;
     }
 
     private static factory<T>(ctor: Constructable<T>): T {
-        //Constructable<T> say constructor may have params: new<T>(...args:any[]): T; but even if it has, the instance will be created
+        //Constructable<T> says constructor must have params: new<T>(...args:any[]): T; but even if it has, the instance will be created
         //with values by default or undefined(if initialization presents into constructor). And the trick is that after creating instance
         //with this factory method then we do deep copy of all item's properties manually.
         return <T>new ctor();
+    }
+
+    /*
+    This method in use only for Reactive Form components. The deal is when you create for example FormGroup based on some
+    item, you actually create FormGroup with the same structure, but you lose typing. And when it's time to extract data
+    from those FormGroup you actually extract anonimous object with the same structure but without typing.
+
+    Remark: even if you have FormArray as a first param you must send not Array, but type of item, because method can't
+    Remark: get item's type(Ctor) any other way and Array doesn't provide it.
+    */
+    static cast<Ctor extends Constructable<T>, T>(ctor: Ctor, origin:any): T | T[]{ //Note: here ctor can't be send as Array!
+         if (origin instanceof Array)
+             //This needed, because inside deepCopy() array processing we have to process each item of array(and also nested
+             //arrays) and for that we use 'typeof item/item.constructor':
+             //     this.deepCopy<typeof item, T>(item.constructor, item)
+             //and we can't use 'typeof ctor/ctor' instead of that, like:
+             //     this.deepCopy<typeof ctor, T>(ctor, item)
+             //because for Array processing 'ctor' won't be constructor, it will be Array!!! So, considering Remark(please read),
+             //we change that Array to real type of item(constructor) here! And this is why we need this piece of code:
+             return origin.map(item => this.cast<typeof ctor, T>(ctor, item)) as T[];
+        return this.deepCopy<typeof ctor, T>(ctor, origin);
     }
 }

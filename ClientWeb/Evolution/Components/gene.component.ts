@@ -125,8 +125,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     }
     private switchMutation(mutationSites?: Site[]) : (enabled:boolean)=>void{
         if(mutationSites)
-            this.gene.mutationSites = mutationSites.map(item => new Site(item.site, item.isMutated));   //Workaround: recreating item(must be eliminated after implementation deep copy)
-            //this.gene.mutationSites = mutationSites;
+            this.gene.mutationSites = mutationSites;
         return enabled => {
             this.mutationEnabled = enabled;
         };
