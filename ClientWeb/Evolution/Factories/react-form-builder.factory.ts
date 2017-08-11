@@ -36,23 +36,23 @@ export default class ReactFormBuilderFactory<T>{
 
     static builder<T extends ReactFormBuilder & Resolvable>(
         //componentInstance: { new(fb: FormBuilder, ...providers:Provider[]): T;},
-        componentInstance: { new(fb: FormBuilder): T;},
+        componentCtor: { new(fb: FormBuilder): T;},
         //componentInstance: T,
         //componentInstance: { new(): T;},
         ...providers: Provider[]):
     <T>(initializationData?: any) => FormGroup | FormArray | FormControl    //signature of ReactFormBuilder.build member
     {
         //return new componentInstance().build;
-        const component: T = (DI.resolve(componentInstance,
+        const component: T = (DI.resolve(componentCtor,
             /*Explanation: this provider needed because we need to register our requested type(componentInstance) into injector,
             * see following sample:
             * https://angular.io/api/core/ReflectiveInjector#example-live-demo-3
             * for GeneService/MutationService we also register it, but in a bit different way: we have geneServiceProvider/mutationServiceProvider
             * which we send into DI.resolve()  */
-            {provide:componentInstance, useClass:componentInstance},
+            {provide:componentCtor, useClass:componentCtor},
             providers) as T);
         return component
             .build               //method of ReactFormBuilder which must build form model for reactive component
-            .bind(component);    //Explanation: bind 'build' fuction context to component instance(without this keyword 'this' will be undefined when 'build' function will be executed)
+            .bind(component);    //Explanation: bind 'build' fuction context to component instance(without this keyword 'this' will be undefined inside 'build' function when 'build' will be executed)
     }
 }
