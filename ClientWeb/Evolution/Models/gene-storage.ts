@@ -49,7 +49,7 @@ export default class GeneStorage{
             errorOption.internalError = err;
             error(errorOption);
         }
-        return this;
+        return this;    //Polymorphic this types: https://www.typescriptlang.org/docs/handbook/advanced-types.html
     }
 
     createKeyValue(gene:Gene):KeyValuePair{
@@ -71,7 +71,7 @@ export default class GeneStorage{
             selector: (g: Gene)=>g.name
         };
         this._genes.remove(condition);   //Explanation: direct call(do not need to bind context)
-        return this;
+        return this;        //Polymorphic this types: https://www.typescriptlang.org/docs/handbook/advanced-types.html
     }
 
     errorOption(gene:Gene, message: string){
