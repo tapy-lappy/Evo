@@ -56,7 +56,6 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private setSites(sites:Site[]){
-        //const formModel = SiteMutationArrayComponent.build(sites);    //static approach
         const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})(sites);
         this.mutationForm.setControl('formGroups', formModel);
     }
