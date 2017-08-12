@@ -134,4 +134,12 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
              return origin.map(item => this.cast<typeof ctor, T>(ctor, item)) as T[];
         return this.deepCopy<typeof ctor, T>(ctor, origin);
     }
+
+    //Note: these methods works with for/in but won't work with Object.keys(key => ...) because key is 'string' but not 'keyof T':
+    static getProperty<T, K extends keyof T>(object: T, propertyName: K): T[K]{
+        return object[propertyName];
+    }
+    static setProperty<T, K extends keyof T>(object: T, propertyName: K, value: any): void{
+        object[propertyName] = value;
+    }
 }
