@@ -24,23 +24,13 @@ export class SiteMutationArrayComponent implements ReactFormBuilder, Resolvable{
     }
 
     build<SiteMutationArrayComponent>(initializationData?: Site[]): FormArray {
-        //return SiteMutationArrayComponent.build(initializationData);      //static approach
         const array = this.fb.array([]);
         if (initializationData) {
             const builder = this.getFormModelBuilder();
             initializationData.forEach(site => array.push(builder(site)));
-            // const sitesFormGroups = data.map(site => SiteMutationComponent.build(site));     //static approach
-            // const array = fb.array(sitesFormGroups);
         }
         return array;
     }
-
-    // private static build<Site>(data?: Site[]):FormArray{
-    //     const fb = new FormBuilder();
-    //     const array = fb.array([]);
-    //     data.forEach(site => array.push(SiteMutationComponent.build(site)));
-    //     return array;
-    // }
 
     private getFormModelBuilder(){
         return ReactFormBuilderFactory.builder(SiteMutationComponent, {provide: FormBuilder, useValue: this.fb});
@@ -59,7 +49,7 @@ export class SiteMutationArrayComponent implements ReactFormBuilder, Resolvable{
         //TODO: this is removing FormControl from FormGroup(form model), BUT it do not remove it from  formArray.value:
         // let removeFormGroups = this.formArray.controls.splice(formGroupIndex, 1); //remove only control(but there are no changes in form model)
         //Done: this is removing from both:
-        this.formArray.removeAt(formGroupIndex);  //remove form group from form model
+        this.formArray.removeAt(formGroupIndex);
 
         this.removeEvent.emit();
     }

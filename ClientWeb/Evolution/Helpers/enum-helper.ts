@@ -13,7 +13,7 @@ export default class EnumHelper{
     * Sample of call:
     * let value = EnumHelper.getEnumValueByName(SiteEnum, 'G');
     *
-    * T - it's enum type, enumName:K - it's a string T[K] - it's number
+    * T - it's enum type, enumName:K - it's a string, T[K] - it's number
     * */
     static getEnumValueByName<T, K extends keyof T>(enumType:T, enumName: K): T[K]{
         return enumType[enumName];

@@ -1,6 +1,10 @@
-//https://stackoverflow.com/a/35370453
-export interface IDictionary<T>{
+export interface IndexedType<T>{
     [key: string]: T;
+}
+
+//https://stackoverflow.com/a/35370453
+export interface IDictionary<T> extends IndexedType<T>{
+    //[key: string]: T;                         //Remark: doesn't needed if we extends from IndexedType<T>
     //[key: string]: (key:string)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
 }
 // interface IKeyValuePair<T>{
@@ -90,9 +94,12 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     // }
     private toDictionary(): IDictionary<T>/*{[key: string]: T}*/ {      //transformation to indexed object
         if(!this.checkSource) return {};
+
+        //TODO: #65 it may be changed with mixin:
         let dictionary:any = {};//Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
         let collection:any = this.source;//Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
         Object.keys(this.source).map(key => dictionary[key]=collection[key]);
+
         return dictionary as {[key: string]: T};
     }
 
