@@ -3,5 +3,5 @@
 //Construct signatures in interfaces are not implementable in classes; they're only for defining existing JS APIs that define a 'new'-able function.
 
 export interface Constructable<T>{
-    new<T>(...args:any[]): T;
+    new/*<T>*/(...args:any[]): T;
 }
