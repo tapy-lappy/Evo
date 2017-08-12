@@ -13,7 +13,9 @@ export default class EnumHelper{
     * Sample of call:
     * let value = EnumHelper.getEnumValueByName(SiteEnum, 'G');
     *
-    * T - it's enum type, enumName:K - it's a string, T[K] - it's number
+    * T - it's enum type,
+    * enumName:K - it's a string,
+    * T[K] - it's number
     * */
     static getEnumValueByName<T, K extends keyof T>(enumType:T, enumName: K): T[K]{
         return enumType[enumName];
@@ -24,9 +26,11 @@ export default class EnumHelper{
     * let name = EnumHelper.getEnumNameByValue(SiteEnum, 3);
     * let name2 = EnumHelper.getEnumNameByValue(SiteEnum, SiteEnum.U);
     *
-    * T - it's number OR enum item, enumValue:T - it's number OR enum item, keyof T - it's string
+    * K - it's number OR enum item,
+    * enumValue:K - it's number OR enum item(because it's K),
+    * keyof K - it's string
     * */
-    static getEnumNameByValue<T extends number>(enumType:any, enumValue:T): keyof T{
+    static getEnumNameByValue<K extends number>(enumType:any, enumValue:K): keyof K{
         return enumType[enumValue];
     }
 

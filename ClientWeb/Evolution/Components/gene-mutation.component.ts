@@ -77,9 +77,9 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         this.mutationForm.reset(initialState);      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
     private onSubmit(){
-        this.gene = this.prepareChanges();
+        const geneDeepCopy = this.prepareChanges();
+        this.submittedEvent.emit(geneDeepCopy);
         this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
-        this.submittedEvent.emit(this.gene);
     }
     private onCancel(){
         // //Explanation: this approach with reset(initialState) works incorrectly with Validators.required(and other validators)

@@ -15,6 +15,11 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     //     return Object.assign(target, sources);
     // }
     static mixin<T, U, V, W>(target: T, source1: U, source2?: V, source3?: W): T & U & V & W {
+        // let result = <T & U>{};
+        // Object.keys(source1).forEach(p => (<any>result)[p] = (<any>source1)[p]);
+        // Object.keys(source2).forEach(p => (result as any)[p] = (source2 as any)[p]);
+        // return result;
+
         return Object.assign(target, source1, source2, source3);
     }
 
@@ -120,7 +125,8 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     from those FormGroup you actually extract anonimous object with the same structure but without typing.
 
     Remark: even if you have FormArray as a first param you must send not Array, but type of item, because method can't
-    Remark: get item's type(Ctor) any other way and Array doesn't provide it.
+    Remark: get item's type(Ctor) any other way and Array doesn't provide it. BUT if you need for example cast literal
+    Remark: object to array, then you must send Array as a first param!
     */
     static cast<Ctor extends Constructable<T>, T>(ctor: Ctor, origin:any): T | T[]{ //Note: here ctor can't be send as Array!
          if (origin instanceof Array)
