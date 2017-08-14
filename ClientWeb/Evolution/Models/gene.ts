@@ -1,10 +1,9 @@
 import Site from "./site";
 import {Injectable, Optional} from "@angular/core";
-import ObjectHelper from "../Helpers/object-helper";
 import {ArrayHelper} from "../Helpers/array-helper";
 
 @Injectable()       //Note: to make class accessible by using constructor with params in Angular
-export default class Gene {
+export default class Gene{
     id: Symbol;
     sites: Site[] = [];
     mutationSites: Site[] = [];
