@@ -30,7 +30,8 @@ interface IDictionaryArray<T> {
 
     //TODO: constructor annotation in interface
     //new (source: IDictionary<T> | Array<T>): IDictionaryArray<T>;
-    //Done: imposible to implement - see Contstructable
+    //Done: constructor annotation implementable in interface, but not with the purpose of implement this interface
+    //Done: in class, it will be impossible to implement this interface. Explanation: see Contstructable
 }
 
 export type KeyValuePair<T> = {keyIndex: number|string, value: T};
@@ -51,6 +52,14 @@ export type Condition<T> = {value: T, predicate: Predicate<T>, selector: Selecto
 export default class DictionaryArray<T> implements IDictionaryArray<T>{
     //private source: { [index:string]: T; } | { [index:number]: T; };      //it's possible to use this object notation
     private source: Dictionary<T> | Array<T>;
+
+    //Note: important to return ANY type(actually why this getter was created - it's just to return 'any'. It allows to
+    //Note: avoid Error:Element implicitly has an 'any' type because type 'Dictionary<T> | T[]' has no index signature.
+    //Note everywhere we need to get access to this.source by index. So instead of code: (<any>this.source)[index] we use
+    //Note: code: this.storage[index] which much more convinient.
+    private get storage():any{
+        return this.source;
+    }
     get dictionary(): Dictionary<T>{return this.toDictionary();}
     get array(): Array<T>{return this.toArray();}
 
@@ -69,7 +78,15 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
             this.source = {};
             let {mapper, ...array} : {mapper: KeyValuePairTransformer<T>} = source;     //Note: destruction - https://www.typescriptlang.org/docs/handbook/variable-declarations.html
             //array it's literal object now, it's not array. So we say we need to cast to Array from literal object:
+            //Explanation: Casting works here, because original props of array it's indexes(0,1...), so it's array actually!
+            //Explanation: But the same time it's object literal, because it is not casted to be array - and we do that casting:
             array = ObjectHelper.cast(Array, array);        //transform object literal (which properties are items of array) to array
+            //Explanation: because this.source is not array(by it's nature), casting it won't work:
+            //ObjectHelper.cast<typeof Array, any>(Array, this.source);          //it will be smt. strange - Array(0) with no items, but with properties which must have been items :)))) But no items in array!
+            //this.source as T[];                                                //it will be literal object - type assertion itself can't return typing
+            //Explanation: but casting array(by nature) - will work - here we create array from array:
+            //const ctor = this.array.length > 0 ? this.array[0].constructor : {};
+            //ObjectHelper.cast<Constructable<T>, any>(<Constructable<T>><any>ctor, this.array);    //useless, but works
             if(array instanceof Array) {
                 array.map(item => {
                     const keyValuePair: KeyValuePair<T> = mapper(item);
@@ -95,12 +112,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
 
     private toArray(): T[]{
         if(!this.checkSource) return [];
-        // let array:any = this.source;    //Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
-        // return Object.keys(array).map(prop => array[prop]);      //works
-        return ObjectHelper.decomposeToArray(this.source);          //the same but generic
-
-        //return ObjectHelper.cast<typeof Array, any>(Array, this.source);          //it will be smt. strange - Array(0) with no items, but with properties which must have been items :)))) But no items in array!
-        //return this.source as T[];                                                //it will be literal object - type assertion itself can't return typing
+        return ObjectHelper.decomposeToArray(this.source);
     }
 
     private toDictionary(): Dictionary<T>/*{[key: string]: T}*/ {
@@ -119,23 +131,17 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     // let arrInstance = this.cast<Array<T>>(this.array);  //cast array to array - useless actually
     private cast<U extends Dictionary<T> | Array<T>>(ctor: U): U{     //Note: generic constraint - <U extends IDictionary<T> | Array<T>>
         if(ctor instanceof Array) {
-            //return ObjectHelper.cast<typeof Array, any>(Array, this.source);            //this is wrong, it creates mixin - empty Array(without items) but with properties of object literal
-
-            //const ctor = this.array.length > 0 ? this.array[0].constructor : {};
-            //return ObjectHelper.cast<Constructable<T>, any>(<Constructable<T>><any>ctor, this.array);    //this is not right, because it just recreate array
-
             return <U>this.array;
         }
         //if(ctor instanceof Dictionary){...}       //ctor always Object, so this condition never works
         else
-            //if ctor is not instance, if ctor is a type
             return ObjectHelper.cast<typeof Dictionary, any>(Dictionary, this.source);      //produces Dictionary mixin
             //return ObjectHelper.cast<typeof ctor, any>(ctor, this.source);                  //produces Object mixin
     }
 
     contains(keyIndexCondition: string|number|Condition<T>): boolean{
         if (typeof keyIndexCondition === "number" || typeof keyIndexCondition === "string")
-            return (<any>this.source)[keyIndexCondition] !== undefined;
+            return this.storage[keyIndexCondition] !== undefined;
         else if(keyIndexCondition!.predicate)       //TODO: what is '!.'?
             return this.array.some(item => keyIndexCondition.predicate(item));      //may use find() instead of some()
         return false;
@@ -149,7 +155,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
         const errorMessage = typeof keyIndex === "string" ? `Item with key: ${keyIndex} is already there` : `Item with an index[${keyIndex}] is already there`;
         if(this.contains(keyIndex))
             throw Error(errorMessage);
-        (<any>this.source)[keyIndex] = value;
+        this.storage[keyIndex] = value;
     }
 
     remove(index:number):void;
@@ -158,13 +164,13 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     remove(keyIndexCondition: number|string|Condition<T>){
         if(this.contains(keyIndexCondition)) {
             if (typeof keyIndexCondition === "number" || typeof keyIndexCondition === "string")
-                delete (<any>this.source)[keyIndexCondition];           //delete - to remove property from object literal
+                delete this.storage[keyIndexCondition];           //delete - to remove property from object literal
             else if (keyIndexCondition) {
                 //Explanation: won't work when array items is KeyValuePairs because 'index' will have number type even if a source item must be accessed by string key
                 // let index = this.getIndex(keyIndexCondition);
-                // delete (<any>this.source)[index];
+                // delete this.storage[index];
                 let item = this.getItem(keyIndexCondition);
-                delete (<any>this.source)[keyIndexCondition.selector(item)];
+                delete this.storage[keyIndexCondition.selector(item)];
             }
         }
     }
