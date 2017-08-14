@@ -6,7 +6,6 @@ import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import Site from "../Models/site";
 import {Resolvable} from "../Abstract/resolvable";
 import {ReactFormBuilder} from "../Abstract/react-form-builder";
-//import {ReactFormNestedInterface} from "../Abstract/react-form-nested.interface";
 
 @Component({
     moduleId: module.id,
@@ -27,7 +26,6 @@ export class SiteMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     build<SiteMutationComponent>(initializationData?: Site): FormGroup | FormArray | FormControl {
-        //return SiteMutationComponent.build(initializationData);     //static approach
         return this.fb.group(initializationData);
         // {
         //     site: fb.control(site.site),
@@ -35,11 +33,6 @@ export class SiteMutationComponent extends BaseGeneComponent implements OnInit, 
         //     mutationLabel: new FormControl({value: site.isMutated ? 'Mutated' : 'No mutation', disabled: true})
         // }));
     }
-
-    // static build<Site>(data?: Site): FormGroup {
-    //     const fb = new FormBuilder();
-    //     return fb.group(data);
-    // }
 
     ngOnInit() {
         this.setUpMutationChanges();

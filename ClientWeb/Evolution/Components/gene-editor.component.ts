@@ -86,10 +86,11 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
     }
 
     add(){
+        //Note: Workaround(bad): Using local LET variable to prevent setting all the this.gene properties to NULL when we reset the form
+        //let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
         this.gene.sites = [this.currentChosenSite];
-        //Note: Using deepCopy of instance (may use also local LET variable - but it's workaround) to prevent setting all the this.gene properties to NULL when we reset the form
-        const gene = ObjectHelper.deepCopy(this.gene) as Gene;
-        this.geneInteraction.event(gene);
+        const geneDeepCopy = <Gene>ObjectHelper.deepCopy<typeof Gene, Gene>(Gene, this.gene);
+        this.geneInteraction.event(geneDeepCopy);
     }
     onSubmit(){
         this.submitted = true;

@@ -56,7 +56,6 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     private setSites(sites:Site[]){
-        //const formModel = SiteMutationArrayComponent.build(sites);    //static approach
         const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})(sites);
         this.mutationForm.setControl('formGroups', formModel);
     }
@@ -78,12 +77,9 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         this.mutationForm.reset(initialState);      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
     private onSubmit(){
-        this.gene = this.prepareChanges();         //Workaround
-        //this.mutationService.updateGene(preparedGene);    //TODO: implementation
+        const geneDeepCopy = this.prepareChanges();
+        this.submittedEvent.emit(geneDeepCopy);
         this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
-
-        //this.submittedEvent.emit(ObjectHelper.deepTreeCopy(this.gene));   //TODO: need to implement deep copy for tree structure(better if as overload for deepCopy(and overload for arrays too!))
-        this.submittedEvent.emit(this.gene);
     }
     private onCancel(){
         // //Explanation: this approach with reset(initialState) works incorrectly with Validators.required(and other validators)
@@ -96,8 +92,12 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
     private prepareChanges():Gene{
         const formModel = this.mutationForm.value;
-        //Set up mutation sites into gene(TODO: must be done by MutationService):
-        this.gene.mutationSites = ObjectHelper.deepCopy(formModel.formGroups);    //Error: formModel.formGroups.controls
-        return <Gene>ObjectHelper.deepCopy(this.gene);
+
+        //TODO: must be implemented with MutationService:
+        //Fixme: Set up mutation sites into gene with MutationService
+        //this.mutationService.updateGene(preparedGene, formModel.formGroups);    //TODO: implementation
+
+        this.gene.mutationSites = <Site[]>ObjectHelper.cast(Site, formModel.formGroups);    //Error: formModel.formGroups.controls
+        return <Gene>ObjectHelper.deepCopy(Gene, this.gene);
     }
 }

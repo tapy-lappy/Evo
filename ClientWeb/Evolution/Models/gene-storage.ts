@@ -1,18 +1,6 @@
-//import {InjectionToken} from "@angular/core";
 import Gene from "./gene";
-import {ArrayHelper} from "../Helpers/array-helper";
-import {Observable} from "rxjs/Observable";
 import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair, IDictionary} from "../Common/DictionaryArray";
-import Site from "./site";
-import {SiteEnum} from "../Enums/site-enum";
 
-// enum GeneEnum{
-//     Human = 48, Ape = 24, Worm = 8, Jellyfish = 16, Unknown = -1
-// }
-
-//const GENE_ENUM_TOKEN = new InjectionToken<GeneEnum>('gene-Enum');
-
-//export {GENE_ENUM_TOKEN, GeneEnum}
 type ErrorOptions = {
     gene: Gene,
     message: string,
@@ -39,8 +27,8 @@ export default class GeneStorage{
         // this._genes = new DictionaryArray<Gene>(dict);
     }
 
-    private execute(callback: (param: KeyValuePair) => void,
-                    param: KeyValuePair,
+    private execute(callback: (param: KeyValuePair<Gene>) => void,
+                    param: KeyValuePair<Gene>,
                     error: (option: ErrorOptions) => never,
                     errorOption?: ErrorOptions): this{
         try{
@@ -49,11 +37,11 @@ export default class GeneStorage{
             errorOption.internalError = err;
             error(errorOption);
         }
-        return this;
+        return this;    //Polymorphic this types: https://www.typescriptlang.org/docs/handbook/advanced-types.html
     }
 
-    createKeyValue(gene:Gene):KeyValuePair{
-        let keyValue: KeyValuePair = {keyIndex: gene.name, value: gene};
+    createKeyValue(gene:Gene):KeyValuePair<Gene> {
+        let keyValue: KeyValuePair<Gene> = {keyIndex: gene.name, value: gene};
         return keyValue;
     }
     add(gene: Gene): this{
@@ -71,7 +59,7 @@ export default class GeneStorage{
             selector: (g: Gene)=>g.name
         };
         this._genes.remove(condition);   //Explanation: direct call(do not need to bind context)
-        return this;
+        return this;        //Polymorphic this types: https://www.typescriptlang.org/docs/handbook/advanced-types.html
     }
 
     errorOption(gene:Gene, message: string){
