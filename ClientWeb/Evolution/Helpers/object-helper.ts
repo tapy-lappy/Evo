@@ -1,7 +1,7 @@
 import {Constructable} from "../Abstract/constructable";
 
 export default class ObjectHelper {//it's not ObjectHelper<T> because static members can not use the class’s type parameter
-    //TODO: #65 using everywhere where we have mixins as this is the simpliest implementation of mixin, e.g.: DictionaryArray etc.
+    //Outcome: using everywhere where we have mixins as this is the simpliest implementation of mixin, e.g.: DictionaryArray etc.
     //Workaround: commented, because overload doesn't work with generic types. It works properly with non-generic types
     //Workaround: but it sees only first version of overload for generics and doesn't see others.
     // static mixin<T, U>(target: T, source: U): T & U;
@@ -81,8 +81,6 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
         {"name":"test","array":[{"value":1},{"value":2}],"nestedItem":{"name":"nested","value":"value"}}                            //OK, deep copy
         [{"value":1,"nested":{"name":"+"}},{"value":2,"nested":{"name":"-"}}]                                                       //WRONG, not deep copy because of nested "name" prop changed
     * */
-    //TODO: should be used in DictionaryArray as a change for CODE: Object.keys(instance1).forEach(p => (<any>result)[p] = (<any>instance1)[p]);
-    //TODO: because for now there are no DEEP COPY for properties which are: array OR instance of class itself.
     //Workaround: commented, because overload doesn't work with generic types. It works properly with non-generic types
     //Workaround: but it sees only first version of overload for generics. So, second version(with array) is invisible from code.
     //deepCopy<T>(source: T) : T;
@@ -91,11 +89,13 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     //Note: decorate<typeof Foo>()(Foo);  // Foo constructor
     //Note: decorate<Foo>()(new Foo);  // Foo instance
 
+    //This method based on cration copy-mixin -with cration factory we create instance(by using constructor) and then
+    //copy all the properties from source:
     static deepCopy<Ctor extends /*{new(...args:any[]): T;}*/Constructable<T>, T>(ctor: Ctor, source: T): T | T[] {
         if (source instanceof Array)
             return source.map(item => this.deepCopy<typeof item, T>(item.constructor, item)) as Array<T>;
         //create item by using its constructor:
-        let deepCopyItem: T = this.factory<T>(ctor);             //new type();   //<T>{};
+        let deepCopyItem: T = this.factory<T>(ctor);             //new ctor();   //<T>{}; - it's Object, typing is lost here
         //copy item property by property:
         Object.keys(source).forEach(prop => {       //alternative: for(let prop in source)
             const currentProperty = (<any>source)[prop];
@@ -125,11 +125,22 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     from those FormGroup you actually extract anonimous object with the same structure but without typing.
 
     Remark: even if you have FormArray as a first param you must send not Array, but type of item, because method can't
-    Remark: get item's type(Ctor) any other way and Array doesn't provide it. BUT if you need for example cast literal
-    Remark: object to array, then you must send Array as a first param!
+    Remark: get item's type(Ctor) any other way and Array doesn't provide it.
+    Remark: If you cast literal object to array - you will get Array(0) without items, but with properties of literal
+    Remark: object which must have been items of array! But with no items in array, it will be empty!
+
+    Also possible to create mixings:
+        ObjectHelper.cast<Constructable<T>, any>(<Constructable<T>><any>item1.constructor, item2);
+    this code will use item1.constructor(not item instance - all the properties will be got from constructor initialization, not from item1 instance itself)
+    to create item1 and then copied all properties from item2 to extend just created item1
     */
-    static cast<Ctor extends Constructable<T>, T>(ctor: Ctor, origin:any): T | T[]{ //Note: here ctor can't be send as Array!
-         if (origin instanceof Array)
+    static cast<Ctor extends Constructable<T>, T>(ctor: Ctor, origin: T): T | T[]{ //Note: here ctor can't be send as Array!
+         if (origin instanceof Array) {
+             //In case ctor is not defined wil try to assert type from array's item, if array is empty - use Object as type of array
+             if (!ctor) {
+                 ctor = origin.length > 0 ? <Ctor>origin[0].constructor : <Ctor>{};     //<Ctor>{} - using Object type as ctor
+                 //ctor = origin.length > 0 ? <Ctor>origin[0].constructor : <Ctor>{}.constructor;     //<Ctor>{}.constructor - using Object constructor function as ctor
+             }
              //This needed, because inside deepCopy() array processing we have to process each item of array(and also nested
              //arrays) and for that we use 'typeof item/item.constructor':
              //     this.deepCopy<typeof item, T>(item.constructor, item)
@@ -138,7 +149,27 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
              //because for Array processing 'ctor' won't be constructor, it will be Array!!! So, considering Remark(please read),
              //we change that Array to real type of item(constructor) here! And this is why we need this piece of code:
              return origin.map(item => this.cast<typeof ctor, T>(ctor, item)) as T[];
-        return this.deepCopy<typeof ctor, T>(ctor, origin);
+         }
+         return this.deepCopy<typeof ctor, T>(ctor, origin);
+    }
+
+    //Explanation: it's useless, it doesn't return typing, it's simple type assertion and it does nothing
+    // static cast<T>(origin: any): T{
+    //     return <T>origin;       //This did not cast to type! This is simple type assertion, it dosn't return typing
+    // }
+
+    //https://stackoverflow.com/a/35370453
+    static propsToArray<T>(obj: { [index: string]: T; } | { [index: number]: T; }): T[] {
+        return Object.keys(obj).map(prop => (<any>obj)[prop]);
+    }
+    static decomposeToArray<T, K extends keyof T>(origin:T): K[]{
+        //https://learn.javascript.ru/array-methods#object-keys-obj
+        //Note: this additional extra line of code needed because in tsconfig.json we have "noImplicitAny": true option
+        // const stringLiteralObject: any = origin;
+        // return Object.keys(origin).map(key => stringLiteralObject[key]);
+
+        //Or the same with type casting inside lambda:
+        return Object.keys(origin).map(key => (<any>origin)[key]);
     }
 
     //Note: these methods works with for/in but won't work with Object.keys(key => ...) because key is 'string' but not 'keyof T':
