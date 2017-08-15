@@ -6,7 +6,7 @@
         <button type="button" class="btn btn-sm btn-info gene-button" (click)="add()">Add</button>
     </div>
 </div>
-<div class="well well-lg narrowed-row"><!--Remark: if add formArrayName="formArray" to this <div> you will get error:
+<div *ngIf="isNotEmpty()" class="well well-lg narrowed-row"><!--Remark: if add formArrayName="formArray" to this <div> you will get error:
 Remark: 'Error: formArrayName must be used with a parent formGroup directive." That means you must use formArrayName=""
 Remark: only in parent formGroup template, because you wire it with that specific formGroup.-->
 

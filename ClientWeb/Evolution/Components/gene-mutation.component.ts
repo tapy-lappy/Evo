@@ -9,6 +9,8 @@ import Site from "../Models/site";
 import ObjectHelper from "../Helpers/object-helper";
 import {SiteMutationArrayComponent} from "./site-mutation-array.component";
 import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
+import {SiteEnum} from "../Enums/site-enum";
+import {ArrayHelper} from "../Helpers/array-helper";
 
 @Component({
     moduleId: module.id,
@@ -27,14 +29,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         return this.mutationForm.get('formGroups') as FormArray;     //Remark: this is FormArray of FormGroups
     }
 
-    private get initialState(){
-        return {
-            description: ['description message', Validators.required],
-            //empty array init:                     this.formBuilder.array([])
-            //form group with site instance init:        this.formBuilder.group(new Site())
-            //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
-            formGroups: this.formBuilder.array([])
-        };
+    private get sitesSource(): Site[]{
+        return ArrayHelper.notEmpty(this.gene.mutationSites) ? this.gene.mutationSites : this.gene.sites;
     }
 
     constructor(private formBuilder: FormBuilder/*, private mutationService: MutationService*/) {
@@ -42,9 +38,25 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     }
 
     ngOnInit(): void {
-        this.mutationForm = this.formBuilder.group(this.initialState);
-        //Workaround Explanation: The reason why we populate form with data here is because @Input() gene: Gene is undefined in constructor:
-        this.setSites(this.gene.mutationSites.length > 0 ? this.gene.mutationSites : this.gene.sites);
+        this.mutationForm = this.formBuilder.group({
+            description: ['description message', Validators.required],  //this.formBuilder.control('description', Validators.required),
+            //empty array init:                     this.formBuilder.array([])
+            //form group with site instance init:        this.formBuilder.group(new Site())
+            //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
+
+            //formGroups: this.formBuilder.array([])
+            formGroups: ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})
+                (this.sitesSource)
+        });
+        //Explanation: The reason why we populate form with data here is because @Input() gene: Gene is undefined in constructor:
+        // const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})
+        //     (this.sitesSource);
+        // this.mutationForm.setControl('formGroups', formModel);
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        //to clear control values from the previous gene and restore status flags to the pristine state need
+        //to call reset at the top of ngOnChanges:
+        //this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
     ngAfterContentChecked(): void {
         this.mutationForm.valueChanges.subscribe(data =>{
@@ -55,11 +67,6 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         });
     }
 
-    private setSites(sites:Site[]){
-        const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})(sites);
-        this.mutationForm.setControl('formGroups', formModel);
-    }
-
 
     private stopEventPropagation(event: Event){
         this.stopPropagation(event);
@@ -68,11 +75,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
     private enableActions(){
         this.mutationForm.markAsDirty({onlySelf: true});     //marks only mutationForm, not it's ancestors
     }
-    ngOnChanges(changes: SimpleChanges): void {
-        //to clear control values from the previous gene and restore status flags to the pristine state need
-        //to call reset at the top of ngOnChanges:
-        //this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
-    }
+
     private reset(initialState?:any){
         this.mutationForm.reset(initialState);      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
@@ -82,13 +85,16 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         this.reset();                               //TODO: cause changes into mutationForm's model - in HTML see output of <p>Form value: {{ mutationForm.value | json }}</p>
     }
     private onCancel(){
-        // //Explanation: this approach with reset(initialState) works incorrectly with Validators.required(and other validators)
-        // this.reset(this.initialState);      //reset form flags(pristine, touched, dirty etc.) and revert control value changes by reseting them to this.initialState
-        // //Workaround: to populate reseted form with restored data:
-        // this.setSites(this.gene.mutationSites.length > 0 ? this.gene.mutationSites : this.gene.sites);
+        //Problem: we can't use reset(this.initialState), it works incorrectly with Validators.required(and other validators) & don't work with FormArray at all
+        //Explanation: https://stackoverflow.com/a/41179817 The 'setValue' method takes ONLY simple values:
+        let initialState = {
+            description: 'description message',  //without validation!!!
+            formGroups: this.sitesSource   //not FormArray of FormGroups
+        }
+        this.reset(initialState);      //reset form flags(pristine, touched, dirty etc.) and revert control value changes by reseting them to this.initialState
 
-        //Cancel changes with recreating whole parent FormGroup - reinitialization form model with initial data:
-        this.ngOnInit();
+        //Workaround: Cancel changes with recreating whole parent FormGroup - reinitialization form model with initial data:
+        //this.ngOnInit();
     }
     private prepareChanges():Gene{
         const formModel = this.mutationForm.value;

@@ -6,6 +6,7 @@ import {SiteEnum} from "../Enums/site-enum";
 import {ReactFormBuilder} from "../Abstract/react-form-builder";
 import {Resolvable} from "../Abstract/resolvable";
 import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
+import {ArrayHelper} from "../Helpers/array-helper";
 
 @Component({
     moduleId: module.id,
@@ -34,6 +35,10 @@ export class SiteMutationArrayComponent implements ReactFormBuilder, Resolvable{
 
     private getFormModelBuilder(){
         return ReactFormBuilderFactory.builder(SiteMutationComponent, {provide: FormBuilder, useValue: this.fb});
+    }
+
+    private isNotEmpty(){
+        return this.formArray ? ArrayHelper.notEmpty(this.formArray.controls) : false;
     }
 
     private add(){
