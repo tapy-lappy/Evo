@@ -86,6 +86,7 @@ export default class ObjectHelper {//it's not ObjectHelper<T> because static mem
     //deepCopy<T>(source: T) : T;
     //deepCopy<T>(source: T[]) : T[];
 
+    //https://github.com/Microsoft/TypeScript/issues/9358#issuecomment-228500639
     //Note: decorate<typeof Foo>()(Foo);  // Foo constructor
     //Note: decorate<Foo>()(new Foo);  // Foo instance
 
