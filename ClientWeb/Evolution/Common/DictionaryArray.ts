@@ -1,20 +1,8 @@
 import ObjectHelper from "../Helpers/object-helper";
 import {Constructable} from "../Abstract/constructable";
+import {IDictionary} from "../Abstract/interfaces";
 
-export interface IArray<T>{
-    [key: number]: T;
-}
 
-//
-export interface IDictionary<T>{
-    [key: string]: T;                         //Remark: doesn't needed if we extends from IndexedType<T>
-}
-// interface IDictionaryFunctions<T>{
-//     [key: string]: (exclude: boolean)=>T;           //string literal object(type)/associative array/string indexed object(interface)/dictionary which values are functions
-// }
-// interface IKeyValuePair<T>{
-//     keyValuePairs: {key: T}[];
-// }
 
 //Impossible to cast to interface(IDictionary), so needed class for that purpose
 class Dictionary<T> implements IDictionary<T>{
@@ -142,7 +130,7 @@ export default class DictionaryArray<T> implements IDictionaryArray<T>{
     contains(keyIndexCondition: string|number|Condition<T>): boolean{
         if (typeof keyIndexCondition === "number" || typeof keyIndexCondition === "string")
             return this.storage[keyIndexCondition] !== undefined;
-        else if(keyIndexCondition!.predicate)       //TODO: what is '!.'?
+        else if(keyIndexCondition!.predicate)       //TODO: what is '!.'? Done: https://angular.io/guide/template-syntax#the-non-null-assertion-operator---
             return this.array.some(item => keyIndexCondition.predicate(item));      //may use find() instead of some()
         return false;
     }

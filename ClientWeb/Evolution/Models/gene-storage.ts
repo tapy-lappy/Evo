@@ -1,5 +1,6 @@
 import Gene from "./gene";
-import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair, IDictionary} from "../Common/DictionaryArray";
+import DictionaryArray, {ArrayConverter, ArrayMapper, Condition, KeyValuePair} from "../Common/DictionaryArray";
+import {IDictionary} from "../Abstract/interfaces";
 
 type ErrorOptions = {
     gene: Gene,

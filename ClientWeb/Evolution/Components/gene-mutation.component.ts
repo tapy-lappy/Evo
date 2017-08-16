@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges,
-    AfterContentChecked
+    AfterContentChecked, Inject, OnDestroy
 } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Gene from "../Models/gene";
@@ -11,19 +11,28 @@ import {SiteMutationArrayComponent} from "./site-mutation-array.component";
 import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
 import {SiteEnum} from "../Enums/site-enum";
 import {ArrayHelper} from "../Helpers/array-helper";
+import {FormValidator, formValidatorProvider} from "../Validation/form-validator";
+import {CONTROL_ERRORS_TOKEN, ControlErrors, VALIDATION_SCHEME_TOKEN, ValidationScheme} from "../Validation/validation-scheme";
+import {ErrorAccumulator} from "../Abstract/interfaces";
+import DI from "../Helpers/di-helper";
+import {Subscription} from "rxjs/Subscription";
+import {ForbiddenValidator} from "../Validation/validators";
 
 @Component({
     moduleId: module.id,
     selector: 'gene-mutation',
     styles: [String(require('../Css/markup.less')), String(require('../Css/validation.less'))],
     templateUrl: '../Html/gene-mutation.component.html',
+    providers: [formValidatorProvider]
 })
 
-export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges, AfterContentChecked{
+export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges, OnDestroy/*, AfterContentChecked*/{
     @Input() gene: Gene;
     @Output('submitted') submittedEvent: EventEmitter<Gene> = new EventEmitter<Gene>();
     private mutationForm: FormGroup;
-    private errors: string[] = [];
+    private validationSubscription: Subscription;
+    private validator: FormValidator;
+    private errors: ErrorAccumulator = {};
 
     private get sitesFormGroups():FormArray{
         return this.mutationForm.get('formGroups') as FormArray;     //Remark: this is FormArray of FormGroups
@@ -39,7 +48,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
 
     ngOnInit(): void {
         this.mutationForm = this.formBuilder.group({
-            description: ['description message', Validators.required],  //this.formBuilder.control('description', Validators.required),
+            description: ['description message', [Validators.required, Validators.minLength(4),
+                Validators.maxLength(50), ForbiddenValidator(/description/i)]],  //this.formBuilder.control('description', Validators.required),
             //empty array init:                     this.formBuilder.array([])
             //form group with site instance init:        this.formBuilder.group(new Site())
             //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
@@ -52,19 +62,34 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         // const formModel = ReactFormBuilderFactory.builder(SiteMutationArrayComponent, {provide: FormBuilder, useValue: this.formBuilder})
         //     (this.sitesSource);
         // this.mutationForm.setControl('formGroups', formModel);
+
+
+        let controlErrors:ControlErrors = {
+            'description': ''
+        };
+        this.validator = DI.resolve<FormValidator>(FormValidator, formValidatorProvider,
+            {provide: FormGroup, useValue: this.mutationForm},
+            {provide: CONTROL_ERRORS_TOKEN, useValue: controlErrors},           //uses specific customized object
+            {provide: VALIDATION_SCHEME_TOKEN, useClass: ValidationScheme});    //uses already defined global error messages container
+        this.validationSubscription = this.mutationForm.valueChanges.subscribe(data => {
+            this.errors = this.validator.onValueChanged(data);});
+        this.validator.onValueChanged(); // (re)set validation messages now
     }
     ngOnChanges(changes: SimpleChanges): void {
         //to clear control values from the previous gene and restore status flags to the pristine state need
         //to call reset at the top of ngOnChanges:
         //this.mutationForm.reset();      //https://angular.io/guide/reactive-forms#reset-the-form-flags
     }
-    ngAfterContentChecked(): void {
-        this.mutationForm.valueChanges.subscribe(data =>{
-           const descriptionCtrl = this.mutationForm.get('description');
-           if(descriptionCtrl && !descriptionCtrl.valid){
-               this.errors.push(descriptionCtrl.errors['required']);
-           }
-        });
+    // ngAfterContentChecked(): void {
+    //     this.mutationForm.valueChanges.subscribe(data =>{
+    //        const descriptionCtrl = this.mutationForm.get('description');
+    //        if(descriptionCtrl && !descriptionCtrl.valid){
+    //            this.errors.push(descriptionCtrl.errors['required']);
+    //        }
+    //     });
+    // }
+    ngOnDestroy(): void {
+        this.validationSubscription.unsubscribe();
     }
 
 
