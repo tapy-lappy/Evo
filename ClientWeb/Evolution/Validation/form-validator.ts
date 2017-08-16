@@ -11,7 +11,7 @@ export class FormValidator{
     //file:///G:/Angular/v2.angular.io/docs/ts/latest/cookbook/form-validation.html  Committing hero value changes
     //The 'data' object passed into onValueChanged() contains the current element values. The handler ignores them.
     onValueChanged(data?: any) : ErrorAccumulator {
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
         if (!this.form) { return this.errorAccumulator; }
         for (const controlName in this.errorAccumulator) {
             // clear previous error message (if any)

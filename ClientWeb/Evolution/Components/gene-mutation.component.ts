@@ -29,6 +29,7 @@ import {ForbiddenValidator} from "../Validation/validators";
 export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges, OnDestroy/*, AfterContentChecked*/{
     @Input() gene: Gene;
     @Output('submitted') submittedEvent: EventEmitter<Gene> = new EventEmitter<Gene>();
+    private descriptionContent = 'please descriebe...';
     private mutationForm: FormGroup;
     private validationSubscription: Subscription;
     private validator: FormValidator;
@@ -48,7 +49,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
 
     ngOnInit(): void {
         this.mutationForm = this.formBuilder.group({
-            description: ['description message', [Validators.required, Validators.minLength(4),
+            description: [this.descriptionContent, [Validators.required, Validators.minLength(4),
                 Validators.maxLength(50), ForbiddenValidator(/description/i)]],  //this.formBuilder.control('description', Validators.required),
             //empty array init:                     this.formBuilder.array([])
             //form group with site instance init:        this.formBuilder.group(new Site())
@@ -73,7 +74,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
             {provide: VALIDATION_SCHEME_TOKEN, useClass: ValidationScheme});    //uses already defined global error messages container
         this.validationSubscription = this.mutationForm.valueChanges.subscribe(data => {
             this.errors = this.validator.onValueChanged(data);});
-        this.validator.onValueChanged(); // (re)set validation messages now
+        //this.validator.onValueChanged(); // (re)set validation messages now         //TODO: do we really need it?
     }
     ngOnChanges(changes: SimpleChanges): void {
         //to clear control values from the previous gene and restore status flags to the pristine state need
@@ -113,7 +114,7 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         //Problem: we can't use reset(this.initialState), it works incorrectly with Validators.required(and other validators) & don't work with FormArray at all
         //Explanation: https://stackoverflow.com/a/41179817 The 'setValue' method takes ONLY simple values:
         let initialState = {
-            description: 'description message',  //without validation!!!
+            description: this.descriptionContent,  //without validation!!!
             formGroups: this.sitesSource   //not FormArray of FormGroups
         }
         this.reset(initialState);      //reset form flags(pristine, touched, dirty etc.) and revert control value changes by reseting them to this.initialState
