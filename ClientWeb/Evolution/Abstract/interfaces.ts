@@ -25,9 +25,14 @@ export interface Identifiable{
 
 
 //----------------Error interface----------------
-export interface ValidationErrorMessage{
+export interface ValidationRule{
     message: string;
+    value?: number|string|RegExp;
+    error?: (rule: ValidationRule) => string;
 }
-export interface ValidationControl extends IDictionary<ValidationErrorMessage>{}
-export interface ValidationControlsScheme extends IDictionary<ValidationControl>{}
+export interface ValidationRulesScheme{
+    rules: IDictionary<ValidationRule>;
+    getError: (rule: ValidationRule) => string;
+    setPlaceholders: (settings: {rule: ValidationRule, value: number|string}[]) => void;
+}
 export interface ErrorAccumulator extends IDictionary<string>{}

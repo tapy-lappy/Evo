@@ -12,7 +12,7 @@ import ReactFormBuilderFactory from "../Factories/react-form-builder.factory";
 import {SiteEnum} from "../Enums/site-enum";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {FormValidator, formValidatorProvider} from "../Validation/form-validator";
-import {CONTROL_ERRORS_TOKEN, ControlErrors, VALIDATION_SCHEME_TOKEN, ValidationScheme} from "../Validation/validation-scheme";
+import {ControlErrors, ValidationScheme} from "../Validation/validation-scheme";
 import {ErrorAccumulator} from "../Abstract/interfaces";
 import DI from "../Helpers/di-helper";
 import {Subscription} from "rxjs/Subscription";
@@ -29,7 +29,7 @@ import {ForbiddenValidator} from "../Validation/validators";
 export class GeneMutationComponent extends BaseGeneComponent implements OnInit, OnChanges, OnDestroy/*, AfterContentChecked*/{
     @Input() gene: Gene;
     @Output('submitted') submittedEvent: EventEmitter<Gene> = new EventEmitter<Gene>();
-    private descriptionContent = 'please descriebe...';
+    private descriptionContent = 'please describe...';
     private mutationForm: FormGroup;
     private validationSubscription: Subscription;
     private validator: FormValidator;
@@ -43,14 +43,24 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         return ArrayHelper.notEmpty(this.gene.mutationSites) ? this.gene.mutationSites : this.gene.sites;
     }
 
-    constructor(private formBuilder: FormBuilder/*, private mutationService: MutationService*/) {
+    constructor(private formBuilder: FormBuilder,
+                private validationScheme: ValidationScheme
+                /*, private mutationService: MutationService*/) {
         super();
+        validationScheme.setPlaceholders([
+            {rule: validationScheme.rules.minlength, value: 4},
+            {rule: validationScheme.rules.maxlength, value: 50},
+            {rule: validationScheme.rules.forbidden, value: /description/i}
+        ]);
     }
 
     ngOnInit(): void {
+        const rules = this.validationScheme.rules;
         this.mutationForm = this.formBuilder.group({
-            description: [this.descriptionContent, [Validators.required, Validators.minLength(4),
-                Validators.maxLength(50), ForbiddenValidator(/description/i)]],  //this.formBuilder.control('description', Validators.required),
+            description: [this.descriptionContent, [Validators.required,
+                Validators.minLength(<number>rules['minlength'].value),
+                Validators.maxLength(<number>rules.maxlength.value),
+                ForbiddenValidator(<RegExp>rules.forbidden.value)]],  //this.formBuilder.control('description', Validators.required),
             //empty array init:                     this.formBuilder.array([])
             //form group with site instance init:        this.formBuilder.group(new Site())
             //array of form groups of site instances:    this.formBuilder.array([this.formBuilder.group(new Site(SiteEnum.A))])
@@ -70,8 +80,8 @@ export class GeneMutationComponent extends BaseGeneComponent implements OnInit, 
         };
         this.validator = DI.resolve<FormValidator>(FormValidator, formValidatorProvider,
             {provide: FormGroup, useValue: this.mutationForm},
-            {provide: CONTROL_ERRORS_TOKEN, useValue: controlErrors},           //uses specific customized object
-            {provide: VALIDATION_SCHEME_TOKEN, useClass: ValidationScheme});    //uses already defined global error messages container
+            {provide: ControlErrors, useValue: controlErrors},           //uses specific customized object
+            {provide: ValidationScheme, useValue: this.validationScheme});
         this.validationSubscription = this.mutationForm.valueChanges.subscribe(data => {
             this.errors = this.validator.onValueChanged(data);});
         //this.validator.onValueChanged(); // (re)set validation messages now         //TODO: do we really need it?

@@ -27,6 +27,7 @@ import {GeneMutationComponent} from "../Components/gene-mutation.component";
 import {SiteMutationComponent} from "../Components/site-mutation.component";
 import {SiteMutationArrayComponent} from "../Components/site-mutation-array.component";
 import {formValidatorProvider} from "../Validation/form-validator";
+import {ValidationScheme} from "../Validation/validation-scheme";
 
 
 const componentDeclarations = [AppComponent, GeneListComponent, GeneComponent, GeneSelectorComponent,
@@ -50,7 +51,8 @@ const routes: Routes = [
     bootstrap: [AppComponent],
     providers: [
         {provide: AppState, useValue: new AppState()},    //useValue - because AppState should be only one local state and we shouldn't create instance of local state each time
-        {provide: GeneList, useClass: GeneList},    //GeneList //both form of use are equivalent
+        {provide: GeneList, useClass: GeneList},
+        ValidationScheme,
         formValidatorProvider,
         LogService, ArrayHelper,
         {provide: config.APP_CONFIG_TOKEN, useValue: config.EVOLUTION_CONFIG},      //https://angular.io/guide/dependency-injection#the-provider-class-and-provide-object-literal

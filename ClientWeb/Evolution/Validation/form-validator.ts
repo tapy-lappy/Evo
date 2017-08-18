@@ -1,11 +1,11 @@
 import {Injectable, Provider} from "@angular/core";
 import {FormGroup} from "@angular/forms";
-import {ErrorAccumulator, ValidationControlsScheme} from "../Abstract/interfaces";
-import {CONTROL_ERRORS_TOKEN, VALIDATION_SCHEME_TOKEN} from "./validation-scheme";
+import {ErrorAccumulator, ValidationRulesScheme} from "../Abstract/interfaces";
+import {ControlErrors, ValidationScheme} from "./validation-scheme";
 
 @Injectable()
 export class FormValidator{
-    constructor(private form: FormGroup, private errorAccumulator: ErrorAccumulator, private validationScheme: ValidationControlsScheme){
+    constructor(private form: FormGroup, private errorAccumulator: ErrorAccumulator, private validationScheme: ValidationRulesScheme){
     }
 
     //file:///G:/Angular/v2.angular.io/docs/ts/latest/cookbook/form-validation.html  Committing hero value changes
@@ -18,9 +18,9 @@ export class FormValidator{
             this.errorAccumulator[controlName] = '';
             const control = this.form.get(controlName);
             if (control && (control.dirty || control.touched) && control.invalid) {
-                const messages = this.validationScheme[controlName];
+                const rules = this.validationScheme.rules;
                 for (const key in control.errors) {
-                    this.errorAccumulator[controlName] += messages[key].message + ' ';
+                    this.errorAccumulator[controlName] += rules[key].error(rules[key]) + ' ';
                 }
             }
         }
@@ -30,8 +30,8 @@ export class FormValidator{
 
 export const formValidatorProvider: Provider ={
     provide: FormValidator,
-    useFactory: (form: FormGroup, errorAccumulator: ErrorAccumulator, validationScheme: ValidationControlsScheme) => {
+    useFactory: (form: FormGroup, errorAccumulator: ErrorAccumulator, validationScheme: ValidationRulesScheme) => {
         return new FormValidator(form, errorAccumulator, validationScheme);
     },
-    deps: [FormGroup, CONTROL_ERRORS_TOKEN, VALIDATION_SCHEME_TOKEN]
+    deps: [FormGroup, ControlErrors, ValidationScheme]
 }
