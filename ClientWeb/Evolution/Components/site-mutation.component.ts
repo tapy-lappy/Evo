@@ -50,8 +50,8 @@ export class SiteMutationComponent extends BaseGeneComponent implements OnInit, 
         //https://angular.io/guide/reactive-forms#observe-control-changes
         this.siteGroup.controls.site.valueChanges.forEach((value:SiteEnum)=>{   //TODO: investigate Observable<any>. Also possible to use .subscriebe() but then need to unsubscriebe
             let isMutatedCtrl = this.siteGroup.controls.isMutated;
-            //isMutatedCtrl.patchValue({isMutated: true});    //https://angular.io/guide/reactive-forms#patchvalue
-            isMutatedCtrl.setValue(true);    //https://angular.io/guide/reactive-forms#setvalue
+            //isMutatedCtrl.patchValue(true);               //https://angular.io/guide/reactive-forms#patchvalue
+            isMutatedCtrl.setValue(true);                   //https://angular.io/guide/reactive-forms#setvalue
         });
     }
 }

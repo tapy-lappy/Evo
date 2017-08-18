@@ -7,6 +7,7 @@ import Site from "../Models/site";
 import {SiteEnum} from "../Enums/site-enum";
 import {GeneInteractionToken} from "../Services/di-interaction-service-tokens";
 import ObjectHelper from "../Helpers/object-helper";
+import {Constructable} from "../Abstract/constructable";
 
 
 @Component({
@@ -90,6 +91,7 @@ export class GeneEditorComponent extends BaseGeneComponent implements OnInit, On
         //let gene = new Gene(this.gene.name, [this.currentChosenSite], this.gene.description);
         this.gene.sites = [this.currentChosenSite];
         const geneDeepCopy = <Gene>ObjectHelper.deepCopy<typeof Gene, Gene>(Gene, this.gene);
+        //const geneDeepCopy = <Gene>ObjectHelper.deepCopy<Constructable<Gene>, Gene>(Gene, this.gene);     //the same
         this.geneInteraction.event(geneDeepCopy);
     }
     onSubmit(){

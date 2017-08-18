@@ -22,6 +22,10 @@ export class ArrayHelper<T> {
         return array.every.apply(array, [predicate]);
     }
 
+    static notEmpty<T>(array: T[]): boolean{
+        return array ? array.length > 0 : false;
+    }
+
     //TODO: JS context set up: this: void
     //some<T>(callbackfn: (this: void, value: T, index: number, array: T[]) => boolean): boolean;
 
