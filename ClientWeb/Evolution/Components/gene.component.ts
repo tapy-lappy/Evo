@@ -16,13 +16,14 @@ import DI from "../Helpers/di-helper";
 import {SiteEnum, SITE_ENUMS_TOKEN} from "../Enums/site-enum";
 import {Subscription} from "rxjs/Subscription";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
-import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {IndexedMolecula, Molecula} from "../../Libraries/Molvwr/molecule";
 import {
     RemoveGeneInteractionMultiCastEventToken,
     SiteInteractionToken
 } from "../Services/di-interaction-service-tokens";
 import ObjectHelper from "../Helpers/object-helper";
 import {ArrayHelper} from "../Helpers/array-helper";
+import {Indexable} from "../Abstract/interfaces";
 
 @Component({
     moduleId: module.id,
@@ -38,14 +39,14 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
     // @Input() dna: GeneEnum;
     // @Output('remove') removeEvent = new EventEmitter<GeneEnum>();
     gene: Gene;
-    molecule: Molecule;
+    molecule: Molecula;
     kinds: string[];
-    private moleculaDisplayed: Subscription;
+    private moleculaDisplayedSubscriptionIndex: number;
     private mutationChanged:Subscription;
 
     constructor(@Optional() protected log: LogService,
                 private geneRemovedEvent: RemoveGeneInteractionMultiCastEventToken<Gene>,
-                private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>,
+                private siteInteraction: SiteInteractionToken<IndexedMolecula, Molecula>,
                 @Inject(APP_CONFIG_TOKEN) protected config: AppConfig,
                 private appState: AppState,
                 //private geneService: GeneService,
@@ -91,19 +92,19 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
             this.log.info(new CustomLog(`Gene ${this.gene.name} created!!!`));
         }
 
-        this.moleculaDisplayed = this.siteInteraction.confirmed$.subscribe(
+        this.moleculaDisplayedSubscriptionIndex = this.siteInteraction.subscribe(
             (molecule) => {
                 this.molecule = molecule;
                 this.kinds = [];
                 for(let prop in molecule.kinds){
                     this.kinds.push(prop);
                 }
-            },
-            err => this.error(err),
-            () => {
-                //TODO: never come in here
-                alert('Molecule formula and atoms have been displayed.');
-            }
+            }//,        //TODO: error and done should be implemented also!
+            // err => this.error(err),
+            // () => {
+            //     //TODO: never come in here
+            //     alert('Molecula formula and atoms have been displayed.');
+            // }
         );
 
         // const reinitializeGene: () => void = this.initGene;      //aliasing
@@ -153,7 +154,7 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         this.log.log(new CustomLog(`Gene ${this.gene.name} is destroyed!`, css));
 
         //Unsubscribe
-        this.moleculaDisplayed.unsubscribe();
+        this.siteInteraction.unsubscribe(this.moleculaDisplayedSubscriptionIndex);
         this.mutationChanged.unsubscribe();
     }
 
@@ -167,9 +168,13 @@ export class GeneComponent extends BaseGeneComponent implements OnInit, OnDestro
         this.geneRemovedEvent.event(this.gene);
     }
 
-    siteClicked(event: MouseEvent, molecule: SiteEnum|Gene){
+    siteClicked(event: MouseEvent, molecula: SiteEnum|Gene){
         this.stopPropagation(event);
-        this.siteInteraction.event(molecule);
+        const indexedMolecula: IndexedMolecula = {
+            index: this.moleculaDisplayedSubscriptionIndex,
+            molecula: molecula
+        };
+        this.siteInteraction.event(indexedMolecula);
     }
     mutateSite(event: MouseEvent, site: Site){
         this.stopPropagation(event);

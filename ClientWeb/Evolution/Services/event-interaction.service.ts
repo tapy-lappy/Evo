@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs/Subject";
 import {SiteEnum} from "../Enums/site-enum";
-import {Molecule} from "../../Libraries/Molvwr/molecule";
+import {Molecula} from "../../Libraries/Molvwr/molecule";
 import Gene from "../Models/gene";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/of";
 import {Subscriber} from "rxjs/Subscriber";
 import {Observer} from "rxjs/Observer";
+import {IArray, IDictionary, Indexable} from "../Abstract/interfaces";
+import {Subscription} from "rxjs/Subscription";
 
 // @Injectable()
 // export default class SiteInteractionService<T> {
@@ -59,6 +61,12 @@ interface IInteractEvent<TInput, TOutput> extends IEvent<TInput>{
     confirm(value:TOutput):void;
 }
 
+interface IOneToManyInteractEvent<TInput, TOutput extends Indexable> extends IEvent<TInput>{
+    subscribe(callback: (value: TOutput) => void):number;
+    unsubscribe(subscriptionIndex:number):void;
+    confirm(value:TOutput):void;
+}
+
 //TODO: We do not use this:
 @Injectable()
 class SingleEvent<T> implements IEvent<T>{
@@ -92,4 +100,29 @@ class InteractEvent<TInput, TOutput> extends MultiCastEvent<TInput> implements I
     confirmed$ = this.confirmSource.asObservable();
     confirm(successed: TOutput){this.confirmSource.next(successed);}
 }
-export {MultiCastEvent, InteractEvent, IEvent, IInteractEvent};
+
+@Injectable()
+class OneToManyInteractEvent<TInput, TOutput extends Indexable> extends MultiCastEvent<TInput> implements IOneToManyInteractEvent<TInput, TOutput> {
+    private observers: IArray<MultiCastEvent<TOutput>> = [];
+    private subscriptions: IArray<Subscription> = [];
+
+    index = 0;
+    subscribe(callback: (value: TOutput) => void):number{
+        this.observers[this.index] = new MultiCastEvent();
+        this.subscriptions[this.index] = this.observers[this.index].generated$.subscribe(callback);
+        return this.index++;
+    }
+    unsubscribe(subscriptionIndex:number){
+        delete this.observers[subscriptionIndex];
+        this.subscriptions[subscriptionIndex].unsubscribe();
+        delete this.subscriptions[subscriptionIndex];
+    }
+
+    confirm(value: TOutput): void {
+        this.observers[value.index].event(value);       //index from Indexable
+    }
+
+}
+
+export {OneToManyInteractEvent, MultiCastEvent, InteractEvent,
+    IOneToManyInteractEvent, IInteractEvent, IEvent};

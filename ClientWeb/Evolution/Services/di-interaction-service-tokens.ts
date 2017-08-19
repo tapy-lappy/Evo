@@ -1,5 +1,6 @@
-import {IEvent, IInteractEvent} from "./event-interaction.service";
+import {IEvent, IInteractEvent, IOneToManyInteractEvent} from "./event-interaction.service";
 import {Observable} from "rxjs/Observable";
+import {Indexable} from "../Abstract/interfaces";
 
 //Abstract base token classes for 2 possible kinds of event:
 //Class used as a "narrowing" interface that exposes properties of real instance of service(which is hidden under the token) and the same time it
@@ -16,6 +17,17 @@ abstract class BaseEventToken<T> implements IEvent<T>{
 }
 abstract class BaseInteractionToken<T1,T2> extends BaseEventToken<T1> implements IInteractEvent<T1,T2>{
     confirmed$: Observable<T2>;
+    confirm(value: T2): void {
+        throw new Error('Method not implemented.');
+    }
+}
+abstract class BaseOneToManyInteractionToken<T1, T2 extends Indexable> extends BaseEventToken<T1> implements IOneToManyInteractEvent<T1, T2>{
+    subscribe(callback: (value: T2) => void):number{
+        throw new Error('Method not implemented.');
+    }
+    unsubscribe(subscriptionIndex:number){
+        throw new Error('Method not implemented.');
+    }
     confirm(value: T2): void {
         throw new Error('Method not implemented.');
     }
@@ -39,7 +51,7 @@ abstract class RemoveGeneInteractionMultiCastEventToken<T> extends BaseEventToke
 //Remark: in JS there are no interfaces). https://angular.io/guide/dependency-injection-in-action#class-interface
 //Note: You can't use an interface as a provider token because interfaces are not JavaScript objects. They exist only in the TypeScript design space.
 
-abstract class SiteInteractionToken<TInput,TOutput> extends BaseInteractionToken<TInput, TOutput>{}
+abstract class SiteInteractionToken<TInput,TOutput extends Indexable> extends BaseOneToManyInteractionToken<TInput, TOutput>{}
 abstract class GeneInteractionToken<TInput,TOutput> extends BaseInteractionToken<TInput,TOutput>{}
 
 

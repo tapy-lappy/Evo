@@ -3,7 +3,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {SiteEnum} from "../Enums/site-enum";
-import {Kind, Molecule} from "../../Libraries/Molvwr/molecule";
+import {IndexedMolecula, Kind, Molecula} from "../../Libraries/Molvwr/molecule";
 import * as helper from '../../Webpack/helpers/path.helper';
 //import * as MoleculeViewer from '../../Libraries/Molvwr/molvwr');
 
@@ -68,13 +68,13 @@ const Uracil = require('-!raw-loader!../Molecules/U.mol');
 export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit, OnDestroy {
     private siteClicked$:Subscription;
 
-    constructor(private siteInteraction: SiteInteractionToken<SiteEnum|Gene, Molecule>) {
+    constructor(private siteInteraction: SiteInteractionToken<IndexedMolecula, Molecula>){
         super();
     }
 
     ngOnInit() {
         this.siteClicked$ = this.siteInteraction.generated$.subscribe(
-            molecule => this.displayMolecule(molecule),
+            molecula => this.displayMolecule(molecula),
             err => this.error(err)
         );
 
@@ -82,27 +82,28 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
         // loadG(function(file: string) {
         //     // use file like it was required with
         //     // var file = require("./file.js");
-        //     console.log(`Molecule PDB file: ${file} has been downloaded.`);
+        //     console.log(`Molecula PDB file: ${file} has been downloaded.`);
         // });
     }
     ngOnDestroy(): void {
         this.siteClicked$.unsubscribe();
     }
 
-    private displayMolecule(molecule: SiteEnum | Gene) {
-        const moleculeData = this.getMoleculeData(molecule);
+    private displayMolecule(indexedMolecula: IndexedMolecula) {
+        const moleculeData = this.getMoleculeData(indexedMolecula.molecula);
         let el = $("#moleculeViewer").get(0);
         $(el).attr('data-molvwr', moleculeData.url);
         $(el).attr('data-molvwr-format', moleculeData.format);
         MoleculeViewer.BABYLON = BABYLON;
         MoleculeViewer.Molvwr.process(el,
-            (molecule:Molecule) => {
-                if(molecule.formula)
-                    molecule.formula = molecule.formula.replace(/ /g, '');  //https://stackoverflow.com/a/2116614
-                if(molecule.kinds)
+            (molecula:Molecula) => {
+                molecula.index = indexedMolecula.index;
+                if(molecula.formula)
+                    molecula.formula = molecula.formula.replace(/ /g, '');  //https://stackoverflow.com/a/2116614
+                if(molecula.kinds)
                 {
-                    for(let kindName in molecule.kinds){
-                        let kind = molecule.kinds[kindName].kind;
+                    for(let kindName in molecula.kinds){
+                        let kind = molecula.kinds[kindName].kind;
                         let color = new BABYLON.Color3(kind.color[0], kind.color[1], kind.color[2]).scale(255);
                         let R = Math.ceil(color.r);
                         let G = Math.ceil(color.g);
@@ -113,7 +114,7 @@ export class MoleculeViewerComponent extends BaseGeneComponent implements OnInit
                         (kind as Kind).invertedRGB = `rgb(${invertedColors[0]}, ${invertedColors[1]}, ${invertedColors[2]})`;
                     }
                 }
-                this.siteInteraction.confirm(molecule);
+                this.siteInteraction.confirm(molecula);
             });
     }
 

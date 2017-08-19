@@ -23,6 +23,10 @@ export interface Identifiable{
     id: Symbol;
 }
 
+export interface Indexable{
+    index: number;
+}
+
 
 //----------------Error interface----------------
 export interface ValidationRule{

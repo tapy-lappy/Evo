@@ -4,7 +4,7 @@ import {AppState} from "../AppState/app-state";
 import {ArrayHelper} from "../Helpers/array-helper";
 import {BaseGeneComponent} from "../Abstract/base-gene.component";
 import {GeneSelectorComponent} from "./gene-selector.component";
-import {InteractEvent, MultiCastEvent} from "../Services/event-interaction.service";
+import {InteractEvent, MultiCastEvent, OneToManyInteractEvent} from "../Services/event-interaction.service";
 import Gene from "../Models/gene";
 import {
     DiscriminatedEnum1, DiscriminatedEnum3, DiscriminatedEnums, Enum3,
@@ -24,7 +24,7 @@ import {
     providers: [ArrayHelper,
         //MultiCastEvent, InteractEvent,        //Error: provide ONLY one common shared SINGLETON instance for each components tree
         //Done: create one SINGLETON instance for specific token:
-        {provide: SiteInteractionToken, useClass: InteractEvent},
+        {provide: SiteInteractionToken, useClass: OneToManyInteractEvent},
         {provide: GeneInteractionToken, useClass: InteractEvent},
         {provide: RemoveGeneInteractionMultiCastEventToken, useClass: MultiCastEvent}
     ]     //used into child components, but it's a helper, so must be a singleton. This is why it's here
